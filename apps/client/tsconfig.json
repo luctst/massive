@@ -1,0 +1,14 @@
+{
+  "extends": "tsconfig/services/vuejs.json",
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "../global-test-setup.ts"],
+  "exclude": ["src/**/*.d.ts."],
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "react": ["./src/types/types__react"]
+    },
+    "experimentalDecorators": true
+  }
+}

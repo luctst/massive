@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "name": "massive",
+  "version": "1.0.0",
+  "packageManager": "pnpm",
+  "scripts": {
+    "lint": "pnpm run --filter './apps/*' --if-present -r lint",
+    "typecheck": "pnpm run --filter './apps/*' --if-present -r typecheck",
+    "prepare": "husky install .husky"
+  },
+  "engines": {
+    "node": "^14.18.0 || >=16.0.0",
+    "npm": "please use pnpm",
+    "yarn": "please use pnpm"
+  },
+  "license": "Apache",
+  "devDependencies": {
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
+    "husky": "^8.0.1"
+  }
+}

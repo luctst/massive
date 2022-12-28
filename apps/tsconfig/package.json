@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "name": "tsconfig",
+  "version": "1.0.0",
+  "main": "index.js",
+  "files": [
+    "./services/**/*.json"
+  ]
+}
