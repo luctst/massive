@@ -1,17 +1,32 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="bckg-img"></div>
+  <div class="bckg-img" />
   <main class="container">
     <div class="propal-icon-transparent is__container__img">
-      <img src="@/assets/logo-massive.svg" alt="icon app">
+      <img
+        src="@/assets/logo-massive.svg"
+        alt="icon app"
+      >
     </div>
     <div class="content">
       <h1>Bienvenue sur la plateforme 100% engagée !</h1>
       <p>Suivez l'actualité de notre société avec des créateurs engagés</p>
       <div class="btn-box">
-        <router-link to="/auth/signin" type="button" id="inscription">{{ $t('auth.btnSignin') }}</router-link>
-        <router-link to="/auth/login" type="button" id="connexion">{{ $t('auth.btnLogin') }}</router-link>
+        <router-link
+          id="inscription"
+          to="/auth/signin"
+          type="button"
+        >
+          {{ $t('auth.btnSignin') }}
+        </router-link>
+        <router-link
+          id="connexion"
+          to="/auth/login"
+          type="button"
+        >
+          {{ $t('auth.btnLogin') }}
+        </router-link>
       </div>
     </div>
   </main>

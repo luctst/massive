@@ -17,6 +17,7 @@ module.exports = {
       {
         '': 'never',
       },
-    ]
+    ],
+    'vue/multi-word-component-names': 'warn',
   },
 };

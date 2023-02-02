@@ -20,6 +20,7 @@
   "devDependencies": {
     "@intlify/vite-plugin-vue-i18n": "^7.0.0",
     "@vue/eslint-config-typescript": "^11.0.2",
+    "eslint": "^8.33.0",
     "eslint-config-custom": "workspace:^1.0.0",
     "eslint-plugin-vue": "^9.6.0",
     "sass": "^1.57.1",

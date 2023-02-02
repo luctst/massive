@@ -6,17 +6,17 @@ export default createRouter({
     {
       path: '/auth',
       name: 'Auth',
-      component: () => import('@/views/Auth.vue'),
+      component: () => import('@/views/auth.vue'),
       children: [
         {
           path: 'login',
           name: 'Login',
-          component: () => import('@/views/Login.vue'),
+          component: () => import('@/views/login.vue'),
         },
         {
           path: 'signin',
           name: 'Signin',
-          component: () => import('@/views/Signin.vue'),
+          component: () => import('@/views/signin.vue'),
         },
       ],
     },
