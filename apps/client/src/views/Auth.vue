@@ -10,8 +10,8 @@
       >
     </div>
     <div class="content">
-      <h1>Bienvenue sur la plateforme 100% engagée !</h1>
-      <p>Suivez l'actualité de notre société avec des créateurs engagés</p>
+      <h1>{{ $t('auth.title') }}</h1>
+      <p>{{ $t('auth.subTitle') }}</p>
       <div class="btn-box">
         <router-link
           id="inscription"
