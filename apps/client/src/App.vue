@@ -36,7 +36,7 @@ onUnmounted(() => {
     <div v-if="showApp">
       <RouterView />
     </div>
-    <div v-else>
+    <div v-else class="massive-hidden">
       <h1>{{ $t('appNotAvailable') }}</h1>
     </div>
   </div>
@@ -48,6 +48,19 @@ onUnmounted(() => {
   
   div:first-child {
     height: 100%;
+  }
+}
+
+.massive-hidden {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+
+  h1 {
+    font-size: 3rem;
+    background: -webkit-linear-gradient(#eee, #333);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
 </style>

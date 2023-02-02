@@ -9,7 +9,7 @@ export default {
     },
   },
   fr: {
-    appNotAvailable: 'App non disponible',
+    appNotAvailable: 'App non disponible sur ordinateur',
     auth: {
       title: 'Bienvenue sur la plateforme 100% engagée !',
       subTitle: 'Suivez l\'actualité de notre société avec des créateurs engagés',
