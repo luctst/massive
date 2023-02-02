@@ -20,7 +20,7 @@ pnpm i
 
 ## Lancer docker:
 1. Vérifier que docker est lancé en exécutant la commande `docker -v`, un numéro de version doit être retournée.
-2. Une fois docker lancé, executé la commande `docker compose up -d --remove-orphans --force-recreate` à la racine du projet.
+2. Une fois docker lancé, executé la commande `docker compose up -d --remove-orphans --force-recreate -V` à la racine du projet.
 
 ## Ouvrir le front et le back-office(strapi)
 Si aucune erreur est remontée strapi devrait être accessible à l'adresse suivante `http://localhost:1337/admin`, le front `http://localhost:{CLIENT_PORT}/` ou **CLIENT_PORT** correspond au port rentré dans la variable située dans le fichier `.env`.
