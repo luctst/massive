@@ -4,27 +4,41 @@ import { RouterView } from 'vue-router';
 </script>
 
 <template>
-  <section class="auth" v-if="$route.name === 'Auth'">
-    <div class="bckg-img"></div>
+  <section
+    v-if="$route.name === 'Auth'"
+    class="auth"
+  >
+    <div class="bckg-img" />
     <main class="container">
       <div class="propal-icon-transparent is__container__img">
-        <img src="@/assets/logo-massive.svg" alt="icon app">
+        <img
+          src="@/assets/logo-massive.svg"
+          alt="icon app"
+        >
       </div>
       <div class="content">
         <h1>{{ $t('auth.title') }}</h1>
         <p>{{ $t('auth.subTitle') }}</p>
         <div class="btn-box">
-          <router-link id="inscription" to="/auth/signin" type="button">
+          <router-link
+            id="inscription"
+            to="/auth/signin"
+            type="button"
+          >
             {{ $t('auth.btnSignin') }}
           </router-link>
-          <router-link id="connexion" to="/auth/login" type="button">
+          <router-link
+            id="connexion"
+            to="/auth/login"
+            type="button"
+          >
             {{ $t('auth.btnLogin') }}
           </router-link>
         </div>
       </div>
     </main>
   </section>
-  <RouterView v-else/>
+  <RouterView v-else />
 </template>
 
 <style scoped lang="scss">

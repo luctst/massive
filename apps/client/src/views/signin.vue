@@ -11,31 +11,60 @@
     <form>
       <div class="input-group">
         <label for="user-name">Nom d'utilisateur</label>
-        <input type="text" id="user-name" placeholder="Emmanuel Macron">
+        <input
+          id="user-name"
+          type="text"
+          placeholder="Emmanuel Macron"
+        >
       </div>
       <div class="input-group">
         <label for="user-mail">Adresse mail</label>
-        <input type="email" id="user-mail" placeholder="manu.macron@gmail.com">
+        <input
+          id="user-mail"
+          type="email"
+          placeholder="manu.macron@gmail.com"
+        >
       </div>
       <div class="input-group">
         <label for="user-name">Mot de passe</label>
-        <input type="password" id="user-password"><span id="icon-pass"><img src="@/assets/viewpassword.svg"
-            alt="icon password"></span>
+        <input
+          id="user-password"
+          type="password"
+        ><span id="icon-pass"><img
+          src="@/assets/viewpassword.svg"
+          alt="icon password"
+        ></span>
       </div>
       <div class="checkbox-validation">
-        <input type="checkbox" name="validation" id="validation">
+        <input
+          id="validation"
+          type="checkbox"
+          name="validation"
+        >
         <label for="validation">En cochant cette case, j'accepte les <span id="termes">termes et confidentialité</span> de
           l'application.</label>
       </div>
       <div class="btn-box">
-        <input type="button" id="create-count-btn" value="Créer mon compte">
+        <input
+          id="create-count-btn"
+          type="button"
+          value="Créer mon compte"
+        >
         <div class="sign-google-box">
-          <input type="button" id="sign-in-google" value="S'inscrire avec Google"><img src="&/assets/icons8-google.svg"
-            alt="Google icon">
+          <input
+            id="sign-in-google"
+            type="button"
+            value="S'inscrire avec Google"
+          ><img
+            src="&/assets/icons8-google.svg"
+            alt="Google icon"
+          >
         </div>
       </div>
     </form>
-    <p id="already-user">Vous avez déjà un compte? <span>Se connecter</span></p>
+    <p id="already-user">
+      Vous avez déjà un compte? <span>Se connecter</span>
+    </p>
   </main>
 </template>
 

@@ -36,7 +36,10 @@ onUnmounted(() => {
     <div v-if="showApp">
       <RouterView />
     </div>
-    <div v-else class="massive-hidden">
+    <div
+      v-else
+      class="massive-hidden"
+    >
       <h1>{{ $t('appNotAvailable') }}</h1>
     </div>
   </div>
