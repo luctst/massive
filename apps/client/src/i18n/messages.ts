@@ -7,6 +7,25 @@ export default {
       btnLogin: 'Login',
       btnSignin: 'Signin',
     },
+    signin: {
+      title: 'Signin',
+      subTitle: 'Please fill in the fields below',
+      userName: {
+        label: 'Username',
+        placeholder: 'Emmanuel Macron',
+      },
+      mail: {
+        label: 'Mail',
+        placeholder: 'manu.macron@gmail.com',
+      },
+      password: {
+        label: 'Password',
+      },
+      legal: 'By checking this box, I accept the <router-link to="/legal" id="termes">terms and privacy</ router-link> of the application.',
+      createAccount: 'Create my account',
+      loginWithGoogle: 'Signin with Google',
+      alreadyAccount: 'You already have an account? <router-link to="/auth/login">Login</router-link>',
+    },
   },
   fr: {
     appNotAvailable: 'App non disponible sur ordinateur',
