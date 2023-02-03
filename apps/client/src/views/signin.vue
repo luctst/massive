@@ -8,7 +8,7 @@
         <p>Merci de remplir les champs ci-dessous</p>
       </div>
     </header>
-    <form>
+    <form class="container">
       <div class="input-group">
         <label for="user-name">Nom d'utilisateur</label>
         <input
@@ -45,25 +45,19 @@
           l'application.</label>
       </div>
       <div class="btn-box">
-        <input
-          id="create-count-btn"
-          type="button"
-          value="Créer mon compte"
-        >
+        <button id="create-count-btn">Créer mon compte </button>
         <div class="sign-google-box">
-          <input
-            id="sign-in-google"
-            type="button"
-            value="S'inscrire avec Google"
-          ><img
-            src="&/assets/icons8-google.svg"
-            alt="Google icon"
-          >
+          <button id="sign-in-google">
+            S'inscrire avec google
+            <img
+            src="@/assets/icons8-google.svg"
+            alt="Google icon" />
+          </button>
         </div>
       </div>
     </form>
     <p id="already-user">
-      Vous avez déjà un compte? <span>Se connecter</span>
+      Vous avez déjà un compte? <router-link to="/auth/login">Se connecter</router-link>
     </p>
   </main>
 </template>
@@ -107,7 +101,6 @@
     display: flex;
     flex-direction: column;
     gap: 31px;
-    padding: 0 30px;
     margin-top: 49px;
 
     .input-group {
@@ -141,6 +134,12 @@
       input[type="password"] {
         font-size: 22px;
         color: #9CA3AF;
+      }
+
+      #icon-pass {
+        position: absolute;
+        right: 10px;
+        bottom: 11px;
       }
     }
 
@@ -181,7 +180,16 @@
       gap: 25px;
       margin-top: 16px;
 
-      input {
+      button {
+        width: 100%;
+        font-size: 16px;
+        padding: 15px;
+        border-radius: 30px;
+        border: none;
+        outline: none;
+      }
+
+      #create-count-btn {
         width: 100%;
         font-size: 16px;
         padding: 15px;
@@ -194,23 +202,31 @@
         background: linear-gradient(87.79deg, #000A6B 0%, #790D0D 100%);
       }
 
-      div {
+      .sign-google-box {
         display: flex;
         align-items: center;
         position: relative;
 
-        input {
+        button {
           font-family: 'Satoshi', sans-serif;
           color: #000;
           font-weight: 500;
           background-color: transparent;
           border: 1px solid #D1CFCF;
+        }
 
-          img {
-            width: 16px;
-            position: absolute;
-            left: 17%
-          }
+        img {
+          width: 16px;
+          position: absolute;
+          left: 17%
+        }
+
+        #sign-in-google {
+          font-family: 'Satoshi', sans-serif;
+          color: #000;
+          font-weight: 500;
+          background-color: transparent;
+          border: 1px solid #D1CFCF;
         }
       }
     }
@@ -220,15 +236,17 @@
     }
   }
 
-  // p {
-  //   color: #424244;
-  //   font-size: 14px;
-  //   font-weight: 500;
-  //   margin: 33px 0 80px;
+  #already-user {
+    color: #424244;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    margin: 33px 0 80px;
+  }
 
-  //   span {
-  //     color: #020a69;
-  //   }
-  // }
+  #already-user a {
+    text-decoration: none;
+    color: #020a69;
+  }
 }
 </style>
