@@ -4,29 +4,29 @@
   <main class="signin">
     <header>
       <div class="header--content container">
-        <h1>Inscription</h1>
-        <p>Merci de remplir les champs ci-dessous</p>
+        <h1>{{ $t('signin.title') }}</h1>
+        <p>{{ $t('signin.subTitle') }}</p>
       </div>
     </header>
     <form class="container">
       <div class="input-group">
-        <label for="user-name">Nom d'utilisateur</label>
+        <label for="user-name">{{ $t('signin.userName.label') }}</label>
         <input
           id="user-name"
           type="text"
-          placeholder="Emmanuel Macron"
+          :placeholder="$t('signin.userName.placeholder')"
         >
       </div>
       <div class="input-group">
-        <label for="user-mail">Adresse mail</label>
+        <label for="user-mail">{{ $t('sigin.mail.label') }}</label>
         <input
           id="user-mail"
           type="email"
-          placeholder="manu.macron@gmail.com"
+          :placeholder="$t('signin.mail.placeholder')"
         >
       </div>
       <div class="input-group">
-        <label for="user-name">Mot de passe</label>
+        <label for="user-name">{{ $t('signin.password.label') }}</label>
         <input
           id="user-password"
           type="password"
@@ -41,16 +41,18 @@
           type="checkbox"
           name="validation"
         >
-        <label for="validation">En cochant cette case, j'accepte les <span id="termes">termes et confidentialité</span> de
-          l'application.</label>
+        <label
+          for="validation"
+          v-html="$t('signin.legal')"
+        />
       </div>
       <div class="btn-box">
         <button id="create-count-btn">
-          Créer mon compte
+          {{ $t('signin.createAccount') }}
         </button>
         <div class="sign-google-box">
           <button id="sign-in-google">
-            S'inscrire avec google
+            {{ $t('signin.loginWithGoogle') }}
             <img
               src="@/assets/icons8-google.svg"
               alt="Google icon"
@@ -59,11 +61,10 @@
         </div>
       </div>
     </form>
-    <p id="already-user">
-      Vous avez déjà un compte? <router-link to="/auth/login">
-        Se connecter
-      </router-link>
-    </p>
+    <p
+      id="already-user"
+      v-html="$t('signin.alreadyAccount')"
+    />
   </main>
 </template>
 
@@ -153,7 +154,8 @@
       align-items: baseline;
       gap: 11px;
 
-      input {
+      a {
+        text-decoration: none;
         accent-color: #020A69;
         -ms-transform: scale(1.25);
         /* IE */
@@ -192,6 +194,10 @@
         border-radius: 30px;
         border: none;
         outline: none;
+
+        &:hover {
+          cursor: pointer;
+        }
       }
 
       #create-count-btn {

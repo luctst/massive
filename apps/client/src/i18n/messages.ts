@@ -16,5 +16,24 @@ export default {
       btnLogin: 'Se connecter',
       btnSignin: 'S\'inscrire',
     },
+    signin: {
+      title: 'Inscription',
+      subTitle: 'Merci de remplir les champs ci-dessous',
+      userName: {
+        label: 'Nom d\'utilisateur',
+        placeholder: 'Emmanuel Macron',
+      },
+      mail: {
+        label: 'Adresse mail',
+        placeholder: 'manu.macro@gmail.com',
+      },
+      password: {
+        label: 'Mot de passe',
+      },
+      legal: 'En cochant cette case, j\'accepte les <router-link to="/legal" id="termes">termes et confidentialité</ router-link> de l\'application.',
+      createAccount: 'Créer mon compte',
+      loginWithGoogle: 'S\'inscrire avec Google',
+      alreadyAccount: 'Vous avez déjà un compte ? <router-link to="/auth/login">Se connecter</router-link>',
+    },
   },
 };
