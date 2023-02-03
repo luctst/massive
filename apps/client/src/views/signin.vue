@@ -45,19 +45,24 @@
           l'application.</label>
       </div>
       <div class="btn-box">
-        <button id="create-count-btn">Créer mon compte </button>
+        <button id="create-count-btn">
+          Créer mon compte
+        </button>
         <div class="sign-google-box">
           <button id="sign-in-google">
             S'inscrire avec google
             <img
-            src="@/assets/icons8-google.svg"
-            alt="Google icon" />
+              src="@/assets/icons8-google.svg"
+              alt="Google icon"
+            >
           </button>
         </div>
       </div>
     </form>
     <p id="already-user">
-      Vous avez déjà un compte? <router-link to="/auth/login">Se connecter</router-link>
+      Vous avez déjà un compte? <router-link to="/auth/login">
+        Se connecter
+      </router-link>
     </p>
   </main>
 </template>
