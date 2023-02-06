@@ -23,7 +23,7 @@
           </router-link>
         </li>
         <li>
-          <router-link to="/favorite">
+          <router-link to="/bookmarks">
             <img
               src="@/assets/Bookmark-white.svg"
               alt="bookmark icon"
