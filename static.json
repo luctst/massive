@@ -1,0 +1,4 @@
+{
+  "root": "apps/client/dist/",
+  "clean_urls": true
+}
