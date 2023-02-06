@@ -9,7 +9,9 @@
     "prepare": "husky install .husky"
   },
   "engines": {
-    "node": "^14.18.0 || >=16.0.0"
+    "node": "^14.18.0 || >=16.0.0",
+    "npm": "please use pnpm",
+    "yarn": "please use pnpm"
   },
   "license": "Apache",
   "devDependencies": {
