@@ -20,5 +20,15 @@ export default createRouter({
         },
       ],
     },
+    {
+      path: '/bookmarks',
+      name: 'Bookmarks',
+      component: () => import('@/views/favorite.vue'),
+    },
+    {
+      path: '/',
+      name: 'Home',
+      component: () => import('@/views/home.vue'),
+    },
   ],
 });
