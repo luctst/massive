@@ -12,9 +12,9 @@ WORKDIR /usr/app
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install
 COPY ./ ./
-RUN pnpm build
+RUN pnpm run --filter client build
 
 # Start server
 EXPOSE 8080
 ENV NODE_ENV production
-CMD ["pnpm", "start"]
+CMD ["pnpm", "run", "--filter", "client", "start"]
