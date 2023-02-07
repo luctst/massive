@@ -12,6 +12,9 @@ export default createRouter({
           path: 'signin',
           name: 'Signin',
           component: () => import('@/views/signin.vue'),
+          meta: {
+            headerTitle: 'header.routes.home',
+          },
         },
       ],
     },
@@ -19,11 +22,17 @@ export default createRouter({
       path: '/bookmarks',
       name: 'Bookmarks',
       component: () => import('@/views/favorite.vue'),
+      meta: {
+        headerTitle: 'header.routes.bookmarks',
+      },
     },
     {
       path: '/',
       name: 'Home',
       component: () => import('@/views/home.vue'),
+      meta: {
+        headerTitle: 'header.routes.home',
+      },
     },
   ],
 });
