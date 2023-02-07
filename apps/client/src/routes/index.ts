@@ -12,9 +12,6 @@ export default createRouter({
           path: 'signin',
           name: 'Signin',
           component: () => import('@/views/signin.vue'),
-          meta: {
-            headerTitle: 'header.routes.home',
-          },
         },
       ],
     },
@@ -32,6 +29,14 @@ export default createRouter({
       component: () => import('@/views/home.vue'),
       meta: {
         headerTitle: 'header.routes.home',
+      },
+    },
+    {
+      path: '/explorer',
+      name: 'Explorer',
+      component: () => import('@/views/explorer.vue'),
+      meta: {
+        headerTitle: 'header.routes.explorer',
       },
     },
   ],

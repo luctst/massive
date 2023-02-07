@@ -3,8 +3,9 @@ export default {
     appNotAvailable: 'App not available',
     header: {
       routes: {
-        home: 'Discover',
+        home: 'Publications',
         bookmarks: 'Your bookmarks',
+        explorer: 'Discover',
       },
     },
     auth: {
@@ -41,8 +42,9 @@ export default {
     appNotAvailable: 'App non disponible sur ordinateur',
     header: {
       routes: {
-        home: 'Découvrir',
+        home: 'Publications',
         bookmarks: 'Vos favoris',
+        explorer: 'Découvrir',
       },
     },
     auth: {

@@ -16,6 +16,12 @@
         <li>
           <router-link to="/explorer">
             <img
+              v-if="$route.name === 'Explorer'"
+              src="@/assets/explorer-white.svg"
+              alt="explorer icon"
+            >
+            <img
+              v-else
               src="@/assets/explorer.svg"
               alt="explorer icon"
             >
