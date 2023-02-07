@@ -34,6 +34,7 @@ export default {
     },
     bookmarks: {
       noData: 'No publication saved',
+      noBookmarks: 'Added recently',
     },
   },
   fr: {
@@ -71,6 +72,7 @@ export default {
     },
     bookmarks: {
       noData: 'Aucune publication sauvegardée',
+      noBookmarks: 'Ajoutés recemment',
     },
   },
 };

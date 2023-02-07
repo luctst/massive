@@ -91,7 +91,7 @@ function formatMilliseoncdsToTime(milliseconds: number) {
     </template>
     <template v-else>
       <header>
-        <p>Ajoutés récemment</p>
+        <p>{{ $t('bookmarks.noBookmarks') }}</p>
       </header>
       <section class="card--container">
         <div
