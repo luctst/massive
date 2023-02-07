@@ -25,7 +25,13 @@
         <li>
           <router-link to="/bookmarks">
             <img
+              v-if="$route.name === 'Bookmarks'"
               src="@/assets/Bookmark-white.svg"
+              alt="bookmark icon"
+            >
+            <img
+              v-else
+              src="@/assets/Bookmark.svg"
               alt="bookmark icon"
             >
             <span class="line-nav" />
