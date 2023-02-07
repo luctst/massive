@@ -1,8 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+const title = ref<string>(useRoute().meta.headerTitle as string);
+</script>
 
 <template>
   <header class="container">
-    <h1>{{ $t($route.meta.headerTitle as string) }}</h1>
+    <h1>{{ $t(title) }}</h1>
     <div class="is__container__img">
       <img src="@/assets/icon_filter.svg">
     </div>
