@@ -1,37 +1,10 @@
 <script setup lang="ts">
 import { CardWidthData } from '@/types/index';
+import utils from '@/utils/index';
 
 const props = defineProps<{
   card: CardWidthData;
 }>();
-
-function formatName(name: string, family_name: string) {
-  return `${name} ${family_name[0].toUpperCase()}`;
-}
-
-function formatDate(date: Date) {
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
-  const diffInMinutes = diff / 1000 / 60;
-  const diffInHours = diffInMinutes / 60;
-  const diffInDays = diffInHours / 24;
-
-  if (diffInMinutes < 60) {
-    return `${Math.round(diffInMinutes)} minutes`;
-  } else if (diffInHours < 24) {
-    return `${Math.round(diffInHours)} heures`;
-  } else {
-    return `${Math.round(diffInDays)} jours`;
-  }
-}
-
-function formatMilliseoncdsToTime(milliseconds: number) {
-  const seconds = Math.floor(milliseconds / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-
-  return `${hours}:${minutes}:${seconds}`;
-}
 </script>
 
 <template>
@@ -45,8 +18,8 @@ function formatMilliseoncdsToTime(milliseconds: number) {
           >
         </div>
         <div class="card--container--item--top--user--name">
-          <p>{{ formatName(props.card.user.name, props.card.user.family_name) }}</p>
-          <p>Il y a {{ formatDate(props.card.created_at) }}</p>
+          <p>{{ utils.formatUserName(props.card.user.name, props.card.user.family_name) }}</p>
+          <p>Il y a {{ utils.formatDate(props.card.media.created_at) }}</p>
         </div>
       </div>
       <span class="card--container--item--top--svg">
@@ -59,7 +32,7 @@ function formatMilliseoncdsToTime(milliseconds: number) {
     <div class="card--container--item--caption">
       <div class="card--container--item--caption--video is__container__img">
         <img :src="props.card.media.preview">
-        <span>{{ formatMilliseoncdsToTime(props.card.media.length) }}</span>
+        <span>{{ utils.formatTime(props.card.media.length) }}</span>
       </div>
       <div class="card--container--item--caption--metadata container">
         <p>{{ props.card.media.title }}</p>
