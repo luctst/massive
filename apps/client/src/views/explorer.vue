@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { Media, PropsAvatarWithName } from '@/types/index';
+import YTpreview from '@/assets/youtube-screen.svg';
+import PP from '@/assets/profil-pic1.svg';
 
 const filters = ref<Array<string>>([
   'Géopolitique',
@@ -8,6 +11,44 @@ const filters = ref<Array<string>>([
   'France',
   'Histoire',
   'Société',
+]);
+const videosTrends = ref<Array<Media>>([
+  {
+    author: 'Jean Masset',
+    length: 50000,
+    title: 'La France, une histoire de guerre',
+    preview: YTpreview,
+    created_at: new Date(),
+  },
+  {
+    author: 'Jean Masset',
+    length: 50000,
+    title: 'La France, une histoire de guerre',
+    preview: YTpreview,
+    created_at: new Date(),
+  },
+])
+const creatorsTrends = ref<Array<PropsAvatarWithName>>([
+  {
+    firstname: 'Gaspard',
+    lastname: 'Proust',
+    picture: PP,
+  },
+  {
+    firstname: 'Gaspard',
+    lastname: 'Proust',
+    picture: PP,
+  },
+  {
+    firstname: 'Gaspard',
+    lastname: 'Proust',
+    picture: PP,
+  },
+  {
+    firstname: 'Gaspard',
+    lastname: 'Proust',
+    picture: PP,
+  },
 ]);
 </script>
 
@@ -42,7 +83,26 @@ const filters = ref<Array<string>>([
       <h2>Vidéos tendances</h2>
       <a href="#">Voir plus</a>
     </header>
-    <main class="trends--videos--slider" />
+    <div class="trends--videos--slider">
+      <card
+        v-for="(video, index) in videosTrends"
+        :key="index"
+        :media="video"
+      />
+    </div>
+  </section>
+  <section class="trends--creators container">
+    <header class="trends--creators--header">
+      <h2>Créateurs Tendances</h2>
+      <a href="#">Voir plus</a>
+    </header>
+    <div class="trends--creators--slider">
+      <avatar-with-name
+        v-for="(creator, index) in creatorsTrends"
+        :key="index"
+        :user-data="creator"
+      />
+    </div>
   </section>
   <navigation />
 </template>
@@ -119,6 +179,48 @@ const filters = ref<Array<string>>([
       letter-spacing: -0.02em;
       text-decoration: none;
     }
+  }
+
+  &--slider {
+    display: -webkit-box;
+    margin-top: 1rem;
+    overflow-x: auto;
+
+    div {
+      margin-right: .8rem;
+    }
+  }
+}
+
+.trends--creators {
+  margin-top: 30px;
+
+  &--header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    h2 {
+      font-size: 17px;
+      color: #1F2E45;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    a {
+      color: #790D0D;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+  }
+
+  &--slider {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
   }
 }
 </style>

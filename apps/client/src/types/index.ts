@@ -17,3 +17,9 @@ export interface CardWidthData {
     avatar: string;
   };
 }
+
+export interface PropsAvatarWithName {
+  firstname: string;
+  lastname: string;
+  picture: string;
+}
