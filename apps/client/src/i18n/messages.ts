@@ -37,6 +37,20 @@ export default {
       noData: 'No publication saved',
       noBookmarks: 'Added recently',
     },
+    discover: {
+      filters: [
+        'Geopolitics',
+        'Report',
+        'News',
+        'France',
+        'History',
+        'Society',
+      ],
+      inputPlaceholder: 'Search a creator or a video',
+      trendsVideosTitle: 'Trending videos',
+      trendsCreatorsTitle: 'Trending creators',
+      cta: 'See more',
+    },
   },
   fr: {
     appNotAvailable: 'App non disponible sur ordinateur',
@@ -75,6 +89,20 @@ export default {
     bookmarks: {
       noData: 'Aucune publication sauvegardée',
       noBookmarks: 'Ajoutés recemment',
+    },
+    discover: {
+      filters: [
+        'Géopolitique',
+        'Reportage',
+        'Actualité',
+        'France',
+        'Histoire',
+        'Société',
+      ],
+      inputPlaceholder: 'Rechercher un créateur ou une vidéo',
+      trendsVideosTitle: 'Vidéos tendances',
+      trendsCreatorsTitle: 'Créateurs tendances',
+      cta: 'Voir plus',
     },
   },
 };

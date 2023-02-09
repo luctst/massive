@@ -3,15 +3,10 @@ import { ref } from 'vue';
 import { Media, PropsAvatarWithName } from '@/types/index';
 import YTpreview from '@/assets/youtube-screen.svg';
 import PP from '@/assets/profil-pic1.svg';
+import { useI18n } from 'vue-i18n';
 
-const filters = ref<Array<string>>([
-  'Géopolitique',
-  'Reportage',
-  'Actualité',
-  'France',
-  'Histoire',
-  'Société',
-]);
+const i18n = useI18n();
+const filters = ref<Array<string>>(i18n.getLocaleMessage(i18n.locale.value).discover.filters);
 const videosTrends = ref<Array<Media>>([
   {
     author: 'Jean Masset',
@@ -64,7 +59,7 @@ const creatorsTrends = ref<Array<PropsAvatarWithName>>([
         id="research"
         type="text"
         name="research"
-        placeholder="Rechercher un créateur"
+        :placeholder="$t('discover.inputPlaceholder')"
       >
     </div>
   </section>
@@ -80,8 +75,8 @@ const creatorsTrends = ref<Array<PropsAvatarWithName>>([
   </section>
   <section class="trends--videos container">
     <header class="trends--videos--header">
-      <h2>Vidéos tendances</h2>
-      <a href="#">Voir plus</a>
+      <h2>{{ $t('discover.trendsVideosTitle') }}</h2>
+      <a href="#">{{ $t('discover.cta') }}</a>
     </header>
     <div class="trends--videos--slider">
       <card
@@ -93,8 +88,8 @@ const creatorsTrends = ref<Array<PropsAvatarWithName>>([
   </section>
   <section class="trends--creators container">
     <header class="trends--creators--header">
-      <h2>Créateurs Tendances</h2>
-      <a href="#">Voir plus</a>
+      <h2>{{ $t('discover.trendsCreatorsTitle') }}</h2>
+      <a href="#">{{ $t('discover.cta') }}</a>
     </header>
     <div class="trends--creators--slider">
       <avatar-with-name
