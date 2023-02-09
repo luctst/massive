@@ -1,15 +1,19 @@
+export interface Media {
+  length: number;
+  title: string;
+  preview: string;
+  created_at: Date;
+  author?: string;
+  description?: string;
+  likes?: Array<object>;
+  comments?: Array<object>;
+}
+
 export interface CardWidthData {
-  media: {
-    length: number;
-    title: string;
-    preview: string;
-    likes?: Array<object>;
-    comments?: Array<object>;
-  };
+  media: Media;
   user: {
     name: string;
     family_name: string;
     avatar: string;
   };
-  created_at: Date;
 }
