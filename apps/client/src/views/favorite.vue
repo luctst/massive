@@ -12,13 +12,13 @@ const bookmarks = ref<Array<CardWidthData>>([
       likes: [],
       comments: [],
       preview: YTpreview,
+      created_at: new Date(),
     },
     user: {
       name: 'Gaspard',
       family_name: 'Guerlain',
       avatar: PP,
     },
-    created_at: new Date(),
   },
   {
     media: {
@@ -27,13 +27,13 @@ const bookmarks = ref<Array<CardWidthData>>([
       likes: [{}, {}],
       comments: [],
       preview: YTpreview,
+      created_at: new Date(),
     },
     user: {
       name: 'Gaspard',
       family_name: 'Guerlain',
       avatar: PP,
     },
-    created_at: new Date(),
   }
 ]);
 </script>
