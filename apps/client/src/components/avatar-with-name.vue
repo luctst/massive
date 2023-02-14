@@ -12,7 +12,7 @@ const fullname = computed(() => `${props.userData.firstname} ${props.userData.la
 <template>
   <div class="avatar">
     <div class="avatar--picture is__container__img">
-      <img :src="props.userData.picture">
+      <img :src="props.userData.avatar">
     </div>
     <p class="avatar--username">
       {{ fullname }}

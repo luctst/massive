@@ -9,14 +9,28 @@ const i18n = useI18n();
 const filters = ref<Array<string>>(i18n.getLocaleMessage(i18n.locale.value).discover.filters);
 const videosTrends = ref<Array<Media>>([
   {
-    author: 'Jean Masset',
+    id: 1,
+    author: {
+      id: 12,
+      firstname: 'Jean',
+      lastname: 'Masset',
+      avatar: PP,
+      bookmarks: [],
+    },
     length: 50000,
     title: 'La France, une histoire de guerre',
     preview: YTpreview,
     created_at: new Date(),
   },
   {
-    author: 'Jean Masset',
+    id: 2,
+    author: {
+      id: 12,
+      firstname: 'Jean',
+      lastname: 'Masset',
+      avatar: PP,
+      bookmarks: [],
+    },
     length: 50000,
     title: 'La France, une histoire de guerre',
     preview: YTpreview,
@@ -27,22 +41,22 @@ const creatorsTrends = ref<Array<PropsAvatarWithName>>([
   {
     firstname: 'Gaspard',
     lastname: 'Proust',
-    picture: PP,
+    avatar: PP,
   },
   {
     firstname: 'Gaspard',
     lastname: 'Proust',
-    picture: PP,
+    avatar: PP,
   },
   {
     firstname: 'Gaspard',
     lastname: 'Proust',
-    picture: PP,
+    avatar: PP,
   },
   {
     firstname: 'Gaspard',
     lastname: 'Proust',
-    picture: PP,
+    avatar: PP,
   },
 ]);
 </script>

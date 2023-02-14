@@ -4,7 +4,7 @@ export interface Media {
   title: string;
   preview: string;
   created_at: Date;
-  author?: string;
+  author?: UserStore;
   description?: string;
   likes?: Array<Likes>;
   comments?: Array<Comments>;
@@ -22,16 +22,16 @@ export interface CardWidthData {
 export interface PropsAvatarWithName {
   firstname: string;
   lastname: string;
-  picture: string;
+  avatar: string;
 }
 
 export interface UserStore {
   id: number;
-  isConnected: boolean;
   firstname: string;
   lastname: string;
-  bookmarks: Array<number> | null;
   avatar: string | null;
+  bookmarks: Array<Article | Media> | null;
+  isConnected?: boolean;
 }
 
 export interface Likes {
@@ -58,7 +58,9 @@ export interface Comments {
 export interface Article {
   id: number;
   title: string;
-  likes: Array<Likes>;
-  comments: Array<object>;
   content: string;
+  author: UserStore;
+  createdAt: Date;
+  likes?: Array<Likes>;
+  comments?: Array<object>;
 }

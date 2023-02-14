@@ -7,11 +7,12 @@ import PP from '@/assets/profil-pic1.svg';
 const bookmarks = ref<Array<CardWidthData>>([
   {
     media: {
+      id: 23,
       length: 5000,
       title: 'Bruno le maire face aux jeunes',
+      preview: YTpreview,
       likes: [],
       comments: [],
-      preview: YTpreview,
       created_at: new Date(),
     },
     user: {
@@ -22,9 +23,10 @@ const bookmarks = ref<Array<CardWidthData>>([
   },
   {
     media: {
+      id: 25,
       length: 500000,
       title: 'Bruno le maire face aux jeunes',
-      likes: [{}, {}],
+      likes: [],
       comments: [],
       preview: YTpreview,
       created_at: new Date(),

@@ -7,6 +7,11 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AvatarWithName: typeof import('./src/components/avatar-with-name.vue')['default']
+    Card: typeof import('./src/components/card.vue')['default']
+    CardWithUserData: typeof import('./src/components/card-with-user-data.vue')['default']
+    Navigation: typeof import('./src/components/navigation.vue')['default']
+    NavigationHeader: typeof import('./src/components/navigation-header.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

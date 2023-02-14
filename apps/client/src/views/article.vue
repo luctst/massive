@@ -1,28 +1,60 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
+import { marked } from 'marked';
 import { Article } from '@/types/index';
 import { useUserStore } from '@/stores/user';
+import PP from '@/assets/profil-pic1.svg';
 
 const article = ref<Article | null>(null);
 const articleLoaded = ref<boolean>(false);
 const userStore = useUserStore();
 
-const userHasLikeArticles = computed(() => {
-  if (article.value?.likes.find((like) => like.user.id === userStore.id)) return true;
-  return false;
+const userHasLikeArticles = computed(() => article.value?.likes!.find((like) => like.user.id === userStore.id));
+const userHasBookmark = computed(() => userStore.bookmarks?.find((bookmark) => bookmark.id === article.value?.id));
+const articleContent = computed(() => {
+  marked.setOptions({
+    breaks: true,
+    gfm: true,
+  });
+
+  return marked(article.value?.content || '')
 });
+
+const handleBookmark = () => {
+  if (userHasBookmark.value) {
+    userStore.bookmarks?.splice(
+      userStore.bookmarks.findIndex((bookmark) => bookmark.id === article.value?.id),
+      1,
+    );
+    return;
+  }
+
+  userStore.bookmarks?.push({
+    id: 1,
+    title: article.value?.title!,
+    createdAt: new Date(),
+    content: 'elit eiusmod laboris laboris',
+    author: {
+      id: 66,
+      firstname: 'Foo',
+      lastname: 'Bar',
+      avatar: PP,
+      bookmarks: null,
+    },
+  });
+};
 
 const handleLikes = () => {
   if (userHasLikeArticles.value) {
-    article.value?.likes.splice(
-      article.value?.likes.findIndex((like) => like.user.id === userStore.id),
+    article.value?.likes!.splice(
+      article.value?.likes!.findIndex((like) => like.user.id === userStore.id),
       1,
     );
     return;
   }
 
 
-  article.value?.likes.push({
+  article.value?.likes!.push({
     id: Math.floor(Math.random() * 100),
     user: {
       id: userStore.id,
@@ -35,9 +67,18 @@ onMounted(async () => {
   article.value = {
     id: 1,
     title: 'Le passage à l\'informatique chez les députés européens',
-    content: 'Article content',
+    content: '<p class="is__article__content">Article content</p><p class="is__article__content">Sunt velit ea deserunt ullamco excepteur do anim ex sint anim.Sunt velit ea deserunt ullamco excepteur do anim ex sint anim.Sunt velit ea deserunt ullamco excepteur do anim ex sint anim.Sunt velit ea deserunt ullamco excepteur do anim ex sint anim.Sunt velit ea deserunt ullamco excepteur do anim ex sint anim.Sunt velit ea deserunt ullamco excepteur do anim ex sint anim.Sunt velit ea deserunt ullamco excepteur do anim ex sint anim.</p><p class="is__article__content">Esse sit labore est et. Magna aute aliqua fugiat ullamco ipsum. Enim consectetur fugiat adipisicing ipsum nisi quis occaecat est ullamco. Amet adipisicing minim ullamco reprehenderit qui aliquip enim aliquip labore magna exercitation voluptate exercitation sunt Lorem.</p>',
     likes: [],
     comments: [],
+    author: {
+      isConnected: false,
+      id: 12,
+      firstname: 'Foo',
+      lastname: 'Bar',
+      bookmarks: [],
+      avatar: PP,
+    },
+    createdAt: new Date(),
   };
   articleLoaded.value = true;
 });
@@ -62,20 +103,37 @@ onMounted(async () => {
             alt="likes"
             @click="handleLikes"
           >
-          <span>{{ article?.likes.length }}</span>
+          <span>{{ article?.likes!.length }}</span>
         </div>
         <div class="is__container__img title--actions--comments">
           <img
             src="@/assets/comments.svg"
             alt="comments"
           >
-          <span>{{ article?.comments.length }}</span>
+          <span>{{ article?.comments!.length }}</span>
         </div>
         <div class="is__container__img title--actions--bookmark">
           <img
+            v-if="userHasBookmark"
+            src="@/assets/bookmark-blue.svg"
+            alt="bookmark"
+            @click="handleBookmark"
+          />
+          <img
+            v-else
             src="@/assets/bookmark-transp.svg"
             alt="bookmark"
+            @click="handleBookmark"
           >
+        </div>
+      </div>
+    </section>
+    <section class="content container" v-html="articleContent"></section>
+    <section class="container author">
+      <div class="author--infos">
+        <div class="is__container__img"></div>
+        <div class="author--infos--metadata">
+          <p>{{ article?.author.firstname }} {{ article?.author.lastname }}</p>
         </div>
       </div>
     </section>
@@ -117,5 +175,9 @@ onMounted(async () => {
       margin-left: auto;
     }
   }
+}
+
+.content {
+  margin-top: 1rem;
 }
 </style>
