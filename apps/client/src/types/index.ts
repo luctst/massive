@@ -23,3 +23,10 @@ export interface PropsAvatarWithName {
   lastname: string;
   picture: string;
 }
+
+export interface UserStore {
+  isConnected: boolean;
+  firstname: string;
+  lastname: string;
+  avatar: string | null;
+}
