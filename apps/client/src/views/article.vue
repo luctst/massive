@@ -31,7 +31,7 @@ const handleBookmark = () => {
 
   userStore.bookmarks?.push({
     id: 1,
-    title: article.value?.title!,
+    title: article.value?.title || '',
     createdAt: new Date(),
     content: 'elit eiusmod laboris laboris',
     author: {
@@ -118,7 +118,7 @@ onMounted(async () => {
             src="@/assets/bookmark-blue.svg"
             alt="bookmark"
             @click="handleBookmark"
-          />
+          >
           <img
             v-else
             src="@/assets/bookmark-transp.svg"
@@ -128,10 +128,13 @@ onMounted(async () => {
         </div>
       </div>
     </section>
-    <section class="content container" v-html="articleContent"></section>
+    <section
+      class="content container"
+      v-html="articleContent"
+    />
     <section class="container author">
       <div class="author--infos">
-        <div class="is__container__img"></div>
+        <div class="is__container__img" />
         <div class="author--infos--metadata">
           <p>{{ article?.author.firstname }} {{ article?.author.lastname }}</p>
         </div>
