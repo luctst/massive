@@ -25,6 +25,17 @@ export interface PropsAvatarWithName {
   avatar: string;
 }
 
+export interface Comments {
+  author: {
+    id: number;
+    firstname: string;
+    lastname: string;
+  };
+  content: string;
+  createdAt: Date;
+  likes: Array<number>;
+}
+
 export interface UserStore {
   id: number;
   firstname: string;
@@ -51,7 +62,7 @@ export interface Comments {
     commentAt: Date;
     avatar?: string;
   };
-  likes: Array<Likes>;
+  likes: Array<number>;
   content: string;
 }
 

@@ -4,10 +4,28 @@ import { marked } from 'marked';
 import { Article } from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import PP from '@/assets/profil-pic1.svg';
+import formatDate from '@/utils/formatDate';
 
 const article = ref<Article | null>(null);
 const articleLoaded = ref<boolean>(false);
 const userStore = useUserStore();
+const cc = [
+  {
+    author: {
+      id: 2,
+      firstname: 'Foo',
+      lastname: 'Bar',
+    },
+    content: 'Lorem ipsum dolor sit amet',
+    createdAt: new Date(),
+    likes: [
+      1,
+      2,
+      3,
+      4
+    ],
+  }
+];
 
 const userHasLikeArticles = computed(() => article.value?.likes!.find((like) => like.user.id === userStore.id));
 const userHasBookmark = computed(() => userStore.bookmarks?.find((bookmark) => bookmark.id === article.value?.id));
@@ -134,12 +152,20 @@ onMounted(async () => {
     />
     <section class="container author">
       <div class="author--infos">
-        <div class="is__container__img" />
+        <div class="is__container__img">
+          <img src="@/assets/profil-pic1.svg">
+        </div>
         <div class="author--infos--metadata">
           <p>{{ article?.author.firstname }} {{ article?.author.lastname }}</p>
+          <p>Publié il y a <span>{{ formatDate(article?.createdAt || new Date()) }}</span></p>
         </div>
       </div>
+      <div class="author--subscribe is__container__img">
+        Abonné
+        <img src="@/assets/Tick-blue.svg">
+      </div>
     </section>
+    <comments :comments="cc" />
   </template>
   <div
     v-else
@@ -182,5 +208,50 @@ onMounted(async () => {
 
 .content {
   margin-top: 1rem;
+}
+
+.author {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+
+  &--infos {
+    align-items: center;
+    display: flex;
+
+    div:first-child {
+      height: 42px;
+      width: 42px;
+    }
+
+    &--metadata {
+      margin-left: .7rem;
+
+      p {
+        margin: 0;
+      }
+
+      p:first-child {
+        color: #0F1419;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      p:last-child {
+        color: #536471;
+        font-size: 12px;
+      }
+    }
+  }
+
+  &--subscribe {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #9CA3AF;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
 }
 </style>
