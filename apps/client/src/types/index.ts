@@ -42,7 +42,10 @@ export interface UserStore {
   lastname: string;
   avatar: string | null;
   bookmarks: Array<Article | Media> | null;
+  followers: Array<UserStore> | null;
+  profilBackground?: string;
   isConnected?: boolean;
+  description?: string;
 }
 
 export interface Likes {

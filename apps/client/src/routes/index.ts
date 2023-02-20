@@ -69,5 +69,15 @@ export default createRouter({
         }
       },
     },
+    {
+      path: '/user/:id',
+      name: 'User',
+      component: () => import('@/views/user.vue'),
+      beforeEnter: () => {
+        if (!userIsAuthenticated()) {
+          return { name: 'Auth' };
+        }
+      },
+    },
   ],
 });
