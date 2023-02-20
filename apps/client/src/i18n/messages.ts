@@ -51,6 +51,11 @@ export default {
       trendsCreatorsTitle: 'Trending creators',
       cta: 'See more',
     },
+    comments: {
+      head: 'Comments',
+      createdAt: 'There is {creationTime}',
+      noComments: 'No comments for the moment',
+    },
   },
   fr: {
     appNotAvailable: 'App non disponible sur ordinateur',
@@ -103,6 +108,11 @@ export default {
       trendsVideosTitle: 'Vidéos tendances',
       trendsCreatorsTitle: 'Créateurs tendances',
       cta: 'Voir plus',
+    },
+    comments: {
+      head: 'Commentaires',
+      createdAt: 'Il y a {creationTime}',
+      noComments: 'Aucun commentaire pour le moment',
     },
   },
 };

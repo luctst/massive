@@ -20,31 +20,38 @@ const articleContent = (content: string): string => {
 <template>
   <section class="container comments">
     <div class="comments--head">
-      <span>{{ props.comments.length }} Commentaires</span>
+      <span>{{ props.comments.length }} {{ $t('comments.head') }}</span>
     </div>
-    <div
-      v-for="(comment, index) in props.comments"
-      :key="index"
-      class="comments--wrapper"
-    >
-      <p class="comments--wrapper--avatar">
-        {{ comment.author.firstname[0].toLowerCase() }}
-      </p>
-      <div class="comments--wrapper--msg">
-        <p>{{ comment.author.firstname }} {{ comment.author.lastname[0].toLowerCase() }}.</p>
-        <p v-html="articleContent(comment.content)" />
+    <template v-if="!props.comments.length">
+      <div class="comments--nocomments">
+        {{ $t('comments.noComments') }}
       </div>
-      <div class="comments--wrapper--metadata">
-        <p>Il y a {{ formatDate(comment.createdAt) }}</p>
-        <p>
-          {{ comment.likes.length }}
-          <img
-            src="@/assets/like-transp.svg"
-            alt="like"
-          >
+    </template>
+    <template v-else>
+      <div
+        v-for="(comment, index) in props.comments"
+        :key="index"
+        class="comments--wrapper"
+      >
+        <p class="comments--wrapper--avatar">
+          {{ comment.author.firstname[0].toLowerCase() }}
         </p>
+        <div class="comments--wrapper--msg">
+          <p>{{ comment.author.firstname }} {{ comment.author.lastname[0].toLowerCase() }}.</p>
+          <p v-html="articleContent(comment.content)" />
+        </div>
+        <div class="comments--wrapper--metadata">
+          <p>{{ $t('comments.createdAt', { creationTime: formatDate(comment.createdAt)}) }}</p>
+          <p>
+            {{ comment.likes.length }}
+            <img
+              src="@/assets/like-transp.svg"
+              alt="like"
+            >
+          </p>
+        </div>
       </div>
-    </div>
+    </template>
   </section>
 </template>
 
@@ -58,6 +65,13 @@ const articleContent = (content: string): string => {
     text-decoration: underline;
     text-underline-offset: 10px;
     letter-spacing: -0.02em;
+  }
+
+  &--nocomments {
+    font-size: .7rem;
+    color: #070B30;
+    text-align: center;
+    margin-top: 2rem;
   }
 
   &--wrapper {
