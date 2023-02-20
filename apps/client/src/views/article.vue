@@ -167,10 +167,7 @@ onMounted(async () => {
     </section>
     <comments :comments="cc" />
   </template>
-  <div
-    v-else
-    class="loader"
-  />
+  <loader v-else />
 </template>
 
 <style scoped lang="scss">
