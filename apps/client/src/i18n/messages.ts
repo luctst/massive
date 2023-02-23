@@ -56,6 +56,13 @@ export default {
       createdAt: 'There is {creationTime}',
       noComments: 'No comments for the moment',
     },
+    userAbout: {
+      tabTitle: 'About',
+      publications: 'Publications',
+      contributors: 'Active contributors',
+      socialTitle: 'My social networks',
+      activeSince: 'Active since {date}',
+    },
   },
   fr: {
     appNotAvailable: 'App non disponible sur ordinateur',
@@ -113,6 +120,13 @@ export default {
       head: 'Commentaires',
       createdAt: 'Il y a {creationTime}',
       noComments: 'Aucun commentaire pour le moment',
+    },
+    userAbout: {
+      tabTitle: 'À propos',
+      publications: 'Publications',
+      contributors: 'Contributeurs actifs',
+      socialTitle: 'Mes réseaux sociaux',
+      activeSince: 'Actif depuis le {date}',
     },
   },
 };

@@ -36,6 +36,8 @@ export interface Comments {
   likes: Array<number>;
 }
 
+export type SocialObject = 'facebook' | 'twitter' | 'instagram' | 'linkedin' | 'web' | 'youtube';
+
 export interface UserStore {
   id: number;
   firstname: string;
@@ -43,6 +45,12 @@ export interface UserStore {
   avatar: string | null;
   bookmarks: Array<Article | Media> | null;
   followers: Array<UserStore> | null;
+  following: Array<UserStore> | null;
+  media: Array<Media | Article> | null;
+  createdAt: Date;
+  social?: {
+    [key in SocialObject]: string;
+  }; 
   profilBackground?: string;
   isConnected?: boolean;
   description?: string;
