@@ -4,9 +4,9 @@ import { Media, PropsAvatarWithName } from '@/types/index';
 import YTpreview from '@/assets/youtube-screen.svg';
 import PP from '@/assets/profil-pic1.svg';
 import { useI18n } from 'vue-i18n';
+import messages from '@/i18n/messages';
 
 const i18n = useI18n();
-const filters = ref<Array<string>>(i18n.getLocaleMessage(i18n.locale.value).discover.filters);
 const videosTrends = ref<Array<Media>>([
   {
     id: 1,
@@ -20,6 +20,7 @@ const videosTrends = ref<Array<Media>>([
       following: [],
       media: [],
       createdAt: new Date(),
+      social: {},
     },
     length: 50000,
     title: 'La France, une histoire de guerre',
@@ -38,6 +39,7 @@ const videosTrends = ref<Array<Media>>([
       following: [],
       media: [],
       createdAt: new Date(),
+      social: {},
     },
     length: 50000,
     title: 'La France, une histoire de guerre',
@@ -88,7 +90,7 @@ const creatorsTrends = ref<Array<PropsAvatarWithName>>([
   <section class="filters container">
     <div class="filters--wrapper">
       <span
-        v-for="(ff, index) in filters"
+        v-for="(ff, index) in messages[i18n.locale.value].discover.filters"
         :key="index"
       >
         {{ ff }}

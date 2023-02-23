@@ -68,6 +68,7 @@ const handleBookmark = () => {
       following: null,
       media: null,
       createdAt: new Date(),
+      social: {},
     },
   });
 };
@@ -109,6 +110,7 @@ onMounted(async () => {
       following: [],
       media: [],
       createdAt: new Date(),
+      social: {},
     },
     createdAt: new Date(),
   };

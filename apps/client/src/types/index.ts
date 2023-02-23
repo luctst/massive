@@ -36,8 +36,6 @@ export interface Comments {
   likes: Array<number>;
 }
 
-export type SocialObject = 'facebook' | 'twitter' | 'instagram' | 'linkedin' | 'web' | 'youtube';
-
 export interface UserStore {
   id: number;
   firstname: string;
@@ -48,8 +46,8 @@ export interface UserStore {
   following: Array<UserStore> | null;
   media: Array<Media | Article> | null;
   createdAt: Date;
-  social?: {
-    [key in SocialObject]: string;
+  social: {
+    [key: string]: string;
   }; 
   profilBackground?: string;
   isConnected?: boolean;

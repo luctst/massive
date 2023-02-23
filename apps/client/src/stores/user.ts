@@ -14,6 +14,7 @@ export const useUserStore = defineStore({
     avatar: PP,
     followers: [],
     createdAt: new Date(),
+    social: {},
     following: [
       {
         id: 0,
@@ -26,6 +27,7 @@ export const useUserStore = defineStore({
         profilBackground: BG,
         bookmarks: [],
         createdAt: new Date(),
+        social: {},
         description: 'Lorem sint eu officia cillum. Dolor Lorem ad sit cupidatat magna ut culpa non Lorem voluptate anim incididunt incididunt reprehenderit nisi.',
         media: [
           {

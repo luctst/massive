@@ -33,9 +33,8 @@ const returnImgSocial = (socialId: string): string => {
 };
 
 const userCreatedAt = computed(() => {
-  const date = new Date(props.userData.createdAt);
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  return date.toLocaleDateString('fr-FR', options);
+  const date = props.userData.createdAt;
+  return `${date.getDate()} ${date.toLocaleDateString('fr-FR', { month: 'long' })} ${date.getFullYear()}`;
 });
 </script>
 

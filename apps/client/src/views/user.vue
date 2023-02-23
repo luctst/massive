@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, ComponentPublicInstance } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { marked } from 'marked';
 import { useI18n } from 'vue-i18n';
 import { UserStore } from '@/types/index';
@@ -10,10 +10,16 @@ import YTpreview from '@/assets/youtube-screen.svg';
 import PP from '@/assets/profil-pic1.svg';
 import BG from '@/assets/Rectangle24.svg';
 
+interface Category {
+  active: boolean;
+  tabContent: string;
+  componentRelated: unknown;
+}
+
 const { t } = useI18n();
 const userData = ref<UserStore>({} as UserStore);
 const dataFetched = ref<boolean>(false);
-const category = ref<Array<{ active: boolean; tabContent: string; componentRelated: ComponentPublicInstance}>>([
+const category = ref<Array<Category>>([
   {
     active: true,
     tabContent: 'Publications',
