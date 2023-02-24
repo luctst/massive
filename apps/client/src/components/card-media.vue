@@ -12,6 +12,13 @@ const props = withDefaults(defineProps<{
   showActions: true,
 });
 
+const emits = defineEmits<{
+  (e: 'removeLike', mediaId: number, likeIndex: number): void;
+  (e: 'addLike', mediaId: number): void;
+  (e: 'removeBookmark', bookmarkIndex: number): void;
+  (e: 'addBookmark', mediaId: number): void;
+}>();
+
 const userFullName = computed(() => `${props.card.author.firstname} ${props.card.author.lastname}`);
 </script>
 

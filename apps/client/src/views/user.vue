@@ -3,6 +3,7 @@ import { onMounted, ref, computed } from 'vue';
 import { marked } from 'marked';
 import { useI18n } from 'vue-i18n';
 import { UserStore } from '@/types/index';
+import { useUserStore } from '@/stores/user';
 import UserAbout from '@/components/user-about.vue';
 import UserCommunity from '@/components/user-community.vue';
 import UserPublication from '@/components/user-publications.vue';
@@ -14,6 +15,7 @@ interface Category {
   componentRelated: unknown;
 }
 
+const userStore = useUserStore();
 const { t } = useI18n();
 const userData = ref<UserStore>({} as UserStore);
 const dataFetched = ref<boolean>(false);
@@ -38,6 +40,28 @@ const category = ref<Array<Category>>([
 const userFullName = computed(() => {
   return `${userData.value.firstname} ${userData.value.lastname}`;
 });
+
+const addLike = (mediaId: number) => {
+  const mediaIndex = userData.value.media?.findIndex((m) => m.id === mediaId);
+  userData.value.media[mediaIndex].likes.push({
+    id: Math.floor(Math.random() * 1000),
+    author: userStore,
+  });
+};
+
+const removeLike = (mediaId: number, likeIndex: number) => {
+  const mediaIndex = userData.value.media?.findIndex((m) => m.id === mediaId);
+  userData.value.media[mediaIndex].likes.splice(likeIndex, 1);
+};
+
+const addBookmark = (mediaId: number) => {
+  const bookmarkToAdd = userData.value.media?.find((m) => m.id === mediaId);
+  userStore.bookmarks?.push(bookmarkToAdd);
+};
+
+const removeBookmark = (bookmarkIndex: number) => {
+  userStore.bookmarks?.splice(bookmarkIndex, 1);
+}
 
 const descriptionMarkdown = computed(() => {
   marked.setOptions({
@@ -122,6 +146,11 @@ onMounted(async () => {
           :is="category.find((c) => c.active)?.componentRelated"
           :user-data="userData"
           :show-comments-head="false"
+          :user-auth="userStore"
+          @add-like="addLike"
+          @remove-like="removeLike"
+          @add-bookmark="addBookmark"
+          @remove-bookmark="removeBookmark"
         />
       </keep-alive>
     </main>

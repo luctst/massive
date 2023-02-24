@@ -1,3 +1,8 @@
+export interface MediaType {
+  isMedia: boolean;
+  isArticle: boolean;
+}
+
 export interface Media {
   id: number;
   length: number;
@@ -8,6 +13,7 @@ export interface Media {
   likes: Array<Likes>;
   comments: Array<Comments>;
   description?: string;
+  type: MediaType;
 }
 
 export interface UserStore {
@@ -50,4 +56,5 @@ export interface Article {
   createdAt: Date;
   likes: Array<Likes>;
   comments: Array<Comments>;
+  type: MediaType;
 }

@@ -5,6 +5,10 @@ import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const bookmarks = ref<Array<Media | Article>>(userStore.bookmarks || []);
+
+const removeBookmark = (bookmarkIndex: number) => {
+  userStore.bookmarks?.splice(bookmarkIndex, 1);
+}
 </script>
 
 <template>
@@ -20,11 +24,23 @@ const bookmarks = ref<Array<Media | Article>>(userStore.bookmarks || []);
         <p>{{ $t('bookmarks.noBookmarks') }}</p>
       </header>
       <section class="card--container">
-        <card-media
-          v-for="(bookmark, index) in bookmarks"
-          :key="index"
-          :card="bookmark"
-        />
+        <template
+        v-for="(bookmark, index) in bookmarks"
+        :key="index">
+          <card-media
+            v-if="bookmark.type.isMedia"
+            :card="bookmark"
+            :user-auth-id="userStore.id"
+          />
+          <card-article
+            v-else
+            :card="bookmark"
+            :user-auth-id="userStore.id"
+            :user-auth-bookmarks="userStore.bookmarks"
+            @remove-bookmark="removeBookmark"
+            @remove-like="removeLike"
+          />
+        </template>
       </section>
     </template>
   </main>
