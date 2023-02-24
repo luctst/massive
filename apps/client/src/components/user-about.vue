@@ -52,9 +52,16 @@ const userCreatedAt = computed(() => {
   <section class="infos container">
     <div>{{ $t('userAbout.tabTitle') }}</div>
     <p
+      v-if="userData.description"
       class="is__article__content"
-      v-html="userData.description || ''"
+      v-html="userData.description"
     />
+    <p
+      v-else
+      class="no--data"
+    >
+      {{ $t('userAbout.noDescription') }}
+    </p>
   </section>
   <section class="social container">
     <div>{{ $t('userAbout.socialTitle') }}</div>
@@ -71,6 +78,12 @@ const userCreatedAt = computed(() => {
         </a>
       </li>
     </ul>
+    <p
+      v-else
+      class="no--data"
+    >
+      {{ $t('userAbout.noSocial') }}
+    </p>
   </section>
   <div class="createdat container">
     {{ $t('userAbout.activeSince', { date: userCreatedAt }) }}
@@ -78,6 +91,12 @@ const userCreatedAt = computed(() => {
 </template>
 
 <style scoped lang="scss">
+.no--data {
+  font-size: .7rem;
+  color: #070B30;
+  margin-top: 1rem;
+}
+
 .about {
   display: flex;
 

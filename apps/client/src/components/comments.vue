@@ -3,9 +3,12 @@ import { marked } from 'marked';
 import { Comments } from '@/types/index';
 import formatDate from '@/utils/formatDate';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   comments: Comments[];
-}>();
+  showCommentsHead: boolean;
+}>(), {
+  showCommentsHead: true,
+});
 
 const articleContent = (content: string): string => {
   marked.setOptions({
@@ -19,7 +22,10 @@ const articleContent = (content: string): string => {
 
 <template>
   <section class="container comments">
-    <div class="comments--head">
+    <div
+      v-if="props.showCommentsHead"
+      class="comments--head"
+    >
       <span>{{ props.comments.length }} {{ $t('comments.head') }}</span>
     </div>
     <template v-if="!props.comments.length">

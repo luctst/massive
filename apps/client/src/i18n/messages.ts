@@ -62,6 +62,8 @@ export default {
       contributors: 'Active contributors',
       socialTitle: 'My social networks',
       activeSince: 'Active since {date}',
+      noSocial: 'No social network',
+      noDescription: 'No description',
     },
   },
   fr: {
@@ -127,6 +129,8 @@ export default {
       contributors: 'Contributeurs actifs',
       socialTitle: 'Mes réseaux sociaux',
       activeSince: 'Actif depuis le {date}',
+      noSocial: 'Aucun réseau social',
+      noDescription: 'Aucune description',
     },
   },
 };

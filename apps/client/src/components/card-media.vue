@@ -1,25 +1,36 @@
 <script setup lang="ts">
-import { CardWidthData } from '@/types/index';
+import { computed } from 'vue';
+import { Media } from '@/types/index';
 import utils from '@/utils/index';
 
-const props = defineProps<{
-  card: CardWidthData;
-}>();
+const props = withDefaults(defineProps<{
+  card: Media;
+  showHead?: boolean;
+  showActions?: boolean;
+}>(), {
+  showHead: true,
+  showActions: true,
+});
+
+const userFullName = computed(() => `${props.card.author.firstname} ${props.card.author.lastname}`);
 </script>
 
 <template>
   <div class="card--container--item">
-    <div class="card--container--item--top">
+    <div
+      v-if="props.showHead"
+      class="card--container--item--top"
+    >
       <div class="card--container--item--top--user--data">
         <div class="is__container__img">
           <img
-            :src="props.card.user.avatar"
+            :src="props.card.author.avatar || 'https://via.placeholder.com/150'"
             alt="profil icon"
           >
         </div>
         <div class="card--container--item--top--user--name">
-          <p>{{ utils.formatUserName(props.card.user.name, props.card.user.family_name) }}</p>
-          <p>Il y a {{ utils.formatDate(props.card.media.created_at) }}</p>
+          <p>{{ utils.formatUserName(props.card.author.firstname, props.card.author.lastname) }}</p>
+          <p>Il y a {{ utils.formatDate(props.card.createdAt) }}</p>
         </div>
       </div>
       <span class="card--container--item--top--svg">
@@ -31,26 +42,37 @@ const props = defineProps<{
     </div>
     <div class="card--container--item--caption">
       <div class="card--container--item--caption--video is__container__img">
-        <img :src="props.card.media.preview">
-        <span>{{ utils.formatTime(props.card.media.length) }}</span>
+        <img :src="props.card.preview">
+        <span>{{ utils.formatTime(props.card.length) }}</span>
       </div>
       <div class="card--container--item--caption--metadata container">
-        <p>{{ props.card.media.title }}</p>
-        <div class="card--container--item--caption--metadata--action">
+        <p
+          v-if="!props.showActions"
+          class="card--container--item--caption--metadata--author"
+        >
+          {{ userFullName }}
+        </p>
+        <p class="card--container--item--caption--metadata--title">
+          {{ props.card.title }}
+        </p>
+        <div
+          v-if="props.showActions"
+          class="card--container--item--caption--metadata--action"
+        >
           <div class="likes-comments">
             <span class="likes">
               <img
                 src="@/assets/like.svg"
                 alt="like icon"
               >
-              {{ props.card.media.likes?.length }}
+              {{ props.card.likes?.length }}
             </span>
             <span class="comments">
               <img
                 src="@/assets/comments.svg"
                 alt="like icon"
               >
-              {{ props.card.media.comments?.length }}
+              {{ props.card.comments?.length }}
             </span>
           </div>
           <span class="subscription"><img
@@ -132,7 +154,17 @@ const props = defineProps<{
     &--metadata {
       padding-bottom: 1rem;
 
-      p {
+      &--author {
+        color: #9CA3AF;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        opacity: 0.88;
+        margin-top: .5rem;
+        margin-bottom: 0;
+      }
+
+      &--title {
         color: #1F2E45;
         font-size: 16px;
         font-weight: 700;

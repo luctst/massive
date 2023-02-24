@@ -6,9 +6,7 @@ import { UserStore } from '@/types/index';
 import UserAbout from '@/components/user-about.vue';
 import UserCommunity from '@/components/user-community.vue';
 import UserPublication from '@/components/user-publications.vue';
-import YTpreview from '@/assets/youtube-screen.svg';
-import PP from '@/assets/profil-pic1.svg';
-import BG from '@/assets/Rectangle24.svg';
+import mocks from '@/mocks/index';
 
 interface Category {
   active: boolean;
@@ -61,35 +59,7 @@ const switchCategory = (index: number) => {
 };
 
 onMounted(async () => {
-  userData.value = {
-    id: 0,
-    isConnected: true,
-    firstname: 'John',
-    lastname: 'Doe',
-    avatar: PP,
-    followers: [],
-    following: [],
-    profilBackground: BG,
-    bookmarks: [],
-    description: 'Lorem sint eu officia cillum. Dolor Lorem ad sit cupidatat magna ut culpa non Lorem voluptate anim incididunt incididunt reprehenderit nisi.',
-    media: [
-      {
-        id: 23,
-        length: 5000,
-        title: 'Bruno le maire face aux jeunes',
-        preview: YTpreview,
-        likes: [],
-        comments: [],
-        created_at: new Date(),
-      },
-    ],
-    social: {
-      web: 'https://www.google.com/',
-      instagram: 'https://www.instagram.com/',
-      youtube: 'https://www.youtube.com/',
-    },
-    createdAt: new Date(),
-  };
+  userData.value = mocks.user1;
   dataFetched.value = true;
 });
 </script>
@@ -151,6 +121,7 @@ onMounted(async () => {
         <component
           :is="category.find((c) => c.active)?.componentRelated"
           :user-data="userData"
+          :show-comments-head="false"
         />
       </keep-alive>
     </main>

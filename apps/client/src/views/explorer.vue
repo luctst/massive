@@ -1,73 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { Media, PropsAvatarWithName } from '@/types/index';
-import YTpreview from '@/assets/youtube-screen.svg';
-import PP from '@/assets/profil-pic1.svg';
+import { Media, UserStore } from '@/types/index';
 import { useI18n } from 'vue-i18n';
 import messages from '@/i18n/messages';
+import mocks from '@/mocks/index';
 
 const i18n = useI18n();
 const videosTrends = ref<Array<Media>>([
-  {
-    id: 1,
-    author: {
-      id: 12,
-      firstname: 'Jean',
-      lastname: 'Masset',
-      avatar: PP,
-      bookmarks: [],
-      followers: [],
-      following: [],
-      media: [],
-      createdAt: new Date(),
-      social: {},
-    },
-    length: 50000,
-    title: 'La France, une histoire de guerre',
-    preview: YTpreview,
-    created_at: new Date(),
-  },
-  {
-    id: 2,
-    author: {
-      id: 12,
-      firstname: 'Jean',
-      lastname: 'Masset',
-      avatar: PP,
-      bookmarks: [],
-      followers: [],
-      following: [],
-      media: [],
-      createdAt: new Date(),
-      social: {},
-    },
-    length: 50000,
-    title: 'La France, une histoire de guerre',
-    preview: YTpreview,
-    created_at: new Date(),
-  },
+  mocks.media1,
+  mocks.media2,
 ])
-const creatorsTrends = ref<Array<PropsAvatarWithName>>([
-  {
-    firstname: 'Gaspard',
-    lastname: 'Proust',
-    avatar: PP,
-  },
-  {
-    firstname: 'Gaspard',
-    lastname: 'Proust',
-    avatar: PP,
-  },
-  {
-    firstname: 'Gaspard',
-    lastname: 'Proust',
-    avatar: PP,
-  },
-  {
-    firstname: 'Gaspard',
-    lastname: 'Proust',
-    avatar: PP,
-  },
+const creatorsTrends = ref<Array<UserStore>>([
+  mocks.user1,
+  mocks.user2,
 ]);
 </script>
 
@@ -103,10 +48,12 @@ const creatorsTrends = ref<Array<PropsAvatarWithName>>([
       <a href="#">{{ $t('discover.cta') }}</a>
     </header>
     <div class="trends--videos--slider">
-      <card
+      <card-media
         v-for="(video, index) in videosTrends"
         :key="index"
-        :media="video"
+        :card="video"
+        :show-head="false"
+        :show-actions="false"
       />
     </div>
   </section>

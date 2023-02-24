@@ -1,43 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { CardWidthData } from '@/types/index';
-import YTpreview from '@/assets/youtube-screen.svg';
-import PP from '@/assets/profil-pic1.svg';
+import { Article, Media } from '@/types/index';
+import { useUserStore } from '@/stores/user';
 
-const bookmarks = ref<Array<CardWidthData>>([
-  {
-    media: {
-      id: 23,
-      length: 5000,
-      title: 'Bruno le maire face aux jeunes',
-      preview: YTpreview,
-      likes: [],
-      comments: [],
-      created_at: new Date(),
-    },
-    user: {
-      name: 'Gaspard',
-      family_name: 'Guerlain',
-      avatar: PP,
-    },
-  },
-  {
-    media: {
-      id: 25,
-      length: 500000,
-      title: 'Bruno le maire face aux jeunes',
-      likes: [],
-      comments: [],
-      preview: YTpreview,
-      created_at: new Date(),
-    },
-    user: {
-      name: 'Gaspard',
-      family_name: 'Guerlain',
-      avatar: PP,
-    },
-  }
-]);
+const userStore = useUserStore();
+const bookmarks = ref<Array<Media | Article>>(userStore.bookmarks || []);
 </script>
 
 <template>
@@ -53,7 +20,7 @@ const bookmarks = ref<Array<CardWidthData>>([
         <p>{{ $t('bookmarks.noBookmarks') }}</p>
       </header>
       <section class="card--container">
-        <card-with-user-data
+        <card-media
           v-for="(bookmark, index) in bookmarks"
           :key="index"
           :card="bookmark"

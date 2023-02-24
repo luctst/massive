@@ -9,10 +9,16 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AvatarWithName: typeof import('./src/components/avatar-with-name.vue')['default']
     Card: typeof import('./src/components/card.vue')['default']
+    CardMedia: typeof import('./src/components/card-media.vue')['default']
     CardWithUserData: typeof import('./src/components/card-with-user-data.vue')['default']
+    Comments: typeof import('./src/components/comments.vue')['default']
+    Loader: typeof import('./src/components/loader.vue')['default']
     Navigation: typeof import('./src/components/navigation.vue')['default']
     NavigationHeader: typeof import('./src/components/navigation-header.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UserAbout: typeof import('./src/components/user-about.vue')['default']
+    UserCommunity: typeof import('./src/components/user-community.vue')['default']
+    UserPublications: typeof import('./src/components/user-publications.vue')['default']
   }
 }
