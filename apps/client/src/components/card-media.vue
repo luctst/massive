@@ -12,13 +12,6 @@ const props = withDefaults(defineProps<{
   showActions: true,
 });
 
-const emits = defineEmits<{
-  (e: 'removeLike', mediaId: number, likeIndex: number): void;
-  (e: 'addLike', mediaId: number): void;
-  (e: 'removeBookmark', bookmarkIndex: number): void;
-  (e: 'addBookmark', mediaId: number): void;
-}>();
-
 const userFullName = computed(() => `${props.card.author.firstname} ${props.card.author.lastname}`);
 </script>
 
@@ -62,31 +55,10 @@ const userFullName = computed(() => `${props.card.author.firstname} ${props.card
         <p class="card--container--item--caption--metadata--title">
           {{ props.card.title }}
         </p>
-        <div
+        <media-actions
           v-if="props.showActions"
-          class="card--container--item--caption--metadata--action"
-        >
-          <div class="likes-comments">
-            <span class="likes">
-              <img
-                src="@/assets/like.svg"
-                alt="like icon"
-              >
-              {{ props.card.likes?.length }}
-            </span>
-            <span class="comments">
-              <img
-                src="@/assets/comments.svg"
-                alt="like icon"
-              >
-              {{ props.card.comments?.length }}
-            </span>
-          </div>
-          <span class="subscription"><img
-            src="@/assets/bookmark-blue.svg"
-            alt="icon bookmark blue"
-          ></span>
-        </div>
+          :media="props.card"
+        />
       </div>
     </div>
   </div>
