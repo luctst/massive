@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onBeforeMount, ref, toRefs } from 'vue';
-import { useRoute } from 'vue-router'; 
 import { Comments, Likes } from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import formatDate from '@/utils/formatDate';
@@ -10,21 +9,23 @@ interface CommentsLikedByUserAuth {
   hasBeenLiked: boolean;
 }
 
-const route = useRoute();
 const userStore = useUserStore();
 const commentsLikedByUserAuth = ref<Array<CommentsLikedByUserAuth>>([]);
 const newComment = ref<string>('');
 const props = withDefaults(defineProps<{
   comments: Comments[];
-  showCommentsHead: boolean;
-  showWriteMessageBox: boolean;
+  authorName: string;
+  authorLastname: string;
+  authorId: number;
+  showCommentsHead?: boolean;
+  showWriteMessageBox?: boolean;
 }>(), {
   showCommentsHead: true,
   showWriteMessageBox: true,
 });
 const { comments } = toRefs(props);
 
-const userAuthIsFollowing = computed(() => userStore.following?.some((follow) => follow.id === parseInt(route.params.id as string)));
+const userAuthIsFollowing = computed(() => userStore.following?.some((follow) => follow.id === props.authorId));
 const userAuthHasLiked = (likes: Array<Likes>): boolean => likes.some((like) => like.author.id === userStore.id);
 const handleLike = (commentIndex: number): void => {
   if (commentsLikedByUserAuth.value[commentIndex].hasBeenLiked) {
@@ -142,7 +143,7 @@ onBeforeMount(() => {
               alt="lock follow"
             >
           </div>
-          <p>S'abonner pour accéder <br> à la communauté de <span>Gaspard G.</span></p>
+          <p>S'abonner pour accéder <br> à la communauté de <span>{{ props.authorName }} {{ props.authorLastname }}</span></p>
         </div>
         <div class="loading-div" />
         <div class="loading-div" />

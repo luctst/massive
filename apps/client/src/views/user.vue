@@ -3,6 +3,7 @@ import { onMounted, ref, computed } from 'vue';
 import { marked } from 'marked';
 import { useI18n } from 'vue-i18n';
 import { UserStore } from '@/types/index';
+import { useUserStore } from '@/stores/user';
 import UserAbout from '@/components/user-about.vue';
 import UserCommunity from '@/components/user-community.vue';
 import UserPublication from '@/components/user-publications.vue';
@@ -15,6 +16,7 @@ interface Category {
 }
 
 const { t } = useI18n();
+const userStore = useUserStore();
 const userData = ref<UserStore>({} as UserStore);
 const dataFetched = ref<boolean>(false);
 const category = ref<Array<Category>>([
@@ -39,6 +41,8 @@ const userFullName = computed(() => {
   return `${userData.value.firstname} ${userData.value.lastname}`;
 });
 
+const isUserAuthFollowing = computed(() => userData.value.followers?.some((ff) => ff.id === userStore.id));
+
 const descriptionMarkdown = computed(() => {
   marked.setOptions({
     breaks: true,
@@ -59,7 +63,7 @@ const switchCategory = (index: number) => {
 };
 
 onMounted(async () => {
-  userData.value = mocks.user1;
+  userData.value = mocks.user2;
   dataFetched.value = true;
 });
 </script>
@@ -93,9 +97,22 @@ onMounted(async () => {
           <div>{{ userData.followers?.length }} Contributeurs</div>
         </div>
         <div class="creator--infos--right">
-          <div class="is__container__img">
+          <div
+            v-if="isUserAuthFollowing"
+            class="is__container__img"
+          >
             Abonné
             <img src="@/assets/Tick-blue.svg">
+          </div>
+          <div
+            v-else
+            class="is__container__img"
+          >
+            S'abonner
+            <img
+              src="@/assets/Lock.svg"
+              alt="s'abonner"
+            >
           </div>
         </div>
       </div>

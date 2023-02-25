@@ -118,7 +118,13 @@ onMounted(async () => {
         <img src="@/assets/Tick-blue.svg">
       </div>
     </section>
-    <comments :comments="article?.comments" />
+    <comments
+      :comments="article?.comments"
+      :author--name="article?.author.firstname"
+      :author-lastname="article?.author.lastname"
+      :author-id="article?.author.id"
+      :show-write-message-box="false"
+    />
   </template>
   <loader v-else />
 </template>
