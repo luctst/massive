@@ -50,7 +50,7 @@
 
 <style scoped lang="scss">
 footer {
-  position: static;
+  position: fixed;
   bottom: 0;
   width: 100%;
   height: 81px;

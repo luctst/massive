@@ -46,13 +46,13 @@ const handleBookmark = (): void => {
           v-if="userHasLikedMedia"
           src="@/assets/like.svg"
           alt="icon like"
-          @click="handleLike"
+          @click.stop="handleLike"
         >
         <img
           v-else
           src="@/assets/like-transp.svg"
           alt="icon like"
-          @click="handleLike"
+          @click.stop="handleLike"
         >
         {{ media.likes.length }}
       </div>
@@ -69,13 +69,13 @@ const handleBookmark = (): void => {
         v-if="userHasBookmarked"
         src="@/assets/bookmark-blue.svg"
         alt="icon share"
-        @click="handleBookmark"
+        @click.stop="handleBookmark"
       >
       <img
         v-else
         src="@/assets/bookmark-transp.svg"
         alt="icon share"
-        @click="handleBookmark"
+        @click.stop="handleBookmark"
       >
     </div>
   </div>

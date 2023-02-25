@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useUserStore } from '@/stores/user';
 
+const userStore = useUserStore();
 const title = ref<string>(useRoute().meta.headerTitle as string || '');
 </script>
 
@@ -20,9 +22,24 @@ const title = ref<string>(useRoute().meta.headerTitle as string || '');
     </template>
     <template v-else>
       <h1>{{ $t(title) }}</h1>
-      <div class="is__container__img">
-        <img src="@/assets/icon_filter.svg">
-      </div>
+      <template v-if="$route.name === 'Home'">
+        <div class="nav--metadata">
+          <div class="is__container__img">
+            <img
+              src="@/assets/notification.svg"
+              alt="notification"
+            >
+          </div>
+          <div class="is__container__img">
+            <img :src="userStore.avatar || ''">
+          </div>
+        </div>
+      </template>
+      <template v-else>
+        <div class="is__container__img">
+          <img src="@/assets/icon_filter.svg">
+        </div>
+      </template>
     </template>
   </header>
 </template>
@@ -44,6 +61,16 @@ header {
   .is__container__img {
     &:hover {
       cursor: pointer;
+    }
+  }
+
+  .nav--metadata {
+    display: flex;
+    align-items: center;
+
+    div:last-child {
+      margin-left: 1rem;
+      width: 27px;
     }
   }
 }
