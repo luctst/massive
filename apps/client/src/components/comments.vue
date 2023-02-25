@@ -1,14 +1,24 @@
 <script setup lang="ts">
 import { marked } from 'marked';
-import { Comments } from '@/types/index';
+import { Comments, Likes } from '@/types/index';
+import { useUserStore } from '@/stores/user';
 import formatDate from '@/utils/formatDate';
+import { onBeforeMount, ref, toRefs } from 'vue';
 
+interface CommentsLikedByUserAuth {
+  commentId: number;
+  hasBeenLiked: boolean;
+}
+
+const userStore = useUserStore();
+const commentsLikedByUserAuth = ref<Array<CommentsLikedByUserAuth>>([]);
 const props = withDefaults(defineProps<{
   comments: Comments[];
   showCommentsHead: boolean;
 }>(), {
   showCommentsHead: true,
 });
+const { comments } = toRefs(props);
 
 const articleContent = (content: string): string => {
   marked.setOptions({
@@ -18,6 +28,27 @@ const articleContent = (content: string): string => {
 
   return marked(content);
 };
+
+const userAuthHasLiked = (likes: Array<Likes>): boolean => likes.some((like) => like.author.id === userStore.id);
+const handleLike = (commentIndex: number): void => {
+  if (commentsLikedByUserAuth.value[commentIndex].hasBeenLiked) {
+    comments.value[commentIndex].likes.splice(
+      comments.value[commentIndex].likes.findIndex((lk: Likes) => lk.author.id === userStore.id),
+      1,
+    );
+    commentsLikedByUserAuth.value[commentIndex].hasBeenLiked = false;
+  } else {
+    comments.value[commentIndex].likes.push({ id: Math.floor(Math.random() * 10000), author: userStore });
+    commentsLikedByUserAuth.value[commentIndex].hasBeenLiked = true;
+  }
+};
+
+onBeforeMount(() => {
+  commentsLikedByUserAuth.value = props.comments.map((comment) => ({
+    commentId: comment.id,
+    hasBeenLiked: userAuthHasLiked(comment.likes),
+  }));
+});
 </script>
 
 <template>
@@ -51,8 +82,16 @@ const articleContent = (content: string): string => {
           <p>
             {{ comment.likes.length }}
             <img
+              v-if="commentsLikedByUserAuth[index].hasBeenLiked"
+              src="@/assets/like.svg"
+              alt="like"
+              @click.stop="handleLike(index)"
+            >
+            <img
+              v-else
               src="@/assets/like-transp.svg"
               alt="like"
+              @click.stop="handleLike(index)"
             >
           </p>
         </div>
