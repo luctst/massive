@@ -60,6 +60,9 @@ export default {
       follow: 'Follow',
       noFollow: 'Followed',
     },
+    userPublications: {
+      seeDetails: 'See details',
+    },
     userAbout: {
       tabTitle: 'About',
       publications: 'Publications',
@@ -137,6 +140,9 @@ export default {
     user: {
       follow: 'Abonné',
       noFollow: 'S\'abonner',
+    },
+    userPublications: {
+      seeDetails: 'Voir les détails',
     },
     userAbout: {
       tabTitle: 'À propos',

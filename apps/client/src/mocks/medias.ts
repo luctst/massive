@@ -47,8 +47,23 @@ const article1: Article = {
   },
 };
 
+const article2: Article = {
+  id: 2345,
+  title: 'Le foot !!',
+  content: 'sdkjgfslkgjslfj',
+  author: users.user2,
+  createdAt: new Date(),
+  likes: [],
+  comments: [],
+  type: {
+    isMedia: false,
+    isArticle: true,
+  },
+};
+
 export default {
   media1,
   media2,
   article1,
+  article2,
 };

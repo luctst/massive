@@ -4,5 +4,5 @@ import mocks from '@/mocks/index';
 
 export const useUserStore = defineStore({
   id: 'user',
-  state: (): UserStore => mocks.user1,
+  state: (): UserStore => mocks.user2,
 });

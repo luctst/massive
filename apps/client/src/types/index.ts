@@ -29,7 +29,8 @@ export interface UserStore {
   comments: Array<Comments> | null;
   social: {
     [key: string]: string;
-  }; 
+  };
+  pricing: number;
   profilBackground?: string;
   isConnected?: boolean;
   description?: string;

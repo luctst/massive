@@ -4,7 +4,6 @@ import BG from '@/assets/Rectangle24.svg';
 
 const user1: UserStore = {
   id: 27513,
-  isConnected: true,
   firstname: 'John',
   lastname: 'Doe',
   avatar: PP,
@@ -20,11 +19,13 @@ const user1: UserStore = {
   media: [],
   profilBackground: BG,
   bookmarks: [],
+  pricing: 10.99,
   description: 'lorem ipsum dolor sit amet, consectetur adipiscing elit.'
 };
 
 const user2: UserStore = {
   id: 66666,
+  isConnected: true,
   firstname: 'Franck',
   lastname: 'Duhart',
   avatar: PP,
@@ -35,6 +36,7 @@ const user2: UserStore = {
   comments: [],
   social: {},
   media: [],
+  pricing: 5.99,
   profilBackground: BG,
 };
 
