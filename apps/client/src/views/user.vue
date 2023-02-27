@@ -27,7 +27,7 @@ const category = ref<Array<Category>>([
   },
   {
     active: false,
-    tabContent: 'Communauté',
+    tabContent: t('userCommunity.tabTitle'),
     componentRelated: UserCommunity,
   },
   {
@@ -101,14 +101,14 @@ onMounted(async () => {
             v-if="isUserAuthFollowing"
             class="is__container__img"
           >
-            Abonné
+            {{ $t('user.follow') }}
             <img src="@/assets/Tick-blue.svg">
           </div>
           <div
             v-else
-            class="is__container__img"
+            class="is__container__img no--follow"
           >
-            S'abonner
+            {{ $t('user.noFollow') }}
             <img
               src="@/assets/Lock.svg"
               alt="s'abonner"
@@ -197,6 +197,10 @@ onMounted(async () => {
         font-size: 13px;
         font-weight: 700;
         letter-spacing: -0.02em;
+      }
+
+      .no--follow {
+        color: #000A6B;
       }
     }
   }

@@ -56,6 +56,10 @@ export default {
       createdAt: 'There is {creationTime}',
       noComments: 'No comments for the moment',
     },
+    user: {
+      follow: 'Follow',
+      noFollow: 'Followed',
+    },
     userAbout: {
       tabTitle: 'About',
       publications: 'Publications',
@@ -64,6 +68,13 @@ export default {
       activeSince: 'Active since {date}',
       noSocial: 'No social network',
       noDescription: 'No description',
+    },
+    userCommunity: {
+      tabTitle: 'Community',
+      needFollow: 'You must follow {name} to see his community',
+    },
+    cardMedia: {
+      needFollow: 'You must follow {name} to see this video',
     },
   },
   fr: {
@@ -123,6 +134,10 @@ export default {
       createdAt: 'Il y a {creationTime}',
       noComments: 'Aucun commentaire pour le moment',
     },
+    user: {
+      follow: 'Abonné',
+      noFollow: 'S\'abonner',
+    },
     userAbout: {
       tabTitle: 'À propos',
       publications: 'Publications',
@@ -131,6 +146,13 @@ export default {
       activeSince: 'Actif depuis le {date}',
       noSocial: 'Aucun réseau social',
       noDescription: 'Aucune description',
+    },
+    userCommunity: {
+      tabTitle: 'Communauté',
+      needFollow: 'Vous devez suivre {name} pour voir sa communauté',
+    },
+    cardMedia: {
+      needFollow: 'Vous devez suivre {name} pour voir cette vidéo',
     },
   },
 };

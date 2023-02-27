@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { Media } from '@/types/index';
+import { useUserStore } from '@/stores/user';
 import utils from '@/utils/index';
 
+const userStore = useUserStore();
 const props = withDefaults(defineProps<{
   card: Media;
   showHead?: boolean;
@@ -13,6 +15,7 @@ const props = withDefaults(defineProps<{
 });
 
 const userFullName = computed(() => `${props.card.author.firstname} ${props.card.author.lastname}`);
+const isUserAuthFollowing = computed(() => userStore.following?.some((ff) => ff.id === props.card.author.id));
 </script>
 
 <template>
@@ -42,8 +45,18 @@ const userFullName = computed(() => `${props.card.author.firstname} ${props.card
     </div>
     <div class="card--container--item--caption">
       <div class="card--container--item--caption--video is__container__img">
-        <img :src="props.card.preview">
-        <span>{{ utils.formatTime(props.card.length) }}</span>
+        <template v-if="isUserAuthFollowing">
+          <img :src="props.card.preview">
+          <span>{{ utils.formatTime(props.card.length) }}</span>
+        </template>
+        <template v-else>
+          <div class="card--container--item--caption--video--no--follow">
+            <div class="is__container__img">
+              <img src="@/assets/Lock.svg">
+            </div>
+            <div>{{ $t('cardMedia.needFollow', { name: userFullName }) }}</div>
+          </div>
+        </template>
       </div>
       <div class="card--container--item--caption--metadata container">
         <p
@@ -128,9 +141,31 @@ const userFullName = computed(() => `${props.card.author.firstname} ${props.card
         padding: 1px 3px;
         letter-spacing: -0.02em;
       }
+
+      &--no--follow {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: linear-gradient(265.45deg, #676769 0.04%, #8A7261 47.79%, #79797A 107.89%), linear-gradient(180deg, rgba(0, 0, 0, 0) 60.94%, rgba(0, 0, 0, 0.5) 100%);
+        max-height: 168px;
+        height: 168px;
+        border-radius: 10px 10px 0px 0px;
+
+        div:last-child {
+          font-weight: 500;
+          font-size: 14px;
+          text-align: center;
+          letter-spacing: -0.02em;
+          color: #FFFFFF;
+          margin-top: 1rem;
+          width: 199px;
+        }
+      }
     }
 
     &--metadata {
+      margin-top: .5rem;
       padding-bottom: 1rem;
 
       &--author {

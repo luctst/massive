@@ -143,7 +143,7 @@ onBeforeMount(() => {
               alt="lock follow"
             >
           </div>
-          <p>S'abonner pour accéder <br> à la communauté de <span>{{ props.authorName }} {{ props.authorLastname }}</span></p>
+          <p>{{ $t('userCommunity.needFollow', { name: `${props.authorName} ${props.authorLastname}`}) }}</p>
         </div>
         <div class="loading-div" />
         <div class="loading-div" />

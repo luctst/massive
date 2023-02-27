@@ -86,6 +86,7 @@ const handleBookmark = (): void => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: .3rem;
 
   &--likes--comments {
     display: flex;

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { Article} from '@/types/index';
+import { useUserStore } from '@/stores/user';
 import utils from '@/utils/index';
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
   showActions?: boolean;
 }
 
+const userStore = useUserStore();
 const props = withDefaults(defineProps<Props>(), {
   showHead: true,
   showActions: true,
@@ -16,6 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const cacheUserName = computed(() => utils.formatUserName(props.card.author.firstname, props.card.author.lastname));
 const cacheCreatedAt = computed(() => utils.formatDate(props.card.createdAt));
+const isUserAuthFollowing = computed(() => userStore.following?.some((ff) => ff.id === props.card.author.id));
 </script>
 
 <template>
@@ -49,9 +52,21 @@ const cacheCreatedAt = computed(() => utils.formatDate(props.card.createdAt));
           {{ props.card.title }}
         </div>
         <div
+          v-if="isUserAuthFollowing"
           class="card--article--caption--content--body"
           v-html="props.card.content"
         />
+        <div
+          v-else
+          class="card--article--caption--content--no--follow"
+        >
+          <div class="is__container__img">
+            <img src="@/assets/Lock-dark.svg">
+          </div>
+          <div class="loading-div" />
+          <div class="loading-div" />
+          <div class="loading-div" />
+        </div>
       </div>
       <div class="container">
         <media-actions
@@ -137,6 +152,30 @@ const cacheCreatedAt = computed(() => utils.formatDate(props.card.createdAt));
         color: #9CA3AF;
         font-size: 15px;
         letter-spacing: -0.02em;
+      }
+
+      &--no--follow {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        position: relative;
+
+        .is__container__img {
+          width: 18px;
+          position: absolute;
+          top: 40%;
+          left: 50%;
+        }
+
+        .loading-div {
+          width: 100%;
+          height: 13px;
+          background-color: rgba(217, 217, 217, 0.2);
+        }
+
+        .loading-div:last-child {
+          width: 55%;
+        }
       }
     }
   }
