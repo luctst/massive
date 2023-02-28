@@ -76,7 +76,10 @@ onMounted(async () => {
         <img :src="userData.profilBackground">
       </div>
       <div class="head--nav container">
-        <div class="is__container__img">
+        <div
+          class="is__container__img"
+          @click.stop="$router.go(-1)"
+        >
           <img src="@/assets/Union.svg">
         </div>
         <div class="is__container__img">

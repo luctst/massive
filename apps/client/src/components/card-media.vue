@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { Media } from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import utils from '@/utils/index';
 
+const router = useRouter();
 const userStore = useUserStore();
 const props = withDefaults(defineProps<{
   card: Media;
@@ -13,18 +15,33 @@ const props = withDefaults(defineProps<{
   showHead: true,
   showActions: true,
 });
+const isUserAuthFollowing = computed(() => userStore.following?.some((ff) => ff.id === props.card.author.id));
+
+const goToArticle = (): void => {
+  if (!isUserAuthFollowing.value) return;
+  router.push({ name: 'Media', params: { id: props.card.id } });
+};
+
+const goToUserProfil = (): void => {
+  router.push({ name: 'User', params: { id: props.card.author.id } });
+};
 
 const userFullName = computed(() => `${props.card.author.firstname} ${props.card.author.lastname}`);
-const isUserAuthFollowing = computed(() => userStore.following?.some((ff) => ff.id === props.card.author.id));
 </script>
 
 <template>
-  <div class="card--container--item">
+  <div
+    class="card--container--item"
+    @click.stop="goToArticle"
+  >
     <div
       v-if="props.showHead"
       class="card--container--item--top"
     >
-      <div class="card--container--item--top--user--data">
+      <div
+        class="card--container--item--top--user--data"
+        @click.stop="goToUserProfil"
+      >
         <div class="is__container__img">
           <img
             :src="props.card.author.avatar || 'https://via.placeholder.com/150'"

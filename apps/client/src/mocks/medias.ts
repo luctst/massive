@@ -11,6 +11,7 @@ const media1: Media = {
   comments: [],
   createdAt: new Date(),
   author: users.user1,
+  view: 120000,
   type: {
     isMedia: true,
     isArticle: false,
@@ -27,6 +28,7 @@ const media2: Media = {
   comments: [],
   createdAt: new Date(),
   description: 'Lorem sint eu officia cillum. Dolor Lorem ad sit cupidatat magna ut culpa non Lorem voluptate anim incididunt incididunt reprehenderit nisi.',
+  view: 666,
   type: {
     isMedia: true,
     isArticle: false,

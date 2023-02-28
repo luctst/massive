@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { Article} from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import utils from '@/utils/index';
@@ -10,24 +11,40 @@ interface Props {
   showActions?: boolean;
 }
 
+const router = useRouter();
 const userStore = useUserStore();
 const props = withDefaults(defineProps<Props>(), {
   showHead: true,
   showActions: true,
 });
+const isUserAuthFollowing = computed(() => userStore.following?.some((ff) => ff.id === props.card.author.id));
+
+const goToArticle = (): void => {
+  if (!isUserAuthFollowing.value) return;
+  router.push({ name: 'Article', params: { id: props.card.id } });
+};
+
+const goToUserProfil = (): void => {
+  router.push({ name: 'User', params: { id: props.card.author.id } });
+};
 
 const cacheUserName = computed(() => utils.formatUserName(props.card.author.firstname, props.card.author.lastname));
 const cacheCreatedAt = computed(() => utils.formatDate(props.card.createdAt));
-const isUserAuthFollowing = computed(() => userStore.following?.some((ff) => ff.id === props.card.author.id));
 </script>
 
 <template>
-  <div class="card--article">
+  <div
+    class="card--article"
+    @click.stop="goToArticle"
+  >
     <div
       v-if="props.showActions"
       class="card--article--top"
     >
-      <div class="card--article--top--user">
+      <div
+        class="card--article--top--user"
+        @click.stop="goToUserProfil"
+      >
         <div class="is__container__img">
           <img :src="props.card.author.avatar || ''">
         </div>

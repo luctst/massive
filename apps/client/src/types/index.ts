@@ -12,8 +12,9 @@ export interface Media {
   author: UserStore;
   likes: Array<Likes>;
   comments: Array<Comments>;
-  description?: string;
   type: MediaType;
+  view: number;
+  description?: string;
 }
 
 export interface UserStore {

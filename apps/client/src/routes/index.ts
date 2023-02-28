@@ -70,6 +70,16 @@ export default createRouter({
       },
     },
     {
+      path: '/media/:id',
+      name: 'Media',
+      component: () => import('@/views/media.vue'),
+      beforeEnter: () => {
+        if (!userIsAuthenticated()) {
+          return { name: 'Auth' };
+        }
+      },
+    },
+    {
       path: '/user/:id',
       name: 'User',
       component: () => import('@/views/user.vue'),
