@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import { Media, UserStore } from '@/types/index';
 import { useI18n } from 'vue-i18n';
-import messages from '@/i18n/messages';
 import mocks from '@/mocks/index';
 
 const i18n = useI18n();
@@ -35,9 +34,8 @@ const creatorsTrends = ref<Array<UserStore>>([
   <section class="filters container">
     <div class="filters--wrapper">
       <span
-        v-for="(ff, index) in messages[i18n.locale.value].discover.filters"
-        :key="index"
-      >
+        v-for="(ff, index) in i18n.getLocaleMessage('fr').discover.filters"
+        :key="index">
         {{ ff }}
       </span>
     </div>

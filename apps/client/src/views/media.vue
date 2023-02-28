@@ -30,6 +30,7 @@ const switchTabActive = (index: number) => {
   });
 };
 
+const tabActive = computed(() => tabs.value.find((tab) => tab.active)?.tabName);
 const isUserAuthFollowing = computed(() => media.value?.author.followers?.some((ff) => ff.id === userStore.id));
 const mediaPublishedDate = computed(() => formatDate(media.value?.createdAt || new Date()));
 
@@ -112,6 +113,34 @@ onMounted(() => {
         </div>
       </section>
     </header>
+    <main>
+      <article
+        v-if="tabActive === 'Description'"
+        class="article container"
+      >
+        <h2>{{ media.title }}</h2>
+        <div>{{ $t('comments.createdAt', { creationTime: mediaPublishedDate }) }}</div>
+        <div
+          v-if="media.description"
+          class="article--content"
+          v-html="media.description"
+        />
+        <div
+          v-else
+          class="article--content"
+        >
+          {{ $t('userAbout.noDescription') }}
+        </div>
+      </article>
+      <comments
+        v-else
+        :comments="media.comments"
+        :show-comments-head="false"
+        :author-name="media.author.firstname"
+        :author-lastname="media.author.lastname"
+        :author-id="media.id"
+      />
+    </main>
   </template>
   <loader v-else />
 </template>
@@ -225,6 +254,34 @@ onMounted(() => {
       text-underline-offset: 10px;
       text-decoration-thickness: 2px;
     }
+  }
+}
+
+.article {
+  margin-top: 1.5rem;
+
+  h2 {
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    color: #14172D;
+    margin-bottom: 10px;
+    margin: 0;
+  }
+
+  div:first-of-type {
+    font-weight: 500;
+    font-size: 12px;
+    color: #536471;
+    margin-top: .3rem;
+  }
+
+  &--content {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 19px;
+    letter-spacing: -0.02em;
+    color: #9CA3AF;
+    margin: 25px 0;
   }
 }
 </style>

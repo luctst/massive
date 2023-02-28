@@ -27,7 +27,7 @@ const media2: Media = {
   likes: [],
   comments: [],
   createdAt: new Date(),
-  description: 'Lorem sint eu officia cillum. Dolor Lorem ad sit cupidatat magna ut culpa non Lorem voluptate anim incididunt incididunt reprehenderit nisi.',
+  // description: '<p class="is__article__content">Lorem sint eu officia cillum. Dolor Lorem ad sit cupidatat magna ut culpa non Lorem voluptate anim incididunt incididunt reprehenderit nisi.</p>',
   view: 666,
   type: {
     isMedia: true,
