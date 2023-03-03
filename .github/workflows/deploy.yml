@@ -48,10 +48,10 @@ jobs:
         run: pnpm install
       
       - name: Lint
-        run: pnpm run --filter './apps/*' --if-present -r lint
+        run: pnpm run lint
 
       - name: type-check
-        run: pnpm run --filter './apps/*' --if-present -r typecheck
+        run: pnpm run typecheck
 
   # CI:
   #   needs: cache-and-install
