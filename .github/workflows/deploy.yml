@@ -95,7 +95,7 @@ jobs:
         run: pnpm install
       
       - name: Build
-        run: pnpm run build
+        run: pnpm run --filter client build
       
       - name: S3
         uses: jakejarvis/s3-sync-action@be0c4ab89158cac4278689ebedd8407dd5f35a83
@@ -106,7 +106,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
           AWS_REGION: 'eu-west-1'
-          SOURCE_DIR: 'dist'
+          SOURCE_DIR: './apps/client/dist'
         
       - name: Invalidate Cloudfront
         uses: chetan/invalidate-cloudfront-action@v2
