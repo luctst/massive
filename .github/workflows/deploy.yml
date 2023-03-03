@@ -47,20 +47,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       
+  CI:
+    needs: cache-and-install
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+    steps:
       - name: Lint
-        run: pnpm run lint
-
+        run: pnpm run Lint
       - name: type-check
         run: pnpm run typecheck
-
-  # CI:
-  #   needs: cache-and-install
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       node-version: [18.x]
-  #   steps:
-  #     - name: Lint
-  #       run: pnpm run --filter './apps/*' --if-present -r lint
-  #     - name: type-check
-  #       run: pnpm run --filter './apps/*' --if-present -r typecheck
