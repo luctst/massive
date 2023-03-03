@@ -37,7 +37,7 @@
             >
             <img
               v-else
-              src="@/assets/Bookmark.svg"
+              src="@/assets/bookmark.svg"
               alt="bookmark icon"
             >
             <span class="line-nav" />
