@@ -3,6 +3,7 @@
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "../global-test-setup.ts"],
   "exclude": ["src/**/*.d.ts."],
   "compilerOptions": {
+    "forceConsistentCasingInFileNames": false,
     "skipLibCheck": true,
     "baseUrl": "./",
     "paths": {
