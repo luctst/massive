@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ComputedRef, ref } from 'vue';
 import { Media, UserStore } from '@/types/index';
-import { useI18n } from 'vue-i18n';
 import mocks from '@/mocks/index';
 
-const i18n = useI18n();
 const videosTrends = ref<Array<Media>>([
   mocks.media1,
   mocks.media2,
@@ -13,6 +11,15 @@ const creatorsTrends = ref<Array<UserStore>>([
   mocks.user1,
   mocks.user2,
 ]);
+const filters: ComputedRef<Array<string>> = computed(() => [
+  'Géopolitique',
+  'Reportage',
+  'Actualité',
+  'France',
+  'Histoire',
+  'Société',
+]);
+
 </script>
 
 <template>
@@ -34,8 +41,9 @@ const creatorsTrends = ref<Array<UserStore>>([
   <section class="filters container">
     <div class="filters--wrapper">
       <span
-        v-for="(ff, index) in i18n.getLocaleMessage('fr').discover.filters"
-        :key="index">
+        v-for="(ff, index) in filters"
+        :key="index"
+      >
         {{ ff }}
       </span>
     </div>
