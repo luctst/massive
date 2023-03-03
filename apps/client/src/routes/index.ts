@@ -11,7 +11,7 @@ export default createRouter({
     {
       path: '/auth',
       name: 'Auth',
-      component: () => import('@/views/auth.vue'),
+      component: () => import('@/views/auth-parent.vue'),
       children: [
         {
           path: 'signin',
