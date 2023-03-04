@@ -1,8 +1,15 @@
 import { defineStore } from 'pinia';
 import { UserStore } from '@/types/index';
-import mocks from '@/mocks/index';
+
+export interface Store {
+  user: UserStore | null;
+}
 
 export const useUserStore = defineStore({
   id: 'user',
-  state: (): UserStore => mocks.user2,
+  state: (): Store => {
+    return {
+      user: null,
+    };
+  },
 });

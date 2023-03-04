@@ -16,17 +16,21 @@ article1.comments?.push(comments.comment2);
 
 // Add followers to users
 user1.followers?.push(user2);
+user1.following?.push(user2);
 user2.following?.push(user1);
+user2.followers?.push(user1);
 
 // Add comments to users
 user1.comments?.push(comments.comment1);
 user1.comments?.push(comments.comment3);
 user1.comments?.push(comments.comment2);
+user2.comments?.push(comments.comment2);
 
 // Add medias to users
 user1.media?.push(media1, article1);
 user2.media?.push(media2);
 user2.media?.push(article2);
+user2.media?.push(article1);
 
 export default {
   user1: user1,
