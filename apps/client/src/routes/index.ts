@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 
 function userIsAuthenticated() {
-  return useUserStore().isConnected;
+  return useUserStore().user !== null;
 }
 
 export default createRouter({
@@ -16,14 +16,14 @@ export default createRouter({
         {
           path: 'signin',
           name: 'Signin',
-          component: () => import('@/views/signin.vue'),
+          component: () => import('@/views/signin-view.vue'),
         },
       ],
     },
     {
       path: '/bookmarks',
       name: 'Bookmarks',
-      component: () => import('@/views/favorite.vue'),
+      component: () => import('@/views/favorite-view.vue'),
       meta: {
         headerTitle: 'header.routes.bookmarks',
       },
@@ -36,7 +36,7 @@ export default createRouter({
     {
       path: '/',
       name: 'Home',
-      component: () => import('@/views/home.vue'),
+      component: () => import('@/views/home-view.vue'),
       meta: {
         headerTitle: 'header.routes.home',
       },
@@ -49,7 +49,7 @@ export default createRouter({
     {
       path: '/explorer',
       name: 'Explorer',
-      component: () => import('@/views/explorer.vue'),
+      component: () => import('@/views/explorer-view.vue'),
       meta: {
         headerTitle: 'header.routes.explorer',
       },
@@ -62,7 +62,7 @@ export default createRouter({
     {
       path: '/article/:id',
       name: 'Article',
-      component: () => import('@/views/article.vue'),
+      component: () => import('@/views/article-view.vue'),
       beforeEnter: () => {
         if (!userIsAuthenticated()) {
           return { name: 'Auth' };
@@ -72,7 +72,7 @@ export default createRouter({
     {
       path: '/media/:id',
       name: 'Media',
-      component: () => import('@/views/media.vue'),
+      component: () => import('@/views/media-view.vue'),
       beforeEnter: () => {
         if (!userIsAuthenticated()) {
           return { name: 'Auth' };
@@ -82,7 +82,7 @@ export default createRouter({
     {
       path: '/user/:id',
       name: 'User',
-      component: () => import('@/views/user.vue'),
+      component: () => import('@/views/user-view.vue'),
       beforeEnter: () => {
         if (!userIsAuthenticated()) {
           return { name: 'Auth' };

@@ -9,6 +9,7 @@ useHead({
       rel: 'stylesheet',
     },
   ],
+  title: 'Massive app',
 });
 
 const showApp = ref(false);

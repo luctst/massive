@@ -66,14 +66,16 @@
     "pricing": {
       "type": "float",
       "required": true,
-      "min": 0
+      "min": 0,
+      "default": 0
     },
     "avatar": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
     },
     "firstname": {
       "type": "string",

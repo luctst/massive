@@ -17,6 +17,14 @@ export default {
     signin: {
       title: 'Signin',
       subTitle: 'Please fill in the fields below',
+      firstName: {
+        label: 'First name',
+        placeholder: 'Emmanuel',
+      },
+      lastName: {
+        label: 'Last name',
+        placeholder: 'Macron',
+      },
       userName: {
         label: 'Username',
         placeholder: 'Emmanuel Macron',

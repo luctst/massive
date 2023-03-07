@@ -1,4 +1,109 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+import { ref } from 'vue';
+import { ReqAxiosNewUser } from '@/types';
+import { useUserStore } from '@/stores/user';
+
+interface Rules {
+  key: keyof ReqAxiosNewUser;
+  error: string | null;
+  label: string;
+  placeholder: string;
+  hasBeenBlured: boolean;
+  validate: (value: string) => null | string;
+}
+
+const { t } = useI18n();
+const conditionLegals = ref<{ isChecked: boolean; error: string | null }>({
+  isChecked: false,
+  error: null,
+});
+const dataForApi = ref<ReqAxiosNewUser>({
+  firstname: '',
+  lastname: '',
+  username: '',
+  password: '',
+  email: '',
+});
+
+function isInputEmpty(value: string) {
+  if (value.length === 0) return 'Ce champ est obligatoire';
+  return null;
+}
+const isUsernameValid = (value: string) => {
+  if (value.length < 3 || value.length > 20) return 'Le nom d\'utilisateur doit contenir entre 3 et 20 caractères';
+  return null;
+};
+const isPasswordValid = (value: string) => {
+  if (value.length < 8) return 'Le mot de passe doit contenir au moins 8 caractères';
+  return null;
+};
+const isEmailValidWithRegex = (value: string) => {
+  if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value) === false) return 'L\'adresse email n\'est pas valide';
+  return null;
+};
+
+function wrapperValidate(self: Rules, evtName: string, cb: Rules['validate']) {
+  if (evtName === 'input' && self.hasBeenBlured === false) return;
+  if (evtName === 'blur' && self.hasBeenBlured === false) self.hasBeenBlured = true;
+  self.error = cb(dataForApi.value[self.key]);
+}
+
+const rules = ref<Array<Rules>>(
+  [
+    {
+      key: 'firstname',
+      validate: isInputEmpty,
+      error: null,
+      hasBeenBlured: false,
+      label: t('signin.firstName.label'),
+      placeholder: t('signin.firstName.placeholder'),
+    },
+    {
+      key: 'lastname',
+      validate: isInputEmpty,
+      error: null,
+      hasBeenBlured: false,
+      label: t('signin.lastName.label'),
+      placeholder: t('signin.lastName.placeholder'),
+    },
+    {
+      key: 'username',
+      validate: isUsernameValid,
+      error: null,
+      hasBeenBlured: false,
+      label: t('signin.userName.label'),
+      placeholder: t('signin.userName.placeholder'),
+    },
+    {
+      key: 'password',
+      validate: isPasswordValid,
+      error: null,
+      hasBeenBlured: false,
+      label: t('signin.password.label'),
+      placeholder: '',
+    },
+    {
+      key: 'email',
+      validate: isEmailValidWithRegex,
+      error: null,
+      hasBeenBlured: false,
+      label: t('signin.mail.label'),
+      placeholder: t('signin.mail.placeholder'),
+    },
+  ]
+);
+
+const createUser = () => {
+  if (conditionLegals.value.isChecked === false) {
+    conditionLegals.value.error = 'Vous devez accepter les conditions légales';
+    return;
+  }
+  
+  if (!rules.value.every((rule) => rule.error === null ? true : false)) return;
+  useUserStore().registerUser(dataForApi.value);
+};
+</script>
 
 <template>
   <main class="signin">
@@ -8,46 +113,55 @@
         <p>{{ $t('signin.subTitle') }}</p>
       </div>
     </header>
-    <form class="container">
-      <div class="input-group">
-        <label for="user-name">{{ $t('signin.userName.label') }}</label>
+    <form
+      class="container"
+      @submit.prevent="createUser"
+    >
+      <div
+        v-for="(input, index) in rules"
+        :key="index"
+        class="input-group"
+      >
+        <label :for="input.key">{{ input.label }}</label>
         <input
-          id="user-name"
-          type="text"
-          :placeholder="$t('signin.userName.placeholder')"
+          :id="input.key"
+          v-model="dataForApi[input.key]"
+          :type="input.key === 'password' ? 'password' : 'text'"
+          :placeholder="input.placeholder"
+          @input="wrapperValidate(input, $event.type, input.validate)"
+          @blur="wrapperValidate(input, $event.type, input.validate)"
         >
-      </div>
-      <div class="input-group">
-        <label for="user-mail">{{ $t('sigin.mail.label') }}</label>
-        <input
-          id="user-mail"
-          type="email"
-          :placeholder="$t('signin.mail.placeholder')"
+        <small v-if="input.error">{{ input.error }}</small>
+        <span
+          v-if="input.key === 'password'"
+          id="icon-pass"
         >
-      </div>
-      <div class="input-group">
-        <label for="user-name">{{ $t('signin.password.label') }}</label>
-        <input
-          id="user-password"
-          type="password"
-        ><span id="icon-pass"><img
-          src="@/assets/viewpassword.svg"
-          alt="icon password"
-        ></span>
+          <img
+            src="@/assets/viewpassword.svg"
+            alt="icon password"
+          >
+        </span>
       </div>
       <div class="checkbox-validation">
-        <input
-          id="validation"
-          type="checkbox"
-          name="validation"
-        >
-        <label
-          for="validation"
-          v-html="$t('signin.legal')"
-        />
+        <div>
+          <input
+            id="validation"
+            v-model="conditionLegals.isChecked"
+            type="checkbox"
+            name="validation"
+          >
+          <label
+            for="validation"
+            v-html="$t('signin.legal')"
+          />
+        </div>
+        <small v-if="!conditionLegals.isChecked">{{ conditionLegals.error }}</small>
       </div>
       <div class="btn-box">
-        <button id="create-count-btn">
+        <button
+          id="create-count-btn"
+          type="submit"
+        >
           {{ $t('signin.createAccount') }}
         </button>
         <div class="sign-google-box">
@@ -69,6 +183,9 @@
 </template>
 
 <style scoped lang="scss">
+small {
+  color: #f78989;
+}
 .signin {
   display: flex;
   flex-direction: column;
@@ -150,9 +267,10 @@
     }
 
     .checkbox-validation {
-      display: flex;
-      align-items: baseline;
-      gap: 11px;
+      div {
+        display: flex;
+        gap: 11px;
+      }
 
       a {
         text-decoration: none;

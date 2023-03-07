@@ -21,19 +21,20 @@ export interface UserStore {
   id: number;
   firstname: string;
   lastname: string;
-  avatar: string | null;
   bookmarks: Array<Article | Media> | null;
   followers: Array<UserStore> | null;
   following: Array<UserStore> | null;
   media: Array<Media | Article> | null;
-  createdAt: Date;
   comments: Array<Comments> | null;
-  social: {
-    [key: string]: string;
-  };
+  createdAt: Date;
+  udpatedAt: Date;
+  jwt: string;
   pricing: number;
+  social?: {
+  [key: string]: string;
+  };
+  avatar?: string | null;
   profilBackground?: string;
-  isConnected?: boolean;
   description?: string;
 }
 
@@ -59,4 +60,12 @@ export interface Article {
   likes: Array<Likes>;
   comments: Array<Comments>;
   type: MediaType;
+}
+
+export interface ReqAxiosNewUser {
+  firstname: string;
+  lastname: string;
+  username: string;
+  password: string;
+  email: string;
 }
