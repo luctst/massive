@@ -1,3 +1,4 @@
+import { AxiosError, AxiosResponse } from 'axios';
 import { defineStore } from 'pinia';
 import { UserStore } from '@/types/index';
 import { ReqAxiosNewUser } from '@/types/index';
@@ -15,16 +16,17 @@ export const useUserStore = defineStore({
     };
   },
   actions: {
-    async registerUser(newUserData: ReqAxiosNewUser) {
+    async registerUser(newUserData: ReqAxiosNewUser): Promise<boolean | AxiosError> {
       try {
         const { data } = await http.post('/auth/local/register', newUserData);
         this.user = {
           ...data.user,
           jwt: data.jwt,
         };
-      } catch (error) {
-        // TODO: Handle error
-        throw error;
+
+      return true;
+      } catch (error: AxiosError | any) {
+        return error;
       }
     }
   },

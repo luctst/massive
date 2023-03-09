@@ -35,6 +35,7 @@ importers:
       vue-i18n: ^9.2.2
       vue-router: ^4.1.6
       vue-tsc: ^0.40.4
+      vue3-toastify: ^0.1.2
     dependencies:
       '@vitejs/plugin-vue': 3.1.2_vite@3.2.0+vue@3.2.41
       '@vueuse/head': 1.0.24_vue@3.2.41
@@ -58,6 +59,7 @@ importers:
       unplugin-vue-components: 0.23.0_vue@3.2.41
       vue-eslint-parser: 9.1.0_eslint@8.33.0
       vue-tsc: 0.40.13_typescript@4.8.4
+      vue3-toastify: 0.1.2_vue@3.2.41
 
   apps/eslint-config-custom:
     specifiers:
@@ -4281,6 +4283,18 @@ packages:
       '@vue/runtime-dom': 3.2.41
       '@vue/server-renderer': 3.2.41_vue@3.2.41
       '@vue/shared': 3.2.41
+
+  /vue3-toastify/0.1.2_vue@3.2.41:
+    resolution: {integrity: sha512-Cj1CHLI4XLxEP2PqvyCE7jDROXgVyNh4Fqdg7ZEbyuyOfLf1X1zEYQOWnpl5TIqfeJqcQXEwe7VYZN7+UOGDYw==}
+    engines: {node: '>=16', npm: '>=7'}
+    peerDependencies:
+      vue: ^3.2.0
+    peerDependenciesMeta:
+      vue:
+        optional: true
+    dependencies:
+      vue: 3.2.41
+    dev: true
 
   /webpack-sources/3.2.3:
     resolution: {integrity: sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==}

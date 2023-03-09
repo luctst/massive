@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { toast } from 'vue3-toastify';
+import { AxiosError } from 'axios';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { ReqAxiosNewUser } from '@/types';
 import { useUserStore } from '@/stores/user';
@@ -14,6 +17,8 @@ interface Rules {
 }
 
 const { t } = useI18n();
+const { push } = useRouter();
+const callApiDone = ref<boolean>(true);
 const conditionLegals = ref<{ isChecked: boolean; error: string | null }>({
   isChecked: false,
   error: null,
@@ -94,14 +99,30 @@ const rules = ref<Array<Rules>>(
   ]
 );
 
-const createUser = () => {
+const createUser = async () => {
   if (conditionLegals.value.isChecked === false) {
     conditionLegals.value.error = 'Vous devez accepter les conditions légales';
     return;
   }
   
   if (!rules.value.every((rule) => rule.error === null ? true : false)) return;
-  useUserStore().registerUser(dataForApi.value);
+
+  callApiDone.value = false;
+  const result = await useUserStore().registerUser(dataForApi.value);
+
+  if (result instanceof AxiosError) {
+    if (result.response) {
+      if (result.response?.status >= 400 && result.response?.status <= 499) {
+        callApiDone.value = true;
+        return toast.error(t(`signin.errorApi.${result.response?.status}`));
+      }
+    }
+
+    callApiDone.value = true;
+    return toast.error(t('signin.errorApi.default'));
+  }
+
+  push({ name: 'Home' });
 };
 </script>
 
@@ -162,7 +183,13 @@ const createUser = () => {
           id="create-count-btn"
           type="submit"
         >
-          {{ $t('signin.createAccount') }}
+          <template v-if="callApiDone">
+            {{ $t('signin.createAccount') }}
+          </template>
+          <img
+            v-else
+            src="@/assets/loader-svg.svg"
+          >
         </button>
         <div class="sign-google-box">
           <button id="sign-in-google">
@@ -315,6 +342,10 @@ small {
 
         &:hover {
           cursor: pointer;
+        }
+
+        img {
+          width: 1.5rem;
         }
       }
 

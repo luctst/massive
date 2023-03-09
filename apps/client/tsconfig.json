@@ -3,6 +3,9 @@
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "../global-test-setup.ts"],
   "exclude": ["src/**/*.d.ts."],
   "compilerOptions": {
+    "types": [
+      "vue3-toastify/global"
+    ],
     "forceConsistentCasingInFileNames": false,
     "skipLibCheck": true,
     "baseUrl": "./",

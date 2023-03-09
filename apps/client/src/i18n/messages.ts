@@ -15,6 +15,10 @@ export default {
       btnSignin: 'Signin',
     },
     signin: {
+      errorApi: {
+        400: 'The email address is already used',
+        default: 'An error has occurred',
+      },
       title: 'Signin',
       subTitle: 'Please fill in the fields below',
       firstName: {
@@ -104,6 +108,10 @@ export default {
       btnSignin: 'S\'inscrire',
     },
     signin: {
+      errorApi: {
+        400: 'L\'adresse mail est déjà utilisée',
+        default: 'Une erreur est survenue',
+      },
       title: 'Inscription',
       subTitle: 'Merci de remplir les champs ci-dessous',
       userName: {

@@ -2,14 +2,22 @@ import { createApp } from 'vue'
 import { createHead } from '@vueuse/head'
 import { createPinia } from 'pinia';
 import { createI18n, I18nOptions } from 'vue-i18n'
+import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify';
 import App from './App.vue'
 import messages from '@/i18n/messages'
 import router from '@/routes/index'
 
+import 'vue3-toastify/dist/index.css';
 import '@/scss/main.scss'
+import { toast } from 'vue3-toastify';
 
 const app = createApp(App);
 
+app.use(Vue3Toastify, {
+  autoClose: 5000,
+  multiple: false,
+  position: 'bottom-right',
+} as ToastContainerOptions);
 app.use(createPinia());
 app.use(createHead());
 app.use(createI18n({
