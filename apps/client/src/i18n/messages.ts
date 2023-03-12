@@ -43,7 +43,33 @@ export default {
       legal: 'By checking this box, I accept the <router-link to="/legal" id="termes">terms and privacy</ router-link> of the application.',
       createAccount: 'Create my account',
       loginWithGoogle: 'Signin with Google',
-      alreadyAccount: 'You already have an account? <router-link to="/auth/login">Login</router-link>',
+      alreadyAccount: 'You already have an account? <router-link to="/auth/signin">Login</router-link>',
+    },
+    signup: {
+      errorApi: {
+        400: 'Incorrect credentials',
+        default: 'An error has occurred',
+      },
+      title: 'Login',
+      subTitle: 'Please fill in the fields below',
+      noAccount: 'You don\'t have an account?',
+      noAccountLink: 'Signin',
+      inputs: [
+        {
+          label: 'Mail',
+          placeholder: 'manu.macron@gmail.com',
+          error: {
+            default: 'The field cannot be empty',
+            pattern: 'The email address is not valid',
+          },
+        },
+        {
+          label: 'Password',
+          error: {
+            default: 'The field cannot be empty',
+          },
+        },
+      ],
     },
     bookmarks: {
       noData: 'No publication saved',
@@ -128,7 +154,33 @@ export default {
       legal: 'En cochant cette case, j\'accepte les <router-link to="/legal" id="termes">termes et confidentialité</ router-link> de l\'application.',
       createAccount: 'Créer mon compte',
       loginWithGoogle: 'S\'inscrire avec Google',
-      alreadyAccount: 'Vous avez déjà un compte ? <router-link to="/auth/login">Se connecter</router-link>',
+      alreadyAccount: 'Vous avez déjà un compte ? <router-link to="/auth/signin">Se connecter</router-link>',
+    },
+    signup: {
+      errorApi: {
+        400: 'Identifiants incorrects',
+        default: 'Une erreur est survenue',
+      },
+      title: 'Connexion',
+      subTitle: 'Merci de remplir les champs ci-dessous',
+      noAccount: 'Vous n\'avez pas de compte ?',
+      noAccountLink: 'S\'inscrire',
+      inputs: [
+        {
+          label: 'Adresse mail',
+          placeholder: 'manu.macron@gmail.com',
+          error: {
+            default: 'Le champ ne peut pas être vide',
+            pattern: 'L\'adresse mail n\'est pas valide',
+          },
+        },
+        {
+          label: 'Mot de passe',
+          error: {
+            default: 'Le champ ne peut pas être vide',
+          },
+        },
+      ],
     },
     bookmarks: {
       noData: 'Aucune publication sauvegardée',

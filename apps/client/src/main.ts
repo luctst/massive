@@ -9,7 +9,6 @@ import router from '@/routes/index'
 
 import 'vue3-toastify/dist/index.css';
 import '@/scss/main.scss'
-import { toast } from 'vue3-toastify';
 
 const app = createApp(App);
 

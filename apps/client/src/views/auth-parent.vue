@@ -29,7 +29,7 @@ import { RouterView } from 'vue-router';
           </router-link>
           <router-link
             id="connexion"
-            to="/auth/login"
+            to="/auth/signup"
             type="button"
           >
             {{ $t('auth.btnLogin') }}
