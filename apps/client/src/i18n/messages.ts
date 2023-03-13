@@ -54,6 +54,7 @@ export default {
       subTitle: 'Please fill in the fields below',
       noAccount: 'You don\'t have an account?',
       noAccountLink: 'Signin',
+      cta: 'Login',
       inputs: [
         {
           label: 'Mail',
@@ -165,6 +166,7 @@ export default {
       subTitle: 'Merci de remplir les champs ci-dessous',
       noAccount: 'Vous n\'avez pas de compte ?',
       noAccountLink: 'S\'inscrire',
+      cta: 'Se connecter',
       inputs: [
         {
           label: 'Adresse mail',

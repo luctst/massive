@@ -16,12 +16,14 @@ export const useUserStore = defineStore({
     };
   },
   actions: {
+    setUser(userData: UserStore) {
+      this.user = userData;
+    },
     async authUser(userId: { email: string; password: string }): Promise<boolean | AxiosError> {
       try {
         const { data } = await http.post('/auth/local', { identifier: userId.email, password: userId.password });
         this.user = {
           jwt: data.jwt,
-          ...data.user,
         };
         return true;
       } catch (error: AxiosError | any) {
@@ -32,7 +34,6 @@ export const useUserStore = defineStore({
       try {
         const { data } = await http.post('/auth/local/register', newUserData);
         this.user = {
-          ...data.user,
           jwt: data.jwt,
         };
 

@@ -114,7 +114,7 @@ const authUser = async () => {
           type="submit"
         >
           <template v-if="callApiDone">
-            {{ $t('signin.createAccount') }}
+            {{ $t('signup.cta') }}
           </template>
           <img
             v-else
