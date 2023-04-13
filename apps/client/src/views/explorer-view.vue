@@ -1,16 +1,11 @@
 <script setup lang="ts">
-import { computed, ComputedRef, ref } from 'vue';
+import { computed, ComputedRef, onMounted, Ref, ref } from 'vue';
 import { Media, UserStore } from '@/types/index';
-import mocks from '@/mocks/index';
+import { useUserStore } from '@/stores/user';
+import http from '@/utils/http';
 
-const videosTrends = ref<Array<Media>>([
-  mocks.media1,
-  mocks.media2,
-])
-const creatorsTrends = ref<Array<UserStore>>([
-  mocks.user1,
-  mocks.user2,
-]);
+const userStore = useUserStore();
+const dataLoaded: Ref<boolean> = ref<boolean>(false);
 const filters: ComputedRef<Array<string>> = computed(() => [
   'Géopolitique',
   'Reportage',
@@ -20,63 +15,79 @@ const filters: ComputedRef<Array<string>> = computed(() => [
   'Société',
 ]);
 
+onMounted(async () => {
+  try {
+    await http.get('/users', {
+      headers: {
+        Authorization: `Bearer ${userStore.user?.jwt}`,
+      },
+    });
+
+    dataLoaded.value = true;
+  } catch (error) {
+    throw error;
+  }
+});
 </script>
 
 <template>
-  <navigation-header />
-  <section class="search container">
-    <div class="search--wrapper">
-      <img
-        src="@/assets/Search.svg"
-        alt="search icon"
-      >
-      <input
-        id="research"
-        type="text"
-        name="research"
-        :placeholder="$t('discover.inputPlaceholder')"
-      >
-    </div>
-  </section>
-  <section class="filters container">
-    <div class="filters--wrapper">
-      <span
-        v-for="(ff, index) in filters"
-        :key="index"
-      >
-        {{ ff }}
-      </span>
-    </div>
-  </section>
-  <section class="trends--videos container">
-    <header class="trends--videos--header">
-      <h2>{{ $t('discover.trendsVideosTitle') }}</h2>
-      <a href="#">{{ $t('discover.cta') }}</a>
-    </header>
-    <div class="trends--videos--slider">
-      <card-media
-        v-for="(video, index) in videosTrends"
-        :key="index"
-        :card="video"
-        :show-head="false"
-        :show-actions="false"
-      />
-    </div>
-  </section>
-  <section class="trends--creators container">
-    <header class="trends--creators--header">
-      <h2>{{ $t('discover.trendsCreatorsTitle') }}</h2>
-      <a href="#">{{ $t('discover.cta') }}</a>
-    </header>
-    <div class="trends--creators--slider">
-      <avatar-with-name
-        v-for="(creator, index) in creatorsTrends"
-        :key="index"
-        :user-data="creator"
-      />
-    </div>
-  </section>
-  <navigation />
+  <loader-vue v-if="!dataLoaded" />
+  <template v-else>
+    <navigation-header />
+    <section class="search container">
+      <div class="search--wrapper">
+        <img
+          src="@/assets/Search.svg"
+          alt="search icon"
+        >
+        <input
+          id="research"
+          type="text"
+          name="research"
+          :placeholder="$t('discover.inputPlaceholder')"
+        >
+      </div>
+    </section>
+    <section class="filters container">
+      <div class="filters--wrapper">
+        <span
+          v-for="(ff, index) in filters"
+          :key="index"
+        >
+          {{ ff }}
+        </span>
+      </div>
+    </section>
+    <!-- <section class="trends--videos container">
+      <header class="trends--videos--header">
+        <h2>{{ $t('discover.trendsVideosTitle') }}</h2>
+        <a href="#">{{ $t('discover.cta') }}</a>
+      </header>
+      <div class="trends--videos--slider">
+        <card-media
+          v-for="(video, index) in videosTrends"
+          :key="index"
+          :card="video"
+          :show-head="false"
+          :show-actions="false"
+        />
+      </div>
+    </section>
+    <section class="trends--creators container">
+      <header class="trends--creators--header">
+        <h2>{{ $t('discover.trendsCreatorsTitle') }}</h2>
+        <a href="#">{{ $t('discover.cta') }}</a>
+      </header>
+      <div class="trends--creators--slider">
+        <avatar-with-name
+          v-for="(creator, index) in creatorsTrends"
+          :key="index"
+          :user-data="creator"
+        />
+      </div>
+    </section> -->
+    <navigation />
+  </template>
 </template>
 
 <style scoped lang="scss">

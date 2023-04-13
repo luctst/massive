@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
-import http from '@/utils/http';
 import { onMounted } from 'vue';
 
 const router = useRouter();
@@ -11,13 +10,7 @@ const dataLoaded = ref<boolean>(false);
 
 onMounted(async () => {
   try {
-    const { data } = await http.get('/users/me', {
-      headers: {
-        Authorization: `Bearer ${userStore.user?.jwt}`,
-      },
-    });
-
-    userStore.setUser({ ...data, jwt: userStore.user?.jwt });
+    await userStore.setUser();
     dataLoaded.value = true;
   } catch (error) {
     router.push({ name: 'Signup' });
@@ -64,7 +57,7 @@ onMounted(async () => {
         </template>
       </template>
     </main>
-    <navigation />
+    <navigation-footer />
   </template>
 </template>
 

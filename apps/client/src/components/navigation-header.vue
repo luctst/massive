@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const title = ref<string>(useRoute().meta.headerTitle as string || '');
+const getNameInitial = computed(() => `${userStore.user?.firstname[0].toUpperCase()}${userStore.user?.lastname[0].toUpperCase()}`);
 </script>
 
 <template>
@@ -30,8 +31,21 @@ const title = ref<string>(useRoute().meta.headerTitle as string || '');
               alt="notification"
             >
           </div>
-          <div class="is__container__img">
-            <img :src="userStore.avatar || ''">
+          <div
+            v-if="userStore.user?.avatar"
+            class="is__container__img"
+          >
+            <router-link :to="{ name: 'User', params: { id: userStore.user.id } }">
+              <img :src="userStore.user.avatar || ''">
+            </router-link>
+          </div>
+          <div
+            v-else
+            class="fake--avatar"
+          >
+            <router-link :to="{ name: 'User', params: { id: userStore.user?.id } }">
+              <span>{{ getNameInitial }}</span>
+            </router-link>
           </div>
         </div>
       </template>
@@ -71,6 +85,32 @@ header {
     div:last-child {
       margin-left: 1rem;
       width: 27px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .fake--avatar {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      background: rgb(123, 121, 255);
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+
+      a {
+        display: flex;
+        text-decoration: none;
+
+        span {
+          font-weight: 600;
+          font-size: 0.6875rem;
+          color: rgb(255, 255, 255);
+          text-transform: uppercase;
+        }
+      }
     }
   }
 }

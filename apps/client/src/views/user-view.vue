@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { marked } from 'marked';
 import { useI18n } from 'vue-i18n';
 import { UserStore } from '@/types/index';
@@ -7,7 +8,6 @@ import { useUserStore } from '@/stores/user';
 import UserAbout from '@/components/user-about.vue';
 import UserCommunity from '@/components/user-community.vue';
 import UserPublication from '@/components/user-publications.vue';
-import mocks from '@/mocks/index';
 
 interface Category {
   active: boolean;
@@ -16,6 +16,7 @@ interface Category {
 }
 
 const { t } = useI18n();
+const route = useRoute();
 const userStore = useUserStore();
 const userData = ref<UserStore>({} as UserStore);
 const dataFetched = ref<boolean>(false);
@@ -41,7 +42,9 @@ const userFullName = computed(() => {
   return `${userData.value.firstname} ${userData.value.lastname}`;
 });
 
-const isUserAuthFollowing = computed(() => userData.value.followers?.some((ff) => ff.id === userStore.id));
+const isUserAuthFollowing = computed(() => userData.value.followers?.some((ff) => ff.id === userStore.user?.id));
+const getNameInitial = computed(() => `${userStore.user?.firstname[0].toUpperCase()}${userStore.user?.lastname[0].toUpperCase()}`);
+
 
 const descriptionMarkdown = computed(() => {
   marked.setOptions({
@@ -62,18 +65,21 @@ const switchCategory = (index: number) => {
   });
 };
 
-onMounted(async () => {
-  userData.value = mocks.user2;
-  dataFetched.value = true;
+onMounted(() => {
+  if (userStore.user?.id === Number.parseInt(route.params.id as string)) {
+    userData.value = userStore.user;
+    dataFetched.value = true;
+    return;
+  }
 });
 </script>
 
 <template>
-  <loader v-if="!dataFetched" />
+  <loader-vue v-if="!dataFetched" />
   <template v-else>
     <header class="head">
       <div class="is__container__img head--bg--image">
-        <img :src="userData.profilBackground">
+        <img :src="userData.profil_background">
       </div>
       <div class="head--nav container">
         <div
@@ -93,6 +99,7 @@ onMounted(async () => {
           v-if="userData.avatar"
           :src="userData.avatar"
         >
+        <span v-else>{{ getNameInitial }}</span>
       </div>
       <div class="creator--infos">
         <div class="creator--infos--left">
@@ -170,6 +177,16 @@ onMounted(async () => {
     top: 14%;
     border-radius: 50%;
     width: 80px;
+
+    span {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      background: rgb(123, 121, 255);
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+    }
   }
 
   &--infos {

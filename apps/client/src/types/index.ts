@@ -34,7 +34,7 @@ export interface UserStore {
   [key: string]: string;
   };
   avatar?: string | null;
-  profilBackground?: string;
+  profil_background?: string;
   description?: string;
 }
 

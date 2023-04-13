@@ -10,6 +10,6 @@ RUN pnpm fetch
 
 ADD . ./
 
-RUN pnpm install -r --offline
+RUN pnpm install -r --prefer-offline
 
 CMD pnpm run --filter api --filter client --if-present -r --stream dev

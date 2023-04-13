@@ -16,8 +16,20 @@ export const useUserStore = defineStore({
     };
   },
   actions: {
-    setUser(userData: UserStore) {
-      this.user = userData;
+    async setUser(): Promise<void> {
+      try {
+        const { data } = await http.get('/users/me?populate=*', {
+          headers: {
+            Authorization: `Bearer ${this.user?.jwt}`,
+          },
+        });
+        this.user = {
+          ...this.user,
+          ...data,
+        };
+      } catch (error: AxiosError | any) {
+        throw error;
+      }
     },
     async authUser(userId: { email: string; password: string }): Promise<boolean | AxiosError> {
       try {
