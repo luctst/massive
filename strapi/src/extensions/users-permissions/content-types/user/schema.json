@@ -98,6 +98,18 @@
       "relation": "oneToMany",
       "target": "api::media.media",
       "mappedBy": "user"
+    },
+    "followings": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "followers"
+    },
+    "followers": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "followings"
     }
   }
 }

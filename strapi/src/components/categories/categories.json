@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_categories_categories",
+  "info": {
+    "displayName": "categories",
+    "icon": "align-justify",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "subjects": {
+      "type": "json"
+    }
+  }
+}

@@ -21,11 +21,6 @@
       "type": "biginteger",
       "default": "0"
     },
-    "author": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user"
-    },
     "description": {
       "type": "richtext"
     },
@@ -39,6 +34,15 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "media"
+    },
+    "categories": {
+      "type": "component",
+      "repeatable": false,
+      "component": "categories.categories"
+    },
+    "length": {
+      "type": "biginteger",
+      "required": true
     }
   }
 }
