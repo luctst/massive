@@ -110,6 +110,10 @@
       "relation": "manyToMany",
       "target": "plugin::users-permissions.user",
       "inversedBy": "followings"
+    },
+    "profil_background": {
+      "type": "string",
+      "default": "https://massive-assets-dev.s3.eu-west-1.amazonaws.com/Rectangle24_1a7ec120ec.svg?updated_at=2023-04-13T19:06:34.894Z"
     }
   }
 }

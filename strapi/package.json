@@ -14,6 +14,7 @@
     "@strapi/strapi": "4.5.4",
     "@strapi/plugin-users-permissions": "4.5.4",
     "@strapi/plugin-i18n": "4.5.4",
+    "@strapi/provider-upload-aws-s3": "4.5.4",
     "better-sqlite3": "7.4.6",
     "sharp": "0.31.3"
   },
