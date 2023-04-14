@@ -33,7 +33,7 @@ const returnImgSocial = (socialId: string): string => {
 };
 
 const userCreatedAt = computed(() => {
-  const date = props.userData.createdAt;
+  const date = new Date(props.userData.createdAt);
   return `${date.getDate()} ${date.toLocaleDateString('fr-FR', { month: 'long' })} ${date.getFullYear()}`;
 });
 </script>
@@ -41,7 +41,7 @@ const userCreatedAt = computed(() => {
 <template>
   <header class="about container">
     <div class="about--publications">
-      {{ props.userData.media?.length }}
+      {{ props.userData.media?.length || 0 }}
       <span>{{ $t('userAbout.publications') }}</span>
     </div>
     <div class="about--followers">

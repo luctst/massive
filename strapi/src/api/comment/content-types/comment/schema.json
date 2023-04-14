@@ -4,7 +4,8 @@
   "info": {
     "singularName": "comment",
     "pluralName": "comments",
-    "displayName": "comment"
+    "displayName": "comment",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -23,9 +24,21 @@
       "target": "plugin::users-permissions.user"
     },
     "likes": {
+      "type": "component",
+      "repeatable": true,
+      "component": "like.likes"
+    },
+    "media": {
       "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::like.like"
+      "relation": "manyToOne",
+      "target": "api::media.media",
+      "inversedBy": "comments"
+    },
+    "article": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::article.article",
+      "inversedBy": "comments"
     }
   }
 }

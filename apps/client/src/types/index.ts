@@ -1,6 +1,8 @@
 export interface MediaType {
-  isMedia: boolean;
-  isArticle: boolean;
+  cardType: {
+    isMedia: boolean;
+    isArticle: boolean;
+  }
 }
 
 export interface Media {
@@ -9,10 +11,10 @@ export interface Media {
   title: string;
   preview: string;
   createdAt: Date;
-  author: UserStore;
+  user: UserStore;
   likes: Array<Likes>;
   comments: Array<Comments>;
-  type: MediaType;
+  card_type: MediaType;
   view: number;
   description?: string;
 }
@@ -24,12 +26,13 @@ export interface UserStore {
   bookmarks: Array<Article | Media> | null;
   followers: Array<UserStore> | null;
   following: Array<UserStore> | null;
-  media: Array<Media | Article> | null;
+  articles: Array<Article> | null;
+  media: Array<Media> | null;
   comments: Array<Comments> | null;
   createdAt: Date;
   udpatedAt: Date;
-  jwt: string;
   pricing: number;
+  jwt?: string;
   social?: {
   [key: string]: string;
   };
@@ -40,7 +43,9 @@ export interface UserStore {
 
 export interface Likes {
   id: number;
-  author: UserStore;
+  user_id: number;
+  article_id: number;
+  media_id: number;
 }
 
 export interface Comments {
@@ -55,11 +60,11 @@ export interface Article {
   id: number;
   title: string;
   content: string;
-  author: UserStore;
+  user: UserStore;
   createdAt: Date;
   likes: Array<Likes>;
   comments: Array<Comments>;
-  type: MediaType;
+  card_type: MediaType;
 }
 
 export interface ReqAxiosNewUser {

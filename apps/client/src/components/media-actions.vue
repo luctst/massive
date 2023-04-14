@@ -7,13 +7,13 @@ const userStore = useUserStore();
 const props = defineProps<{ media: Article | Media }>();
 const { media } = toRefs(props);
 
-const userHasLikedMedia: ComputedRef<boolean> = computed(() => media.value.likes.some((lk) => lk.author.id === userStore.id));
-const userHasBookmarked: ComputedRef<boolean | undefined> = computed(() => userStore.bookmarks?.some((bk) => bk.id === media.value.id));
+const userHasLikedMedia: ComputedRef<boolean> = computed(() => media.value.likes.some((lk) => lk.user_id === userStore.user?.id));
+const userHasBookmarked: ComputedRef<boolean | undefined> = computed(() => userStore.user?.bookmarks?.some((bk) => bk.id === media.value.id));
 
 const handleLike = (): void => {
   if (userHasLikedMedia.value) {
     media.value.likes.splice(
-      media.value.likes.findIndex((lk) => lk.author.id === userStore.id),
+      media.value.likes.findIndex((lk) => lk.user_id === userStore.user?.id),
       1
     );
     return;
@@ -27,14 +27,14 @@ const handleLike = (): void => {
 
 const handleBookmark = (): void => {
   if (userHasBookmarked.value) {
-    userStore.bookmarks?.splice(
-      userStore.bookmarks?.findIndex((bk) => bk.id === media.value.id),
+    userStore.user?.bookmarks?.splice(
+      userStore.user?.bookmarks?.findIndex((bk) => bk.id === media.value.id),
       1
     );
     return;
   }
 
-  userStore.bookmarks?.push(media.value);
+  userStore.user?.bookmarks?.push(media.value);
 };
 </script>
 

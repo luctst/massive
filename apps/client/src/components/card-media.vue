@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<{
   showHead: true,
   showActions: true,
 });
-const isUserAuthFollowing = computed(() => userStore.following?.some((ff) => ff.id === props.card.author.id));
+const isUserAuthFollowing = computed(() => userStore.user?.following?.some((ff) => ff.id === props.card.user.id));
 
 const goToArticle = (): void => {
   if (!isUserAuthFollowing.value) return;
@@ -23,10 +23,10 @@ const goToArticle = (): void => {
 };
 
 const goToUserProfil = (): void => {
-  router.push({ name: 'User', params: { id: props.card.author.id } });
+  router.push({ name: 'User', params: { id: props.card.user.id } });
 };
 
-const userFullName = computed(() => `${props.card.author.firstname} ${props.card.author.lastname}`);
+const userFullName = computed(() => `${props.card.user.firstname} ${props.card.user.lastname}`);
 </script>
 
 <template>
@@ -44,13 +44,13 @@ const userFullName = computed(() => `${props.card.author.firstname} ${props.card
       >
         <div class="is__container__img">
           <img
-            :src="props.card.author.avatar || 'https://via.placeholder.com/150'"
+            :src="props.card.user.avatar || 'https://via.placeholder.com/150'"
             alt="profil icon"
           >
         </div>
         <div class="card--container--item--top--user--name">
-          <p>{{ utils.formatUserName(props.card.author.firstname, props.card.author.lastname) }}</p>
-          <p>Il y a {{ utils.formatDate(props.card.createdAt) }}</p>
+          <p>{{ utils.formatUserName(props.card.user.firstname, props.card.user.lastname) }}</p>
+          <p>Il y a {{ utils.formatDate(new Date(props.card.createdAt)) }}</p>
         </div>
       </div>
       <span class="card--container--item--top--svg">

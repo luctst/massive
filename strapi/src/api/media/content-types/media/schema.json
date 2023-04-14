@@ -24,9 +24,8 @@
     "description": {
       "type": "richtext"
     },
-    "preview": {
+    "video_url": {
       "type": "string",
-      "regex": "        RegExp pattern: [(http(s)?):\\/\\/(www\\.)?a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)",
       "required": true
     },
     "user": {
@@ -40,9 +39,22 @@
       "repeatable": false,
       "component": "categories.categories"
     },
-    "length": {
-      "type": "biginteger",
+    "card_type": {
+      "type": "component",
+      "repeatable": false,
+      "component": "card-type.card-type",
       "required": true
+    },
+    "likes": {
+      "type": "component",
+      "repeatable": true,
+      "component": "like.likes"
+    },
+    "comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "media"
     }
   }
 }

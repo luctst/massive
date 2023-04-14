@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_like_likes",
+  "info": {
+    "displayName": "likes",
+    "icon": "allergies"
+  },
+  "options": {},
+  "attributes": {
+    "user_id": {
+      "type": "biginteger",
+      "required": true,
+      "min": "0"
+    },
+    "article_id": {
+      "type": "biginteger",
+      "min": "0"
+    },
+    "media_id": {
+      "type": "biginteger",
+      "min": "0"
+    }
+  }
+}

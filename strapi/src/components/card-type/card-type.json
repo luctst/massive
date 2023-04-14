@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_card_type_card_types",
+  "info": {
+    "displayName": "card_type",
+    "icon": "ad"
+  },
+  "options": {},
+  "attributes": {
+    "cardType": {
+      "type": "json",
+      "required": true
+    }
+  }
+}

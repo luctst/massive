@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * like controller
+ * article controller
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
 
-module.exports = createCoreController('api::like.like');
+module.exports = createCoreController('api::article.article');

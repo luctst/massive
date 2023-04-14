@@ -18,7 +18,7 @@ export const useUserStore = defineStore({
   actions: {
     async setUser(): Promise<void> {
       try {
-        const { data } = await http.get('/users/me?populate=*', {
+        const { data } = await http.get('/users/me?populate[media][populate]=*&populate[likes][populate]=*&populate[followers][populate]=*&populate[following][populate]=*&populate[articles][populate]=*', {
           headers: {
             Authorization: `Bearer ${this.user?.jwt}`,
           },

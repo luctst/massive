@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, ComputedRef } from 'vue';
 import { useRoute } from 'vue-router';
 import { marked } from 'marked';
 import { useI18n } from 'vue-i18n';
@@ -38,12 +38,13 @@ const category = ref<Array<Category>>([
   },
 ]);
 
-const userFullName = computed(() => {
+const userFullName: ComputedRef<string> = computed(() => {
   return `${userData.value.firstname} ${userData.value.lastname}`;
 });
 
-const isUserAuthFollowing = computed(() => userData.value.followers?.some((ff) => ff.id === userStore.user?.id));
-const getNameInitial = computed(() => `${userStore.user?.firstname[0].toUpperCase()}${userStore.user?.lastname[0].toUpperCase()}`);
+const isUserAuthFollowing: ComputedRef<boolean | undefined> = computed(() => userData.value.followers?.some((ff) => ff.id === userStore.user?.id));
+const isUserAuthOnHisProfil: ComputedRef<boolean> = computed(() => userStore.user?.id === Number.parseInt(route.params.id as string));
+const getNameInitial: ComputedRef<string> = computed(() => `${userStore.user?.firstname[0].toUpperCase()}${userStore.user?.lastname[0].toUpperCase()}`);
 
 
 const descriptionMarkdown = computed(() => {
@@ -66,7 +67,7 @@ const switchCategory = (index: number) => {
 };
 
 onMounted(() => {
-  if (userStore.user?.id === Number.parseInt(route.params.id as string)) {
+  if (isUserAuthOnHisProfil.value) {
     userData.value = userStore.user;
     dataFetched.value = true;
     return;
@@ -149,6 +150,8 @@ onMounted(() => {
           :is="category.find((c) => c.active)?.componentRelated"
           :user-data="userData"
           :show-comments-head="false"
+          :is-user-auth-on-his-profile="isUserAuthOnHisProfil"
+          :is-user-auth-following="isUserAuthFollowing"
         />
       </keep-alive>
     </main>

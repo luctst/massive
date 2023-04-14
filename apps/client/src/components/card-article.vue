@@ -17,7 +17,7 @@ const props = withDefaults(defineProps<Props>(), {
   showHead: true,
   showActions: true,
 });
-const isUserAuthFollowing = computed(() => userStore.following?.some((ff) => ff.id === props.card.author.id));
+const isUserAuthFollowing = computed(() => userStore.user?.following?.some((ff) => ff.id === props.card.user.id));
 
 const goToArticle = (): void => {
   if (!isUserAuthFollowing.value) return;
@@ -25,11 +25,11 @@ const goToArticle = (): void => {
 };
 
 const goToUserProfil = (): void => {
-  router.push({ name: 'User', params: { id: props.card.author.id } });
+  router.push({ name: 'User', params: { id: props.card.user.id } });
 };
 
-const cacheUserName = computed(() => utils.formatUserName(props.card.author.firstname, props.card.author.lastname));
-const cacheCreatedAt = computed(() => utils.formatDate(props.card.createdAt));
+const cacheUserName = computed(() => utils.formatUserName(props.card.user.firstname, props.card.user.lastname));
+const cacheCreatedAt = computed(() => utils.formatDate(new Date(props.card.createdAt)));
 </script>
 
 <template>
@@ -46,7 +46,7 @@ const cacheCreatedAt = computed(() => utils.formatDate(props.card.createdAt));
         @click.stop="goToUserProfil"
       >
         <div class="is__container__img">
-          <img :src="props.card.author.avatar || ''">
+          <img :src="props.card.user.avatar || 'https://via.placeholder.com/150'">
         </div>
         <div class="card--article--top--user--name">
           <p>{{ cacheUserName }}</p>

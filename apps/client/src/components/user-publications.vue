@@ -1,18 +1,27 @@
 <script setup lang="ts">
+import { Media } from '@/types/index';
+import { Article } from '@/types/index';
 import { UserStore } from '@/types/index';
+import { ComputedRef, computed, ref } from 'vue';
 
 interface Props {
   userData: UserStore;
+  isUserAuthOnHisProfile: boolean;
+  isUserAuthFollowing: boolean;
 }
 
 const props = defineProps<Props>();
+const userPublications = ref<Array<Media | Article>>([].concat(props.userData.articles, props.userData.media));
+const shouldShowSubscribeBanner: ComputedRef<boolean> = computed(() => {
+  return !props.isUserAuthOnHisProfile && !props.isUserAuthFollowing;
+});
 </script>
 
 <template>
   <section class="container publications">
-    <template v-for="(card, index) in props.userData.media">
+    <template v-for="(card, index) in userPublications">
       <card-media
-        v-if="card.type.isMedia"
+        v-if="card.card_type.cardType.isMedia"
         :key="index"
         :card="card"
       />
@@ -23,7 +32,7 @@ const props = defineProps<Props>();
       />
     </template>
   </section>
-  <footer>
+  <footer v-if="shouldShowSubscribeBanner">
     <div class="abo container">
       <div class="abo--price">
         <div>{{ props.userData.pricing }} €<span>/ mois</span></div>
