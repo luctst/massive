@@ -9,7 +9,7 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <comments
+  <comments-media-article
     :comments="props.userData.comments"
     :author-name="props.userData.firstname"
     :author-lastname="props.userData.lastname"

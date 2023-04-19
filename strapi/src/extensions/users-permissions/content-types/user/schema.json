@@ -117,13 +117,29 @@
     },
     "profil_background": {
       "type": "string",
-      "default": "https://massive-assets-dev.s3.eu-west-1.amazonaws.com/Rectangle24_1a7ec120ec.svg?updated_at=2023-04-13T19:06:34.894Z"
+      "default": "https://massive-assets-dev.s3.eu-west-1.amazonaws.com/default_background_profile_fe9f438db3.svg?updated_at=2023-04-19T07:52:59.189Z"
     },
     "articles": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::article.article",
       "mappedBy": "user"
+    },
+    "comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "attah_user"
+    },
+    "bookmarks_media": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::media.media"
+    },
+    "bookmarks_article": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::article.article"
     }
   }
 }

@@ -3,6 +3,7 @@ import { computed, onBeforeMount, ref, toRefs } from 'vue';
 import { Comments, Likes } from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import formatDate from '@/utils/formatDate';
+import { useRoute } from 'vue-router';
 
 interface CommentsLikedByUserAuth {
   commentId: number;
@@ -10,6 +11,7 @@ interface CommentsLikedByUserAuth {
 }
 
 const userStore = useUserStore();
+const route = useRoute();
 const commentsLikedByUserAuth = ref<Array<CommentsLikedByUserAuth>>([]);
 const newComment = ref<string>('');
 const props = withDefaults(defineProps<{
@@ -25,12 +27,15 @@ const props = withDefaults(defineProps<{
 });
 const { comments } = toRefs(props);
 
-const userAuthIsFollowing = computed(() => userStore.following?.some((follow) => follow.id === props.authorId));
-const userAuthHasLiked = (likes: Array<Likes>): boolean => likes.some((like) => like.author.id === userStore.id);
+const userAuthIsFollowing = computed(() => {
+  if (userStore.user?.id === Number.parseInt(route.params.id as string)) return true;
+  return userStore.user?.following?.some((ff) => ff.id === props.authorId);
+});
+const userAuthHasLiked = (likes: Array<Likes>): boolean => likes.some((like) => like.user_id === userStore.user?.id);
 const handleLike = (commentIndex: number): void => {
   if (commentsLikedByUserAuth.value[commentIndex].hasBeenLiked) {
     comments.value[commentIndex].likes.splice(
-      comments.value[commentIndex].likes.findIndex((lk: Likes) => lk.author.id === userStore.id),
+      comments.value[commentIndex].likes.findIndex((lk: Likes) => lk.user_id === userStore.user?.id),
       1,
     );
     commentsLikedByUserAuth.value[commentIndex].hasBeenLiked = false;
@@ -93,7 +98,7 @@ onBeforeMount(() => {
             </p>
           </div>
           <div class="comments--wrapper--metadata">
-            <p>{{ $t('comments.createdAt', { creationTime: formatDate(comment.createdAt)}) }}</p>
+            <p>{{ $t('comments.createdAt', { creationTime: formatDate(new Date(comment.createdAt))}) }}</p>
             <p>
               {{ comment.likes.length }}
               <img

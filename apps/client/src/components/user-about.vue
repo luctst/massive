@@ -14,6 +14,9 @@ const props = defineProps<Props>();
 const userSocialKeys: ComputedRef<Array<string>> = computed(() => {
   return Object.keys(props.userData.social || {});
 });
+const publicationsLength = computed(() => {
+  return (props.userData.media?.length || 0) + (props.userData.articles?.length || 0);
+});
 
 const returnImgSocial = (socialId: string): string => {
   switch (socialId) {
@@ -41,7 +44,7 @@ const userCreatedAt = computed(() => {
 <template>
   <header class="about container">
     <div class="about--publications">
-      {{ props.userData.media?.length || 0 }}
+      {{ publicationsLength }}
       <span>{{ $t('userAbout.publications') }}</span>
     </div>
     <div class="about--followers">

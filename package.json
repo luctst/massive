@@ -17,6 +17,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
+    "strapi-plugin-populate-deep": "^2.0.0",
     "husky": "^8.0.1"
   }
 }

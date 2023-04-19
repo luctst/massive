@@ -1,11 +1,12 @@
-import { AxiosError } from 'axios';
+import { AxiosError, ParamsSerializerOptions } from 'axios';
 import { defineStore } from 'pinia';
+import qs from 'qs';
 import { UserStore } from '@/types/index';
 import { ReqAxiosNewUser } from '@/types/index';
 import http from '@/utils/http';
 
 export interface Store {
-  user: UserStore | null;
+  user: UserStore | null;
 }
 
 export const useUserStore = defineStore({
@@ -18,7 +19,11 @@ export const useUserStore = defineStore({
   actions: {
     async setUser(): Promise<void> {
       try {
-        const { data } = await http.get('/users/me?populate[media][populate]=*&populate[likes][populate]=*&populate[followers][populate]=*&populate[following][populate]=*&populate[articles][populate]=*', {
+        const paramsArticles = qs.stringify(
+          { 
+            populate: ['followings', 'followings.articles', 'followings.articles.user', 'followings.articles.likes', 'followings.articles.comments', 'followings.media', 'followings.media.user', 'followings.media.likes', 'followings.media.comments', 'bookmarks_media', 'bookmarks_article', 'articles', 'media'],
+          });
+        const { data } = await http.get(`/users/me?${paramsArticles}`, {
           headers: {
             Authorization: `Bearer ${this.user?.jwt}`,
           },

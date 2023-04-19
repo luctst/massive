@@ -23,9 +23,10 @@ export interface UserStore {
   id: number;
   firstname: string;
   lastname: string;
-  bookmarks: Array<Article | Media> | null;
+  bookmarks_media: Array<Media> | null;
+  bookmarks_article: Array<Article> | null;
   followers: Array<UserStore> | null;
-  following: Array<UserStore> | null;
+  followings: Array<UserStore> | null;
   articles: Array<Article> | null;
   media: Array<Media> | null;
   comments: Array<Comments> | null;

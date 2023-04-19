@@ -3,14 +3,19 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import { onMounted } from 'vue';
+import { Article, Media } from '@/types';
 
 const router = useRouter();
 const userStore = useUserStore();
 const dataLoaded = ref<boolean>(false);
+const publications = ref<Array<Article | Media>>([]);
 
 onMounted(async () => {
   try {
     await userStore.setUser();
+    publications.value = userStore.user?.followings?.map((follower) => {
+      return follower.media?.concat(follower.articles);
+    }).flat();
     dataLoaded.value = true;
   } catch (error) {
     router.push({ name: 'Signup' });
@@ -23,7 +28,7 @@ onMounted(async () => {
   <template v-else>
     <navigation-header />
     <main class="container home">
-      <template v-if="!userStore.user?.following?.length">
+      <template v-if="!userStore.user?.followings?.length">
         <div class="no--follow">
           <p>Vous ne suivez personne pour le moment</p>
           <button @click="$router.push({ name: 'Explorer'})">
@@ -33,24 +38,21 @@ onMounted(async () => {
       </template>
       <template v-else>
         <template
-          v-for="(ff, index) in userStore.user?.following"
+          v-for="(ff, index) in publications"
           :key="index"
         >
           <section
             :data-id="ff.id"
             class="medias--container"
           >
-            <div
-              v-for="(media, iterator) in ff.media"
-              :key="iterator"
-            >
+            <div>
               <card-media
-                v-if="media.type.isMedia"
-                :card="media"
+                v-if="ff.preview"
+                :card="ff"
               />
               <card-article
                 v-else
-                :card="media"
+                :card="ff"
               />
             </div>
           </section>  

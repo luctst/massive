@@ -21,7 +21,7 @@ const shouldShowSubscribeBanner: ComputedRef<boolean> = computed(() => {
   <section class="container publications">
     <template v-for="(card, index) in userPublications">
       <card-media
-        v-if="card.card_type.cardType.isMedia"
+        v-if="card.preview"
         :key="index"
         :card="card"
       />

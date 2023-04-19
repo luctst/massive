@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { toRefs, computed, ComputedRef } from 'vue';
+import http from '@/utils/http';
 import { useUserStore } from '@/stores/user';
 import { Article, Media } from '@/types/index';
 
@@ -7,34 +8,89 @@ const userStore = useUserStore();
 const props = defineProps<{ media: Article | Media }>();
 const { media } = toRefs(props);
 
-const userHasLikedMedia: ComputedRef<boolean> = computed(() => media.value.likes.some((lk) => lk.user_id === userStore.user?.id));
-const userHasBookmarked: ComputedRef<boolean | undefined> = computed(() => userStore.user?.bookmarks?.some((bk) => bk.id === media.value.id));
+const userHasLikedMedia: ComputedRef<boolean> = computed(() => media.value.likes.some((lk) => Number.parseInt(lk.user_id as string) === userStore.user?.id));
+const mediaType = computed(() => {
+  if (media.value.views) return 'isMedia';
+  return 'isArticle';
+});
+const userHasBookmarked: ComputedRef<boolean | undefined> = computed(() => {
+  if (mediaType.value === 'isArticle') return userStore.user?.bookmarks_article?.some((bk) => bk.id === media.value.id);
+  return userStore.user?.bookmarks_media?.some((bk) => bk.id === media.value.id)
+});
 
-const handleLike = (): void => {
+const handleLike = async (): Promise<void> => {
   if (userHasLikedMedia.value) {
     media.value.likes.splice(
       media.value.likes.findIndex((lk) => lk.user_id === userStore.user?.id),
       1
     );
+
+    await http.put(`${mediaType.value === 'isArticle' ? 'articles' : 'medias'}/${media.value.id}`, {
+      data: {
+        likes: media.value.likes,
+      },
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${userStore.user?.jwt}`,
+      },
+    })
     return;
   }
 
-  media.value.likes.push({
-    id: Math.floor(Math.random() * 1000),
-    author: userStore,
+  const { data } = await http.put(`${mediaType.value === 'isArticle' ? 'articles' : 'medias'}/${media.value.id}`, {
+    data: {
+      likes: [
+        ...media.value.likes,
+        {
+          user_id: userStore.user?.id,
+        },
+      ],
+    },
+  },
+  {
+    params: {
+      populate: 'likes',
+    },
+    headers: {
+      Authorization: `Bearer ${userStore.user?.jwt}`,
+    },
   });
+  media.value.likes.push(data.data.attributes.likes[data.data.attributes.likes.length - 1]);
 };
 
-const handleBookmark = (): void => {
+const handleBookmark = async (): Promise<void> => {
+  const utils = {
+    fieldsInStore: mediaType.value === 'isArticle' ? 'bookmarks_article' : 'bookmarks_media',
+  };
+
   if (userHasBookmarked.value) {
-    userStore.user?.bookmarks?.splice(
-      userStore.user?.bookmarks?.findIndex((bk) => bk.id === media.value.id),
+    userStore.user?.[utils.fieldsInStore].splice(
+      userStore.user?.[utils.fieldsInStore]?.findIndex((bk) => bk.id === media.value.id),
       1
     );
+
+    await http.put(`users/${userStore.user?.id}`, {
+      data: {
+        [utils.fieldsInStore]: userStore.user?.[utils.fieldsInStore].map((bookmark) => bookmark.id),
+      },
+    }, {
+      headers: {
+        Authorization: `Bearer ${userStore.user?.jwt}`,
+      },
+    })
     return;
   }
 
-  userStore.user?.bookmarks?.push(media.value);
+  await http.put(`users/${userStore.user?.id}`, {
+    [utils.fieldsInStore]: userStore.user?.[utils.fieldsInStore]?.map((bookmark) => bookmark.id).concat(media.value.id),
+  }, {
+    headers: {
+      Authorization: `Bearer ${userStore.user?.jwt}`,
+    },
+  });
+
+  userStore.user?.[utils.fieldsInStore].push(media.value);
 };
 </script>
 

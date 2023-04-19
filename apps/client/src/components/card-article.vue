@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { Article} from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import utils from '@/utils/index';
@@ -12,12 +12,16 @@ interface Props {
 }
 
 const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
 const props = withDefaults(defineProps<Props>(), {
   showHead: true,
   showActions: true,
 });
-const isUserAuthFollowing = computed(() => userStore.user?.following?.some((ff) => ff.id === props.card.user.id));
+const isUserAuthFollowing = computed(() => {
+  if (userStore.user?.id === Number.parseInt(route.params.id as string)) return true;
+  return userStore.user?.followings?.some((ff) => ff.id === props.card.user.id);
+});
 
 const goToArticle = (): void => {
   if (!isUserAuthFollowing.value) return;

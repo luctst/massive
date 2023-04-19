@@ -39,22 +39,21 @@
       "repeatable": false,
       "component": "categories.categories"
     },
-    "card_type": {
-      "type": "component",
-      "repeatable": false,
-      "component": "card-type.card-type",
-      "required": true
-    },
     "likes": {
       "type": "component",
       "repeatable": true,
-      "component": "like.likes"
+      "component": "like.likes",
+      "default": []
     },
     "comments": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::comment.comment",
       "mappedBy": "media"
+    },
+    "preview": {
+      "type": "string",
+      "required": true
     }
   }
 }
