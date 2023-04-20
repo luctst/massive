@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import qs from 'qs';
 import { useUserStore } from '@/stores/user';
 import { Media } from '@/types/index';
 import formatDate from '@/utils/formatDate';
-import mocks from '@/mocks/index';
+import http from '@/utils/http';
+import { toast } from 'vue3-toastify';
 
 const { t } = useI18n();
+const route = useRoute();
 const userStore = useUserStore();
 const media = ref<Media | null>();
 const tabs = ref<Array<{ active: boolean; tabName: string;}>>([]);
 
 const userFullName = computed(() => {
-  return `${media.value?.author.firstname} ${media.value?.author.lastname}`;
+  return `${media.value?.user.firstname} ${media.value?.user.lastname}`;
 });
 
 const switchTabActive = (index: number) => {
@@ -31,21 +35,46 @@ const switchTabActive = (index: number) => {
 };
 
 const tabActive = computed(() => tabs.value.find((tab) => tab.active)?.tabName);
-const isUserAuthFollowing = computed(() => media.value?.author.followers?.some((ff) => ff.id === userStore.id));
-const mediaPublishedDate = computed(() => formatDate(media.value?.createdAt || new Date()));
+const isUserAuthFollowing = computed(() => media.value?.user.followers?.some((ff) => ff.id === userStore.user?.id));
+const mediaPublishedDate = computed(() => formatDate(new Date(media.value?.createdAt) || new Date()));
 
-onMounted(() => {
-  media.value = mocks.media2;
-  tabs.value = [
-    {
-      active: true,
-      tabName: 'Description',
-    },
-    {
-      active: false,
-      tabName: `${media.value?.comments.length || 0} ${t('comments.head')}`,
-    },
-  ];
+onMounted(async () => {
+  try {
+    const queryParams = qs.stringify({
+      populate: ['user', 'user.followings', 'user.followers', 'likes', 'comments']
+    });
+    const { data } = await http.get(`/medias/${route.params.id}?${queryParams}`, {
+      headers: {
+        Authorization: `Bearer ${userStore.user?.jwt}`,
+      },
+    });
+    
+    const newObj = {
+      ...data.data.attributes,
+      id: data.data.id,
+      user: {
+        ...data.data.attributes.user.data.attributes,
+        id: data.data.attributes.user.data.id,
+        followers: data.data.attributes.user.data.attributes.followers.data.map((el) => ({id: el.id, ...el.attributes})),
+        followings: data.data.attributes.user.data.attributes.followings.data.map((el) => ({id: el.id, ...el.attributes})),
+        comments: data.data.attributes.comments.data.map((el) => ({id: el.id, ...el.attributes})),
+      },
+    };
+    tabs.value = [
+      {
+        active: true,
+        tabName: 'Description',
+      },
+      {
+        active: false,
+        tabName: `${media.value?.comments.length || 0} ${t('comments.head')}`,
+      },
+    ];
+
+    media.value = { ...newObj };
+  } catch (error) {
+    toast.error('Une erreur est survenue, veuillez réessayer');
+  }
 });
 </script>
 
@@ -55,21 +84,20 @@ onMounted(() => {
       <div class="video--box--media">
         <video
           src="@/assets/Studio_Project.mp4"
-          autoplay
           muted
           controls
         />
       </div>
       <div class="video--box--infos container">
         <h1>{{ media.title }}</h1>
-        <div><span>{{ media.view }}</span> vues</div>
+        <div><span>{{ new Intl.NumberFormat('fr-FR').format(Number.parseInt(media.views)) }}</span> vues</div>
       </div>
       <div class="video--box--author container">
         <div class="video--box--author--left">
           <div class="is__container__img video--box--author--left--avatar">
             <img
-              v-if="media.author.avatar"
-              :src="media.author.avatar"
+              v-if="media.user.avatar"
+              :src="media.user.avatar"
             >
           </div>
           <div class="video--box--author--left--metadata">
@@ -98,7 +126,10 @@ onMounted(() => {
         </div>
       </div>
       <div class="video--box--actions container">
-        <media-actions :media="media" />
+        <media-actions
+          :media="media"
+          :is-user-auth-following="isUserAuthFollowing"
+        />
       </div>
       <section class="tab container">
         <div class="tab--selector">
@@ -136,8 +167,8 @@ onMounted(() => {
         v-else
         :comments="media.comments"
         :show-comments-head="false"
-        :author-name="media.author.firstname"
-        :author-lastname="media.author.lastname"
+        :author-name="media.user.firstname"
+        :author-lastname="media.user.lastname"
         :author-id="media.id"
       />
     </main>

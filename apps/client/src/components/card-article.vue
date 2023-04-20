@@ -38,7 +38,7 @@ const cacheCreatedAt = computed(() => utils.formatDate(new Date(props.card.creat
 
 <template>
   <div
-    class="card--article"
+    :class="['card--article', isUserAuthFollowing ? 'show--cursor--click': '']"
     @click.stop="goToArticle"
   >
     <div

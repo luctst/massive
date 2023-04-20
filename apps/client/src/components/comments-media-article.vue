@@ -28,8 +28,7 @@ const props = withDefaults(defineProps<{
 const { comments } = toRefs(props);
 
 const userAuthIsFollowing = computed(() => {
-  if (userStore.user?.id === Number.parseInt(route.params.id as string)) return true;
-  return userStore.user?.following?.some((ff) => ff.id === props.authorId);
+  return userStore.user?.followings?.some((ff) => ff.id === props.authorId);
 });
 const userAuthHasLiked = (likes: Array<Likes>): boolean => likes.some((like) => like.user_id === userStore.user?.id);
 const handleLike = (commentIndex: number): void => {

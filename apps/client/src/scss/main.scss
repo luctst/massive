@@ -30,14 +30,22 @@ body {
   }
 }
 
-.is__article__content {
-  margin: 0;
-  margin-bottom: 1rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: #9CA3AF;
-
-  &:last-child {
-    margin-bottom: 0;
+.content {
+  p {
+    margin: 0;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: #9CA3AF;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
+}
+.is__article__content {
+}
+
+.show--cursor--click {
+  cursor: pointer;
 }

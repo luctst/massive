@@ -10,12 +10,12 @@ export interface Media {
   length: number;
   title: string;
   preview: string;
-  createdAt: Date;
+  createdAt: string;
   user: UserStore;
   likes: Array<Likes>;
   comments: Array<Comments>;
   card_type: MediaType;
-  view: number;
+  views: number;
   description?: string;
 }
 
@@ -62,7 +62,7 @@ export interface Article {
   title: string;
   content: string;
   user: UserStore;
-  createdAt: Date;
+  createdAt: string;
   likes: Array<Likes>;
   comments: Array<Comments>;
   card_type: MediaType;

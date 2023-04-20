@@ -34,7 +34,7 @@ const userFullName = computed(() => `${props.card.user.firstname} ${props.card.u
 
 <template>
   <div
-    class="card--container--item"
+    :class="['card--container--item', isUserAuthFollowing ? 'show--cursor--click': '']"
     @click.stop="goToArticle"
   >
     <div
