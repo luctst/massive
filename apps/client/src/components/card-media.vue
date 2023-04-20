@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { Media } from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import utils from '@/utils/index';
 
 const router = useRouter();
-const route = useRoute();
 const userStore = useUserStore();
 const props = withDefaults(defineProps<{
   card: Media;
@@ -17,7 +16,7 @@ const props = withDefaults(defineProps<{
   showActions: true,
 });
 const isUserAuthFollowing = computed(() => {
-  if (userStore.user?.id === Number.parseInt(route.params.id as string)) return true;
+  if (userStore.user?.id === props.card.user.id) return true;
   return userStore.user?.followings?.some((ff) => ff.id === props.card.user.id);
 });
 
@@ -92,6 +91,7 @@ const userFullName = computed(() => `${props.card.user.firstname} ${props.card.u
         <media-actions
           v-if="props.showActions"
           :media="props.card"
+          :is-user-auth-following="isUserAuthFollowing"
         />
       </div>
     </div>

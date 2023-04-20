@@ -3,10 +3,11 @@ import { toRefs, computed, ComputedRef } from 'vue';
 import http from '@/utils/http';
 import { useUserStore } from '@/stores/user';
 import { Article, Media } from '@/types/index';
+import { toast } from 'vue3-toastify';
 
 const userStore = useUserStore();
-const props = defineProps<{ media: Article | Media }>();
-const { media } = toRefs(props);
+const props = defineProps<{ media: Article | Media; isUserAuthFollowing: boolean }>();
+const { media, isUserAuthFollowing } = toRefs(props);
 
 const userHasLikedMedia: ComputedRef<boolean> = computed(() => media.value.likes.some((lk) => Number.parseInt(lk.user_id as string) === userStore.user?.id));
 const mediaType = computed(() => {
@@ -19,76 +20,86 @@ const userHasBookmarked: ComputedRef<boolean | undefined> = computed(() => {
 });
 
 const handleLike = async (): Promise<void> => {
-  if (userHasLikedMedia.value) {
-    media.value.likes.splice(
-      media.value.likes.findIndex((lk) => lk.user_id === userStore.user?.id),
-      1
-    );
-
-    await http.put(`${mediaType.value === 'isArticle' ? 'articles' : 'medias'}/${media.value.id}`, {
+  try {
+    if (!isUserAuthFollowing.value) return;
+    if (userHasLikedMedia.value) {
+      media.value.likes.splice(
+        media.value.likes.findIndex((lk) => lk.user_id === userStore.user?.id),
+        1
+      );
+  
+      await http.put(`${mediaType.value === 'isArticle' ? 'articles' : 'medias'}/${media.value.id}`, {
+        data: {
+          likes: media.value.likes,
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userStore.user?.jwt}`,
+        },
+      })
+      return;
+    }
+  
+    const { data } = await http.put(`${mediaType.value === 'isArticle' ? 'articles' : 'medias'}/${media.value.id}`, {
       data: {
-        likes: media.value.likes,
+        likes: [
+          ...media.value.likes,
+          {
+            user_id: userStore.user?.id,
+          },
+        ],
       },
     },
     {
+      params: {
+        populate: 'likes',
+      },
       headers: {
         Authorization: `Bearer ${userStore.user?.jwt}`,
       },
-    })
-    return;
+    });
+    media.value.likes.push(data.data.attributes.likes[data.data.attributes.likes.length - 1]);
+  } catch (error) {
+    toast.error('Une erreur est survenue');
   }
-
-  const { data } = await http.put(`${mediaType.value === 'isArticle' ? 'articles' : 'medias'}/${media.value.id}`, {
-    data: {
-      likes: [
-        ...media.value.likes,
-        {
-          user_id: userStore.user?.id,
-        },
-      ],
-    },
-  },
-  {
-    params: {
-      populate: 'likes',
-    },
-    headers: {
-      Authorization: `Bearer ${userStore.user?.jwt}`,
-    },
-  });
-  media.value.likes.push(data.data.attributes.likes[data.data.attributes.likes.length - 1]);
 };
 
 const handleBookmark = async (): Promise<void> => {
-  const utils = {
-    fieldsInStore: mediaType.value === 'isArticle' ? 'bookmarks_article' : 'bookmarks_media',
-  };
+  try {
+    if (!isUserAuthFollowing.value) return;
+    const utils = {
+        fieldsInStore: mediaType.value === 'isArticle' ? 'bookmarks_article' : 'bookmarks_media',
+      };
 
-  if (userHasBookmarked.value) {
-    userStore.user?.[utils.fieldsInStore].splice(
-      userStore.user?.[utils.fieldsInStore]?.findIndex((bk) => bk.id === media.value.id),
-      1
-    );
+      if (userHasBookmarked.value) {
+        userStore.user?.[utils.fieldsInStore].splice(
+          userStore.user?.[utils.fieldsInStore]?.findIndex((bk) => bk.id === media.value.id),
+          1
+        );
 
-    await http.put(`users/${userStore.user?.id}`, {
-      [utils.fieldsInStore]: userStore.user?.[utils.fieldsInStore].map((bookmark) => bookmark.id),
-    }, {
-      headers: {
-        Authorization: `Bearer ${userStore.user?.jwt}`,
-      },
-    })
-    return;
+        await http.put(`users/${userStore.user?.id}`, {
+          [utils.fieldsInStore]: userStore.user?.[utils.fieldsInStore].map((bookmark) => bookmark.id),
+        }, {
+          headers: {
+            Authorization: `Bearer ${userStore.user?.jwt}`,
+          },
+        })
+        return;
+      }
+
+      await http.put(`users/${userStore.user?.id}`, {
+        [utils.fieldsInStore]: userStore.user?.[utils.fieldsInStore]?.map((bookmark) => bookmark.id).concat(media.value.id),
+      }, {
+        headers: {
+          Authorization: `Bearer ${userStore.user?.jwt}`,
+        },
+      });
+
+      userStore.user?.[utils.fieldsInStore].push(media.value); 
+  } catch (error) {
+    toast.error('Une erreur est survenue');
   }
-
-  await http.put(`users/${userStore.user?.id}`, {
-    [utils.fieldsInStore]: userStore.user?.[utils.fieldsInStore]?.map((bookmark) => bookmark.id).concat(media.value.id),
-  }, {
-    headers: {
-      Authorization: `Bearer ${userStore.user?.jwt}`,
-    },
-  });
-
-  userStore.user?.[utils.fieldsInStore].push(media.value);
 };
 </script>
 
@@ -97,7 +108,12 @@ const handleBookmark = async (): Promise<void> => {
     <div class="media--actions--likes--comments">
       <div class="is__container__img">
         <img
-          v-if="userHasLikedMedia"
+          v-if="!isUserAuthFollowing"
+          src="@/assets/heart-disabled.svg"
+          alt="icon like"
+        >
+        <img
+          v-else-if="userHasLikedMedia"
           src="@/assets/like.svg"
           alt="icon like"
           @click.stop="handleLike"
@@ -112,6 +128,12 @@ const handleBookmark = async (): Promise<void> => {
       </div>
       <div class="is__container__img">
         <img
+          v-if="!isUserAuthFollowing"
+          src="@/assets/comment-disabled.svg"
+          alt="icon comment"
+        >
+        <img
+          v-else
           src="@/assets/comments.svg"
           alt="icon comment"
         >

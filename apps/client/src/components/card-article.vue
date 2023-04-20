@@ -93,6 +93,7 @@ const cacheCreatedAt = computed(() => utils.formatDate(new Date(props.card.creat
         <media-actions
           v-if="props.showActions"
           :media="props.card"
+          :is-user-auth-following="isUserAuthFollowing"
         />
       </div>
     </div>
