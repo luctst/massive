@@ -3,11 +3,14 @@ import { onMounted, ref, computed, ComputedRef } from 'vue';
 import { useRoute } from 'vue-router';
 import { marked } from 'marked';
 import { useI18n } from 'vue-i18n';
+import qs from 'qs';
 import { UserStore } from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import UserAbout from '@/components/user-about.vue';
 import UserCommunity from '@/components/user-community.vue';
 import UserPublication from '@/components/user-publications.vue';
+import http from '@/utils/http';
+import utils from '@/utils';
 
 interface Category {
   active: boolean;
@@ -66,12 +69,21 @@ const switchCategory = (index: number) => {
   });
 };
 
-onMounted(() => {
+onMounted(async () => {
   if (isUserAuthOnHisProfil.value) {
     userData.value = userStore.user;
     dataFetched.value = true;
     return;
   }
+
+  const { data } = await http.get(`/users/${route.params.id}?${qs.stringify({ populate: utils.populateUsersData })}`, {
+    headers: {
+      Authorization: `Bearer ${userStore.user?.jwt}`,
+    },
+  });
+
+  userData.value = data;
+  dataFetched.value = true;
 });
 </script>
 
