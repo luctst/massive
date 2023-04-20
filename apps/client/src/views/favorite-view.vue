@@ -1,10 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { Article, Media } from '@/types/index';
 import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
-const bookmarks = ref<Array<Media | Article>>(userStore.bookmarks || []);
+const bookmarks = ref<Array<Media | Article>>([].concat(userStore.user?.bookmarks_article, userStore.user?.bookmarks_media));
+
+watch(
+  () => [userStore.user?.bookmarks_article, userStore.user?.bookmarks_media],
+  () => {
+    bookmarks.value = [].concat(userStore.user?.bookmarks_article, userStore.user?.bookmarks_media);
+  },
+  { deep: true, immediate: true }
+);
 </script>
 
 <template>
@@ -25,7 +33,7 @@ const bookmarks = ref<Array<Media | Article>>(userStore.bookmarks || []);
           :key="index"
         >
           <card-media
-            v-if="bookmark.type.isMedia"
+            v-if="bookmark.views"
             :card="bookmark"
           />
           <card-article
@@ -36,7 +44,7 @@ const bookmarks = ref<Array<Media | Article>>(userStore.bookmarks || []);
       </section>
     </template>
   </main>
-  <navigation />
+  <navigation-footer />
 </template>
 
 <style scoped lang="scss">

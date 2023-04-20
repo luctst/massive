@@ -71,9 +71,7 @@ const handleBookmark = async (): Promise<void> => {
     );
 
     await http.put(`users/${userStore.user?.id}`, {
-      data: {
-        [utils.fieldsInStore]: userStore.user?.[utils.fieldsInStore].map((bookmark) => bookmark.id),
-      },
+      [utils.fieldsInStore]: userStore.user?.[utils.fieldsInStore].map((bookmark) => bookmark.id),
     }, {
       headers: {
         Authorization: `Bearer ${userStore.user?.jwt}`,

@@ -49,11 +49,6 @@ const getNameInitial = computed(() => `${userStore.user?.firstname[0].toUpperCas
           </div>
         </div>
       </template>
-      <template v-else>
-        <div class="is__container__img">
-          <img src="@/assets/icon_filter.svg">
-        </div>
-      </template>
     </template>
   </header>
 </template>
