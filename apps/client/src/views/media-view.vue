@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import qs from 'qs';
 import { useUserStore } from '@/stores/user';
@@ -11,6 +11,7 @@ import { toast } from 'vue3-toastify';
 
 const { t } = useI18n();
 const route = useRoute();
+const router = useRouter();
 const userStore = useUserStore();
 const media = ref<Media | null>();
 const tabs = ref<Array<{ active: boolean; tabName: string;}>>([]);
@@ -36,6 +37,7 @@ const switchTabActive = (index: number) => {
 
 const tabActive = computed(() => tabs.value.find((tab) => tab.active)?.tabName);
 const isUserAuthFollowing = computed(() => media.value?.user.followers?.some((ff) => ff.id === userStore.user?.id));
+const isUserAuthOnHisMedia = computed(() => media.value?.user.id === userStore.user?.id);
 const mediaPublishedDate = computed(() => formatDate(new Date(media.value?.createdAt) || new Date()));
 
 onMounted(async () => {
@@ -81,6 +83,10 @@ onMounted(async () => {
         tabName: `${media.value?.comments.length || 0} ${t('comments.head')}`,
       },
     ];
+
+    if (!isUserAuthFollowing.value) {
+      if (!isUserAuthOnHisMedia.value) return router.go(-1);
+    }
   } catch (error) {
     toast.error('Une erreur est survenue, veuillez réessayer');
   }

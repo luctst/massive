@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed, ComputedRef } from 'vue';
 import { marked } from 'marked';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import qs from 'qs';
 import { Article } from '@/types/index';
 import { useUserStore } from '@/stores/user';
@@ -10,11 +10,13 @@ import http from '@/utils/http';
 import { toast } from 'vue3-toastify';
 
 const route = useRoute();
+const router = useRouter();
 const article = ref<Article | null>(null);
 const articleLoaded = ref<boolean>(false);
 const userStore = useUserStore();
 
 const isUserAuthFollowing = computed(() => userStore.user?.followings?.some((ff) => ff.id === article.value?.user.id));
+const isUserAuthOnHisArticle = computed(() => userStore.user?.id === article.value?.user.id);
 const getNameInitial: ComputedRef<string> = computed(() => `${article.value?.user.firstname[0].toUpperCase()}${article.value?.user.lastname[0].toUpperCase()}`);
 const articleContent = computed(() => {
   marked.setOptions({
@@ -57,6 +59,10 @@ onMounted(async () => {
 
     article.value = { ...newObj };
     articleLoaded.value = true;
+
+    if (!isUserAuthFollowing.value) {
+      if (!isUserAuthOnHisArticle.value) return router.go(-1);
+    }
   } catch (error) {
     toast.error('Une erreur est survenue')
   }

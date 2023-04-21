@@ -37,10 +37,15 @@ const commentsSectionAttachedTo: ComputedRef<'media' | 'article' | 'attach_user'
 const userAuthIsFollowing = computed(() => {
   return userStore.user?.followings?.some((ff) => ff.id === props.authorId);
 });
+const isUserAuthOnHisProfil = computed(() => {
+  return userStore.user?.id === props.authorId;
+});
 const userAuthHasLiked = (likes: Array<Likes>): boolean => likes.some((like) => Number.parseInt(like.user_id) === userStore.user?.id);
 const handleLike = async (commentIndex: number): Promise<void> => {
   try {
-    if (!userAuthIsFollowing.value) return;
+    if (!userAuthIsFollowing.value) {
+      if (!isUserAuthOnHisProfil.value) return;
+    }
 
     if (commentsLikedByUserAuth.value[commentIndex].hasBeenLiked) {
       comments.value[commentIndex].likes.splice(
@@ -88,7 +93,9 @@ const handleLike = async (commentIndex: number): Promise<void> => {
 };
 const createNewComment = async () => {
   if (!newComment.value.length) return false;
-  if (!userAuthIsFollowing.value) return false;
+  if (!userAuthIsFollowing.value) {
+    if (!isUserAuthOnHisProfil.value) return false;
+  }
 
   const { data } = await http.post('comments', {
     data: {
@@ -135,7 +142,7 @@ onBeforeMount(() => {
 
 <template>
   <section class="container comments">
-    <template v-if="userAuthIsFollowing">
+    <template v-if="userAuthIsFollowing || isUserAuthOnHisProfil">
       <div
         v-if="props.showCommentsHead"
         class="comments--head"
