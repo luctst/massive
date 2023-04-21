@@ -41,7 +41,7 @@ const mediaPublishedDate = computed(() => formatDate(new Date(media.value?.creat
 onMounted(async () => {
   try {
     const queryParams = qs.stringify({
-      populate: ['user', 'user.followings', 'user.followers', 'likes', 'comments']
+      populate: ['user', 'user.followings', 'user.followers', 'likes', 'comments', 'comments.likes', 'comments.author']
     });
     const { data } = await http.get(`/medias/${route.params.id}?${queryParams}`, {
       headers: {
@@ -52,14 +52,25 @@ onMounted(async () => {
     const newObj = {
       ...data.data.attributes,
       id: data.data.id,
+      comments: data.data.attributes.comments.data.map((el) => {
+        const objToReturn = { id: el.id, ...el.attributes };
+        objToReturn.user = {
+          ...el.attributes.author.data.attributes,
+          id: el.attributes.author.data.id,
+        };
+
+        delete objToReturn.author;
+        return objToReturn;
+      }),
       user: {
         ...data.data.attributes.user.data.attributes,
         id: data.data.attributes.user.data.id,
         followers: data.data.attributes.user.data.attributes.followers.data.map((el) => ({id: el.id, ...el.attributes})),
         followings: data.data.attributes.user.data.attributes.followings.data.map((el) => ({id: el.id, ...el.attributes})),
-        comments: data.data.attributes.comments.data.map((el) => ({id: el.id, ...el.attributes})),
       },
     };
+    
+    media.value = { ...newObj };
     tabs.value = [
       {
         active: true,
@@ -70,8 +81,6 @@ onMounted(async () => {
         tabName: `${media.value?.comments.length || 0} ${t('comments.head')}`,
       },
     ];
-
-    media.value = { ...newObj };
   } catch (error) {
     toast.error('Une erreur est survenue, veuillez réessayer');
   }
@@ -163,7 +172,7 @@ onMounted(async () => {
           {{ $t('userAbout.noDescription') }}
         </div>
       </article>
-      <comments
+      <comments-media-article
         v-else
         :comments="media.comments"
         :show-comments-head="false"
@@ -173,7 +182,7 @@ onMounted(async () => {
       />
     </main>
   </template>
-  <loader v-else />
+  <loader-vue v-else />
 </template>
 
 <style scoped lang="scss">

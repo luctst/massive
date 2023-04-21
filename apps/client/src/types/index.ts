@@ -51,7 +51,7 @@ export interface Likes {
 
 export interface Comments {
   id: number;
-  author: UserStore;
+  user: UserStore;
   likes: Array<Likes>;
   content: string;
   createdAt: Date;

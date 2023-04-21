@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { computed, onBeforeMount, ref, toRefs } from 'vue';
+import { ComputedRef, computed, onBeforeMount, ref, toRefs } from 'vue';
+import { useRouter } from 'vue-router';
 import { Comments, Likes } from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import formatDate from '@/utils/formatDate';
-import { useRoute } from 'vue-router';
+import http from '@/utils/http';
+import { toast } from 'vue3-toastify';
 
 interface CommentsLikedByUserAuth {
   commentId: number;
   hasBeenLiked: boolean;
 }
 
+const router = useRouter();
 const userStore = useUserStore();
-const route = useRoute();
 const commentsLikedByUserAuth = ref<Array<CommentsLikedByUserAuth>>([]);
 const newComment = ref<string>('');
 const props = withDefaults(defineProps<{
@@ -27,31 +29,95 @@ const props = withDefaults(defineProps<{
 });
 const { comments } = toRefs(props);
 
+const commentsSectionAttachedTo: ComputedRef<'media' | 'article' | 'attach_user'> = computed(() => {
+  if (router.currentRoute.value.name === 'Media') return 'media';
+  if (router.currentRoute.value.name === 'Article') return 'article';
+  return 'attach_user';
+});
 const userAuthIsFollowing = computed(() => {
   return userStore.user?.followings?.some((ff) => ff.id === props.authorId);
 });
-const userAuthHasLiked = (likes: Array<Likes>): boolean => likes.some((like) => like.user_id === userStore.user?.id);
-const handleLike = (commentIndex: number): void => {
-  if (commentsLikedByUserAuth.value[commentIndex].hasBeenLiked) {
-    comments.value[commentIndex].likes.splice(
-      comments.value[commentIndex].likes.findIndex((lk: Likes) => lk.user_id === userStore.user?.id),
-      1,
-    );
-    commentsLikedByUserAuth.value[commentIndex].hasBeenLiked = false;
-  } else {
-    comments.value[commentIndex].likes.push({ id: Math.floor(Math.random() * 10000), author: userStore });
-    commentsLikedByUserAuth.value[commentIndex].hasBeenLiked = true;
+const userAuthHasLiked = (likes: Array<Likes>): boolean => likes.some((like) => Number.parseInt(like.user_id) === userStore.user?.id);
+const handleLike = async (commentIndex: number): Promise<void> => {
+  try {
+    if (!userAuthIsFollowing.value) return;
+
+    if (commentsLikedByUserAuth.value[commentIndex].hasBeenLiked) {
+      comments.value[commentIndex].likes.splice(
+        comments.value[commentIndex].likes.findIndex((lk: Likes) => lk.user_id === userStore.user?.id),
+        1,
+      );
+
+      await http.put(`comments/${comments.value[commentIndex].id}`, {
+        data: {
+          likes: comments.value[commentIndex].likes,
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userStore.user?.jwt}`,
+        },
+      })
+
+      commentsLikedByUserAuth.value[commentIndex].hasBeenLiked = false;
+    } else {
+      const { data } = await http.put(`comments/${comments.value[commentIndex].id}`, {
+        data: {
+          likes: [
+            ...comments.value[commentIndex].likes,
+            {
+              user_id: userStore.user?.id,
+            },
+          ],
+        },
+      },
+      {
+        params: {
+          populate: 'likes',
+        },
+        headers: {
+          Authorization: `Bearer ${userStore.user?.jwt}`,
+        },
+      })
+      comments.value[commentIndex].likes.push(data.data.attributes.likes[data.data.attributes.likes.length - 1]);
+      commentsLikedByUserAuth.value[commentIndex].hasBeenLiked = true;
+    }
+  } catch (error) {
+    toast.error('Une erreur est survenue');
   }
 };
-const createNewComment = () => {
+const createNewComment = async () => {
   if (!newComment.value.length) return false;
-  comments.value.push({
-    id: Math.floor(Math.random() * 10000),
-    content: newComment.value,
-    createdAt: new Date(),
-    author: userStore,
-    likes: [],
+  if (!userAuthIsFollowing.value) return false;
+
+  const { data } = await http.post('comments', {
+    data: {
+      content: newComment.value,
+      author: userStore.user?.id,
+      [commentsSectionAttachedTo.value]: router.currentRoute.value.params.id,
+    },
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${userStore.user?.jwt}`,
+    },
+    params: {
+      populate: ['author', 'likes'],
+    },
   });
+
+  const newComments = {
+    ...data.data.attributes,
+    id: data.data.id,
+    user: {
+      ...data.data.attributes.author.data.attributes,
+      id: data.data.attributes.author.data.id,
+    },
+  };
+  delete newComments.author;
+
+  comments.value.push({ ...newComments });
+
   commentsLikedByUserAuth.value.push({
     commentId: comments.value[comments.value.length - 1].id,
     hasBeenLiked: false,
@@ -88,10 +154,10 @@ onBeforeMount(() => {
           class="comments--wrapper"
         >
           <p class="comments--wrapper--avatar">
-            {{ comment.author.firstname[0].toLowerCase() }}
+            {{ comment.user.firstname[0].toLowerCase() }}
           </p>
           <div class="comments--wrapper--msg">
-            <p>{{ comment.author.firstname }} {{ comment.author.lastname[0].toLowerCase() }}.</p>
+            <p>{{ comment.user.firstname }} {{ comment.user.lastname[0].toLowerCase() }}.</p>
             <p class="is__article__content">
               {{ comment.content }}
             </p>

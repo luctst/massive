@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, ComputedRef } from 'vue';
 import { marked } from 'marked';
 import { useRoute } from 'vue-router';
 import qs from 'qs';
@@ -15,6 +15,7 @@ const articleLoaded = ref<boolean>(false);
 const userStore = useUserStore();
 
 const isUserAuthFollowing = computed(() => userStore.user?.followings?.some((ff) => ff.id === article.value?.user.id));
+const getNameInitial: ComputedRef<string> = computed(() => `${article.value?.user.firstname[0].toUpperCase()}${article.value?.user.lastname[0].toUpperCase()}`);
 const articleContent = computed(() => {
   marked.setOptions({
     breaks: true,
@@ -27,7 +28,7 @@ const articleContent = computed(() => {
 onMounted(async () => {
   try {
     const queryParams = qs.stringify({
-      populate: ['user', 'likes', 'comments']
+      populate: ['user', 'likes', 'comments', 'comments.likes', 'comments.author']
     });
     const { data } = await http.get(`/articles/${route.params.id}?${queryParams}`, {
       headers: {
@@ -38,7 +39,16 @@ onMounted(async () => {
     const newObj = {
       ...data.data.attributes,
       id: data.data.id,
-      comments: data.data.attributes.comments.data.map((el) => ({ id: el.id, ...el.attributes })),
+      comments: data.data.attributes.comments.data.map((el) => {
+        const objToReturn = { id: el.id, ...el.attributes };
+        objToReturn.user = {
+          ...el.attributes.author.data.attributes,
+          id: el.attributes.author.data.id,
+        };
+
+        delete objToReturn.author;
+        return objToReturn;
+      }),
       user: {
         ...data.data.attributes.user.data.attributes,
         id: data.data.attributes.user.data.id,
@@ -70,7 +80,16 @@ onMounted(async () => {
     <section class="container author">
       <div class="author--infos">
         <div class="is__container__img">
-          <img src="@/assets/profil-pic1.svg">
+          <img
+            v-if="userStore.user?.avatar"
+            :src="userStore.user?.avatar"
+          >
+          <div
+            v-else
+            class="author--infos--fake--avatar"
+          >
+            {{ getNameInitial }}
+          </div>
         </div>
         <div class="author--infos--metadata">
           <p>{{ article?.user.firstname }} {{ article?.user.lastname }}</p>
@@ -78,8 +97,17 @@ onMounted(async () => {
         </div>
       </div>
       <div class="author--subscribe is__container__img">
-        Abonné
-        <img src="@/assets/Tick-blue.svg">
+        <template v-if="isUserAuthFollowing">
+          {{ $t('user.follow') }}
+          <img src="@/assets/Tick-blue.svg">
+        </template>
+        <template v-else>
+          {{ $t('user.noFollow') }}
+          <img
+            src="@/assets/Lock.svg"
+            alt="S'abonner"
+          >
+        </template>
       </div>
     </section>
     <comments-media-article
@@ -143,6 +171,14 @@ onMounted(async () => {
     div:first-child {
       height: 42px;
       width: 42px;
+
+      div {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        background: rgb(123, 121, 255);
+        border-radius: 50%;
+      }
     }
 
     &--metadata {
