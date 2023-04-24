@@ -79,7 +79,7 @@ onMounted(async () => {
 
       return newObj;
     });
-    usersTrends.value = [ ...res[1].data];
+    usersTrends.value = res[1].data.filter((user) => user.id !== userStore.user?.id);
     dataLoaded.value = true;
   } catch (error) {
     throw error;
