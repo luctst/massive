@@ -9,6 +9,7 @@ const userStore = useUserStore();
 const props = defineProps<{ media: Article | Media; isUserAuthFollowing: boolean }>();
 const { media, isUserAuthFollowing } = toRefs(props);
 
+const userHasCreatedData: ComputedRef<boolean> = computed(() => media.value.user.id === userStore.user?.id);
 const userHasLikedMedia: ComputedRef<boolean> = computed(() => media.value.likes.some((lk) => Number.parseInt(lk.user_id as string) === userStore.user?.id));
 const mediaType = computed(() => {
   if (media.value.views) return 'isMedia';
@@ -21,7 +22,10 @@ const userHasBookmarked: ComputedRef<boolean | undefined> = computed(() => {
 
 const handleLike = async (): Promise<void> => {
   try {
-    if (!isUserAuthFollowing.value) return;
+    if (!isUserAuthFollowing.value) {
+      if (!userHasCreatedData.value) return;
+    }
+
     if (userHasLikedMedia.value) {
       media.value.likes.splice(
         media.value.likes.findIndex((lk) => lk.user_id === userStore.user?.id),
@@ -67,7 +71,10 @@ const handleLike = async (): Promise<void> => {
 
 const handleBookmark = async (): Promise<void> => {
   try {
-    if (!isUserAuthFollowing.value) return;
+    if (!isUserAuthFollowing.value) {
+      if (!userHasCreatedData.value) return;
+    }
+
     const utils = {
         fieldsInStore: mediaType.value === 'isArticle' ? 'bookmarks_article' : 'bookmarks_media',
       };
@@ -108,7 +115,7 @@ const handleBookmark = async (): Promise<void> => {
     <div class="media--actions--likes--comments">
       <div class="is__container__img">
         <img
-          v-if="!isUserAuthFollowing"
+          v-if="!isUserAuthFollowing && !userHasCreatedData"
           src="@/assets/heart-disabled.svg"
           alt="icon like"
         >
@@ -128,7 +135,7 @@ const handleBookmark = async (): Promise<void> => {
       </div>
       <div class="is__container__img">
         <img
-          v-if="!isUserAuthFollowing"
+          v-if="!isUserAuthFollowing && !userHasCreatedData"
           src="@/assets/comment-disabled.svg"
           alt="icon comment"
         >
