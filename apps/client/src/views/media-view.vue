@@ -191,7 +191,7 @@ onMounted(async () => {
         :show-comments-head="false"
         :author-name="media.user.firstname"
         :author-lastname="media.user.lastname"
-        :author-id="media.id"
+        :author-id="media.user.id"
       />
     </main>
   </template>
