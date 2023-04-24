@@ -1,28 +1,85 @@
 <script setup lang="ts">
-import { computed, ComputedRef, onMounted, Ref, ref } from 'vue';
+import { onMounted, Ref, ref, reactive } from 'vue';
+import qs from 'qs';
 import { Media, UserStore } from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import http from '@/utils/http';
 
 const userStore = useUserStore();
 const dataLoaded: Ref<boolean> = ref<boolean>(false);
-const filters: ComputedRef<Array<string>> = computed(() => [
-  'Géopolitique',
-  'Reportage',
-  'Actualité',
-  'France',
-  'Histoire',
-  'Société',
+const mediasTrends: Ref<Array<Media>> = ref<Array<Media>>([]);
+const usersTrends: Ref<Array<UserStore>> = ref<Array<UserStore>>([]);
+const filters: Ref<{ search: string; category: Array<string> }> = ref({ search: '', category: []});
+const categories: Array<{ value: string; active: boolean }> = reactive([
+  {
+    value: 'Géopolitique',
+    active: false,
+  },
+  {
+    value: 'Reportage',
+    active: false,
+  },
+  {
+    value: 'Actualité',
+    active: false,
+  },
+  {
+    value: 'France',
+    active: false,
+  },
+  {
+    value: 'Histoire',
+    active: false,
+  },
+  {
+    value: 'Société',
+    active: false,
+  },
 ]);
+
+function handleCategoryFilter(index: number) {
+  categories[index].active = !categories[index].active;
+  filters.value.category = categories.filter((c) => c.active).map((c) => c.value.toLowerCase());
+}
 
 onMounted(async () => {
   try {
-    await http.get('/users', {
-      headers: {
-        Authorization: `Bearer ${userStore.user?.jwt}`,
-      },
-    });
+    function getVideosTrendings() {
+      const queryParams = qs.stringify({
+        populate: ['categories', 'user'],
+      });
 
+      return http.get(`/medias?${queryParams}`, {
+        headers: {
+          Authorization: `Bearer ${userStore.user?.jwt}`,
+        },
+      });
+    }
+
+    function getUsersTrendings() {
+      return http.get('/users', {
+        headers: {
+          Authorization: `Bearer ${userStore.user?.jwt}`,
+        },
+      });
+    }
+
+    const res = await Promise.all([getVideosTrendings(), getUsersTrendings()]);
+    
+    mediasTrends.value = res[0].data.data.map((media) => {
+      const newObj = {
+        id: media.id,
+        ...media.attributes,
+        categories: media.attributes.categories?.subjects || [],
+        user: {
+          id: media.attributes.user.data.id,
+          ...media.attributes.user.data.attributes,
+        },
+      };
+
+      return newObj;
+    });
+    usersTrends.value = [ ...res[1].data];
     dataLoaded.value = true;
   } catch (error) {
     throw error;
@@ -42,6 +99,7 @@ onMounted(async () => {
         >
         <input
           id="research"
+          v-model="filters.search"
           type="text"
           name="research"
           :placeholder="$t('discover.inputPlaceholder')"
@@ -51,21 +109,35 @@ onMounted(async () => {
     <section class="filters container">
       <div class="filters--wrapper">
         <span
-          v-for="(ff, index) in filters"
+          v-for="(ff, index) in categories"
           :key="index"
+          :class="ff.active ? 'active' : ''"
+          @click="handleCategoryFilter(index)"
         >
-          {{ ff }}
+          {{ ff.value }}
         </span>
       </div>
     </section>
-    <!-- <section class="trends--videos container">
+    <section class="trends--videos container">
       <header class="trends--videos--header">
         <h2>{{ $t('discover.trendsVideosTitle') }}</h2>
         <a href="#">{{ $t('discover.cta') }}</a>
       </header>
       <div class="trends--videos--slider">
+        <template v-if="filters.category.length">
+          <template v-for="(video, index) in mediasTrends">
+            <card-media
+              v-if="video.categories?.some((c) => filters.category.includes(c.toLowerCase()))"
+              :key="index"
+              :card="video"
+              :show-head="false"
+              :show-actions="false"
+            />
+          </template>
+        </template>
         <card-media
-          v-for="(video, index) in videosTrends"
+          v-for="(video, index) in mediasTrends"
+          v-else
           :key="index"
           :card="video"
           :show-head="false"
@@ -80,13 +152,13 @@ onMounted(async () => {
       </header>
       <div class="trends--creators--slider">
         <avatar-with-name
-          v-for="(creator, index) in creatorsTrends"
+          v-for="(creator, index) in usersTrends"
           :key="index"
           :user-data="creator"
         />
       </div>
-    </section> -->
-    <navigation />
+    </section>
+    <navigation-footer />
   </template>
 </template>
 
@@ -125,6 +197,7 @@ onMounted(async () => {
       background: transparent;
     }
 
+    
     span {
       font-size: 14px;
       color: #9CA3AF;
@@ -132,10 +205,14 @@ onMounted(async () => {
       padding: 7px 10px;
       border: 1px solid #9CA3AF;
       border-radius: 30px;
-
+      
       &:hover {
         cursor: pointer;
       }
+    }
+    .active {
+      color: aliceblue;
+      background-color: #070B30;
     }
   }
 }

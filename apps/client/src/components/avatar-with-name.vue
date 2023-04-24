@@ -7,20 +7,30 @@ const props = defineProps<{
 }>();
 
 const fullname = computed(() => `${props.userData.firstname} ${props.userData.lastname}`);
+const userInitialsName = computed(() => `${props.userData.firstname[0].toUpperCase()}${props.userData.lastname[0].toUpperCase()}`);
 </script>
 
 <template>
-  <div class="avatar">
-    <div class="avatar--picture is__container__img">
-      <img :src="props.userData.avatar || ''">
+  <router-link :to="{ name: 'User', params: { id: props.userData.id}}">
+    <div class="avatar">
+      <div class="avatar--picture is__container__img">
+        <img
+          v-if="props.userData.avatar"
+          :src="props.userData.avatar"
+        >
+        <span v-else>{{ userInitialsName }}</span>
+      </div>
+      <p class="avatar--username">
+        {{ fullname }}
+      </p>
     </div>
-    <p class="avatar--username">
-      {{ fullname }}
-    </p>
-  </div>
+  </router-link>
 </template>
 
 <style scoped lang="scss">
+a {
+  text-decoration: none;
+}
 .avatar {
   align-items: center;
   display: flex;
@@ -32,6 +42,17 @@ const fullname = computed(() => `${props.userData.firstname} ${props.userData.la
   &--picture {
     height: 80px;
     width: 80px;
+
+    span {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      color: aliceblue;
+      background: linear-gradient(87.79deg, #000A6B 0%, #790D0D 100%);
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+    }
   }
 
   &--username {

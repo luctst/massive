@@ -16,6 +16,7 @@ export interface Media {
   comments: Array<Comments>;
   card_type: MediaType;
   views: number;
+  categories?: Array<string>;
   description?: string;
 }
 

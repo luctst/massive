@@ -153,6 +153,27 @@ onBeforeMount(() => {
         <div class="comments--nocomments">
           {{ $t('comments.noComments') }}
         </div>
+        <div
+          v-if="props.showWriteMessageBox"
+          class="comments--write"
+        >
+          <form @submit.prevent="createNewComment">
+            <input
+              v-model="newComment"
+              type="text"
+              placeholder="Écrire un commentaire"
+            >
+            <button
+              class="is__container__img"
+              type="submit"
+            >
+              <img
+                src="@/assets/icon_Send.svg"
+                alt="send message icon"
+              >
+            </button>
+          </form>
+        </div>
       </template>
       <template v-else>
         <div
