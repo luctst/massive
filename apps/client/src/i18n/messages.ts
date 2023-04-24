@@ -98,6 +98,7 @@ export default {
     user: {
       follow: 'Follow',
       noFollow: 'Followed',
+      update: 'Update',
     },
     userPublications: {
       seeDetails: 'See details',
@@ -210,6 +211,7 @@ export default {
     user: {
       follow: 'Abonné',
       noFollow: 'S\'abonner',
+      update: 'Modifier',
     },
     userPublications: {
       seeDetails: 'Voir les détails',

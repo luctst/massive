@@ -120,8 +120,16 @@ onMounted(async () => {
           <div>{{ userData.followers?.length }} Contributeurs</div>
         </div>
         <div class="creator--infos--right">
+          <div 
+          v-if="isUserAuthOnHisProfil"
+          class="update">
+            <router-link :to="{ name: 'UserUpdate', params: { id: userStore.user?.id}}" class="is__container__img">
+              {{ $t('user.update') }}
+              <img src="@/assets/update-profil.svg"/>
+            </router-link>
+          </div>
           <div
-            v-if="isUserAuthFollowing"
+            v-else-if="isUserAuthFollowing"
             class="is__container__img"
           >
             {{ $t('user.follow') }}
@@ -224,6 +232,16 @@ onMounted(async () => {
     }
 
     &--right {
+      a {
+        display: flex;
+        text-decoration: none;
+        gap: 12px;
+        color: #9CA3AF;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
       div {
         display: flex;
         align-items: center;
