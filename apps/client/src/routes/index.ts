@@ -94,5 +94,15 @@ export default createRouter({
         }
       },
     },
+    {
+      path: '/user/:id/update',
+      name: 'UserUpdate',
+      component: () => import('@/views/user-update.vue'),
+      beforeEnter: () => {
+        if (!userIsAuthenticated()) {
+          return { name: 'Auth' };
+        }
+      }
+    },
   ],
 });
