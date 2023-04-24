@@ -39,6 +39,7 @@ const tabActive = computed(() => tabs.value.find((tab) => tab.active)?.tabName);
 const isUserAuthFollowing = computed(() => media.value?.user.followers?.some((ff) => ff.id === userStore.user?.id));
 const isUserAuthOnHisMedia = computed(() => media.value?.user.id === userStore.user?.id);
 const mediaPublishedDate = computed(() => formatDate(new Date(media.value?.createdAt) || new Date()));
+const getNameInitial = computed(() => `${media.value?.user.firstname[0].toUpperCase()}${media.value?.user.lastname[0].toUpperCase()}`);
 
 onMounted(async () => {
   try {
@@ -114,6 +115,12 @@ onMounted(async () => {
               v-if="media.user.avatar"
               :src="media.user.avatar"
             >
+            <div
+              v-else
+              class="author--infos--fake--avatar"
+            >
+              {{ getNameInitial }}
+            </div>
           </div>
           <div class="video--box--author--left--metadata">
             <p>{{ userFullName }}</p>
@@ -221,9 +228,6 @@ onMounted(async () => {
       font-size: 13px;
       font-weight: 700;
       letter-spacing: -0.02em;
-
-      span {
-      }
     }
   }
 
@@ -241,6 +245,17 @@ onMounted(async () => {
       &--avatar {
         width: 35px;
         border-radius: 50%;
+        margin-right: .7rem;
+
+        div {
+          align-items: center;
+          display: flex;
+          justify-content: center;
+          background: rgb(123, 121, 255);
+          border-radius: 50%;
+          height: 42px;
+          width: 42px;
+        }
       }
 
       &--metadata {

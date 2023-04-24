@@ -30,6 +30,7 @@ const goToUserProfil = (): void => {
 };
 
 const userFullName = computed(() => `${props.card.user.firstname} ${props.card.user.lastname}`);
+const getNameInitial = computed(() => `${props.card.user.firstname[0].toUpperCase()}${props.card.user.lastname[0].toUpperCase()}`);
 </script>
 
 <template>
@@ -47,9 +48,16 @@ const userFullName = computed(() => `${props.card.user.firstname} ${props.card.u
       >
         <div class="is__container__img">
           <img
+            v-if="props.card.user.avatar"
             :src="props.card.user.avatar || 'https://via.placeholder.com/150'"
             alt="profil icon"
           >
+          <div
+            v-else
+            class="author--infos--fake--avatar"
+          >
+            {{ getNameInitial }}
+          </div>
         </div>
         <div class="card--container--item--top--user--name">
           <p>{{ utils.formatUserName(props.card.user.firstname, props.card.user.lastname) }}</p>
@@ -115,11 +123,21 @@ const userFullName = computed(() => `${props.card.user.firstname} ${props.card.u
 
       .is__container__img {
         width: 22%;
+
+        div {
+          align-items: center;
+          display: flex;
+          justify-content: center;
+          background: rgb(123, 121, 255);
+          border-radius: 50%;
+          width: 42px;
+          height: 42px;
+        }
       }
     }
 
     &--user--name {
-      margin-left: .5rem;
+      margin-left: 1.2rem;
 
       p {
         margin: 0;

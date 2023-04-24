@@ -34,6 +34,7 @@ const goToUserProfil = (): void => {
 
 const cacheUserName = computed(() => utils.formatUserName(props.card.user.firstname, props.card.user.lastname));
 const cacheCreatedAt = computed(() => utils.formatDate(new Date(props.card.createdAt)));
+const getNameInitial = computed(() => `${props.card.user.firstname[0].toUpperCase()}${props.card.user.lastname[0].toUpperCase()}`);
 </script>
 
 <template>
@@ -50,7 +51,16 @@ const cacheCreatedAt = computed(() => utils.formatDate(new Date(props.card.creat
         @click.stop="goToUserProfil"
       >
         <div class="is__container__img">
-          <img :src="props.card.user.avatar || 'https://via.placeholder.com/150'">
+          <img
+            v-if="props.card.user.avatar"
+            :src="props.card.user.avatar"
+          >
+          <div
+            v-else
+            class="author--infos--fake--avatar"
+          >
+            {{ getNameInitial }}
+          </div>
         </div>
         <div class="card--article--top--user--name">
           <p>{{ cacheUserName }}</p>
@@ -117,10 +127,20 @@ const cacheCreatedAt = computed(() => utils.formatDate(new Date(props.card.creat
 
       .is__container__img {
         width: 22%;
+
+        div {
+          align-items: center;
+          display: flex;
+          justify-content: center;
+          background: rgb(123, 121, 255);
+          border-radius: 50%;
+          width: 42px;
+          height: 42px;
+        }
       }
 
       &--name {
-        margin-left: .5rem;
+        margin-left: 1.5rem;
   
         p {
           margin: 0;
