@@ -116,6 +116,15 @@ export default {
       tabTitle: 'Community',
       needFollow: 'You must follow {name} to see his community',
     },
+    userUpdate: {
+      title: 'MY profile',
+      links: {
+        subscribes: 'MY subscribes',
+        personalData: 'MY personal data',
+        support: 'Contact support',
+        logout: 'Deconnexion',
+      },
+    },
     cardMedia: {
       needFollow: 'You must follow {name} to see this video',
     },
@@ -228,6 +237,15 @@ export default {
     userCommunity: {
       tabTitle: 'Communauté',
       needFollow: 'Vous devez suivre {name} pour voir sa communauté',
+    },
+    userUpdate: {
+      title: 'Mon profil',
+      links: {
+        subscribes: 'Mes abonnements',
+        personalData: 'Mes informations personnelles',
+        support: 'Contacter le support',
+        logout: 'Déconnexion',
+      },
     },
     cardMedia: {
       needFollow: 'Vous devez suivre {name} pour voir cette vidéo',

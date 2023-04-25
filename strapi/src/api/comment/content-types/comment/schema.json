@@ -40,7 +40,7 @@
       "target": "api::article.article",
       "inversedBy": "comments"
     },
-    "attah_user": {
+    "attach_user": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",

@@ -125,12 +125,6 @@
       "target": "api::article.article",
       "mappedBy": "user"
     },
-    "comments": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::comment.comment",
-      "mappedBy": "attah_user"
-    },
     "bookmarks_media": {
       "type": "relation",
       "relation": "oneToMany",
@@ -140,6 +134,12 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::article.article"
+    },
+    "comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "attach_user"
     }
   }
 }

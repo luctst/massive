@@ -24,6 +24,7 @@ export interface UserStore {
   id: number;
   firstname: string;
   lastname: string;
+  email: string;
   bookmarks_media: Array<Media> | null;
   bookmarks_article: Array<Article> | null;
   followers: Array<UserStore> | null;
