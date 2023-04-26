@@ -3,11 +3,13 @@ import { onMounted, computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import utils from '@/utils/index';
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
-const { user } = useUserStore();
+const { user, removeUser } = useUserStore();
+const inputFile = ref<HTMLInputElement | null>(null);
 const viewToLoad = ref<'root' | 'subscribes' | 'personalData'>('root');
 const links = ref<Array<{ value: string; onClick: () => void; }>>([
   {
@@ -28,7 +30,10 @@ const links = ref<Array<{ value: string; onClick: () => void; }>>([
   },
   {
     value: t('userUpdate.links.logout'),
-    onClick: () => {},
+    onClick: () => {
+      removeUser();
+      router.push({ name: 'Auth' });
+    },
   },
 ]);
 
@@ -39,6 +44,11 @@ const goBack = (): void => {
   }
 
   router.go(-1);
+};
+
+const changeProfilePicture = (): void => {
+  if (!inputFile.value) return;
+  console.log(inputFile.value.files);
 };
 
 const appVersion = computed(() => {
@@ -124,6 +134,63 @@ onMounted(() => {
         <div>Version {{ appVersion }}</div>
       </div>
     </footer>
+  </template>
+  <template v-else-if="viewToLoad === 'subscribes'">
+    <section class="subscribes--list container">
+      <div
+        v-for="(creator, index) in user?.followings"
+        :key="index"
+        class="subscribes--list--item"
+      >
+        <div class="subscribes--list--item--avatar is__container__img">
+          <img
+            v-if="creator.avatar"
+            :src="creator.avatar"
+          >
+          <div v-else>
+            {{ `${creator.firstname[0].toUpperCase()}${creator.lastname[0].toUpperCase()}` }}
+          </div>
+        </div>
+        <div class="subscribes--list--item--name">
+          <h3>{{ `${creator.firstname} ${creator.lastname}` }}</h3>
+          <span>Abonné depuis {{ utils.formatDate(new Date()) }}</span>
+        </div>
+        <div class="subscribes--list--item--actions">
+          <button>Se désabonner</button>
+        </div>
+      </div>
+    </section>
+  </template>
+  <template v-else>
+    <section class="sub--header--personal--data container">
+      <div class="sub--header--personal--data--title">
+        Photo de profil
+      </div>
+      <div class="sub--header--personal--data--picture">
+        <div class="is__container__img">
+          <img
+            v-if="user?.avatar"
+            :src="user.avatar"
+          >
+          <div v-else>
+            {{ getNameInitial }}
+          </div>
+        </div>
+        <div class="sub--header--personal--data--picture--action">
+          <input
+            ref="inputFile"
+            type="file"
+            accept="image/*"
+            placeholder="Modifier la photo"
+            @change="changeProfilePicture"
+          >
+          <div>
+            <img src="@/assets/update-profil.svg">
+            <div>Modifier la photo</div>
+          </div>
+        </div>
+      </div>
+    </section>
   </template>
 </template>
 
@@ -250,6 +317,129 @@ main {
     color: #8C8C8C;
     font-size: .7rem;
     text-align: center;
+  }
+}
+
+.subscribes--list {
+  margin-top: 2rem;
+
+  &--item {
+    align-items: center;
+    display: flex;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #D9D9D9;
+    padding-bottom: 1.5rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &--avatar {
+      div {
+        background: rgb(123, 121, 255);
+        border-radius: 50%;
+        width: 42px;
+        height: 42px;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    &--name {
+      margin-left: 1rem;
+
+      h3 {
+        font-family: 'Satoshi', sans-serif;
+        font-size: 1rem;
+        color: #14172D;
+        margin: 0;
+      }
+
+      span {
+        font-family: 'Satoshi', sans-serif;
+        font-size: .7rem;
+        color: #9CA3AF;
+      }
+    }
+
+    &--actions {
+      margin-left: auto;
+
+      button {
+        background: transparent;
+        border: none;
+        color: #790D0D;
+        font-family: 'Satoshi', sans-serif;
+        font-size: .8rem;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.sub--header--personal--data {
+  margin-top: 3rem;
+
+  &--title {
+    font-family: 'Satoshi', sans-serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #14172D;
+    margin: 0;
+  }
+
+  &--picture {
+    align-items: center;
+    display: flex;
+    margin-top: 1rem;
+    
+    .is__container__img {
+      width: 22%;
+
+      div {
+        background: rgb(123, 121, 255);
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    &--action {
+      align-items: center;
+      display: flex;
+      margin-left: 2rem;
+
+      input[type="file"] {
+        position: relative;
+        z-index: 2;
+        opacity: 0;
+      }
+
+      div {
+        align-items: center;
+        display: flex;
+        position: absolute;
+        width: 51%;
+
+        div {
+          font-family: 'Satoshi', sans-serif;
+          font-size: .8rem;
+          color: #000;
+          margin-left: 1.5rem;
+        }
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 }
 </style>

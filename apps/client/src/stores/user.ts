@@ -18,6 +18,9 @@ export const useUserStore = defineStore({
     };
   },
   actions: {
+    removeUser(): void {
+      this.user = null;
+    },
     async setUser(): Promise<void> {
       try {
         const paramsArticles = qs.stringify(
