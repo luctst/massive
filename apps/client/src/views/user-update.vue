@@ -4,12 +4,34 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import utils from '@/utils/index';
+import { toast } from 'vue3-toastify';
+
+interface DataToUpdate {
+  avatar: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+interface Rules {
+  key: string;
+  type: 'text' | 'password' | 'email';
+  error: string | null;
+  label: string;
+  hasBeenBlured: boolean;
+  validate: (value: string) => null | string;
+  placeholder?: string;
+}
 
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const { user, removeUser } = useUserStore();
+const dataToUpdate = ref({} as DataToUpdate);
 const inputFile = ref<HTMLInputElement | null>(null);
+const callApiDone = ref<boolean>(true);
 const viewToLoad = ref<'root' | 'subscribes' | 'personalData'>('root');
 const links = ref<Array<{ value: string; onClick: () => void; }>>([
   {
@@ -36,6 +58,46 @@ const links = ref<Array<{ value: string; onClick: () => void; }>>([
     },
   },
 ]);
+const personalDataFormRules = ref<Array<Rules>>([
+  {
+    key: 'username',
+    type: 'text',
+    error: null,
+    label: t('signin.userName.label'),
+    hasBeenBlured: false,
+    validate: (value: string) => {
+      if (value.length === 0) return t('signup.inputs[0].error.default');
+      if (value.length < 3 || value.length > 20) return 'Le nom d\'utilisateur doit contenir entre 3 et 20 caractères';
+      return null;
+    },
+    placeholder: user?.username,
+  },
+  {
+    key: 'email',
+    type: 'email',
+    error: null,
+    label: t('signup.inputs[0].label'),
+    hasBeenBlured: false,
+    validate: (value: string) => {
+      if (value.length === 0) return t('signup.inputs[0].error.default');
+      if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value) === false) return t('signup.inputs[0].error.pattern');
+      return null;
+    },
+    placeholder: user?.email,
+  },
+  {
+    key: 'password',
+    type: 'password',
+    error: null,
+    label: t('signin.password.label'),
+    hasBeenBlured: false,
+    validate: (value: string) => {
+      if (value.length === 0) return t('signup.inputs[1].error.default');
+      if (value.length < 8) return 'Le mot de passe doit contenir au moins 8 caractères';
+      return null;
+    },
+  },
+]);
 
 const goBack = (): void => {
   if (viewToLoad.value !== 'root') {
@@ -48,8 +110,31 @@ const goBack = (): void => {
 
 const changeProfilePicture = (): void => {
   if (!inputFile.value) return;
-  console.log(inputFile.value.files);
+  const fileReader = new FileReader();
+
+  fileReader.addEventListener('load', () => {
+    dataToUpdate.value.avatar = fileReader.result as string;
+  }, false);
+
+  if (inputFile.value.files[0]) {
+    fileReader.readAsDataURL(inputFile.value.files[0]);
+  }
 };
+
+function wrapperValidate(self: Rules, evtName: string, cb: Rules['validate']) {
+  if (evtName === 'input' && self.hasBeenBlured === false) return;
+  if (evtName === 'blur' && self.hasBeenBlured === false) self.hasBeenBlured = true;
+  self.error = cb(dataToUpdate.value[self.key]);
+}
+
+const updateUserData = (): void => {
+  try {
+    if (!personalDataFormRules.value.every((rule) => rule.error === null ? true : false)) return;
+    callApiDone.value = false;
+  } catch (error) {
+    toast.error('Une erreur est survenue');
+  }
+}
 
 const appVersion = computed(() => {
   return window.__VERSION__;
@@ -168,8 +253,12 @@ onMounted(() => {
       </div>
       <div class="sub--header--personal--data--picture">
         <div class="is__container__img">
+          <img 
+            v-if="dataToUpdate.avatar"
+            :src="dataToUpdate.avatar"
+          >
           <img
-            v-if="user?.avatar"
+            v-else-if="user?.avatar"
             :src="user.avatar"
           >
           <div v-else>
@@ -191,6 +280,39 @@ onMounted(() => {
         </div>
       </div>
     </section>
+    <main class="personal--data--form container">
+      <form @submit.prevent="updateUserData">
+        <div
+          v-for="(input, index) in personalDataFormRules"
+          :key="index"
+          class="input--group"
+        >
+          <label :for="input.key">{{ input.label }}</label>
+          <input
+            :id="input.key"
+            v-model="dataToUpdate[input.key]"
+            :placeholder="input.placeholder"
+            @input="wrapperValidate(input, $event.type, input.validate)"
+            @blur="wrapperValidate(input, $event.type, input.validate)"
+          >
+          <small
+            v-if="input.hasBeenBlured && input.error"
+            class="error"
+          >{{ input.error }}</small>
+        </div>
+        <div class="btn--box">
+          <button type="submit">
+            <template v-if="callApiDone">
+              Sauvegarder les modifications
+            </template>
+            <img
+              v-else
+              src="@/assets/loader-svg.svg"
+            >
+          </button>
+        </div>
+      </form>
+    </main>
   </template>
 </template>
 
@@ -439,6 +561,93 @@ main {
       &:hover {
         cursor: pointer;
       }
+    }
+  }
+}
+
+.personal--data--form {
+  height: calc(100vh - 2.5rem - 122px - 3rem - 27.5px - 2rem);
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 31px;
+    margin-top: 3rem;
+
+    .input--group {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+
+      label {
+        color: #14172D;
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+
+      input {
+        position: relative;
+        padding: 0 10px 7px;
+        border-width: 1px;
+        border-top: 0;
+        border-left: 0;
+        border-right: 0;
+        outline: none;
+
+        &:placeholder {
+          font-family: 'Satoshi', sans-serif;
+          font-style: 15px;
+          color: #9ca3af;
+        }
+      }
+
+      input[type="password"] {
+        font-size: 22px;
+        color: #9CA3AF;
+      }
+
+      #icon-pass {
+        position: absolute;
+        right: 10px;
+        bottom: 11px;
+      }
+
+      small {
+        color: #f78989;
+      }
+    }
+
+    .btn--box {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+
+      button {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        background-color: #070B30;
+        border: none;
+        border-radius: 50px;
+        color: #fff;
+        font-family: 'Satoshi', sans-serif;
+        font-size: 1rem;
+        padding: 13px 45px;
+        width: 100%;
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        img {
+          width: 1.5rem;
+        }
+      }
+    }
+
+    @media (max-width: 361px) {
+      padding: 0 20px;
     }
   }
 }
