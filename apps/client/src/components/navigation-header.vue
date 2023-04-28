@@ -32,11 +32,11 @@ const getNameInitial = computed(() => `${userStore.user?.firstname[0].toUpperCas
             >
           </div>
           <div
-            v-if="userStore.user?.avatar"
+            v-if="userStore.user?.avatar_url"
             class="is__container__img"
           >
             <router-link :to="{ name: 'User', params: { id: userStore.user.id } }">
-              <img :src="userStore.user.avatar || ''">
+              <img :src="userStore.user.avatar_url || ''">
             </router-link>
           </div>
           <div

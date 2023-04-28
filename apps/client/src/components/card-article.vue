@@ -52,8 +52,8 @@ const getNameInitial = computed(() => `${props.card.user.firstname[0].toUpperCas
       >
         <div class="is__container__img">
           <img
-            v-if="props.card.user.avatar"
-            :src="props.card.user.avatar"
+            v-if="props.card.user.avatar_url"
+            :src="props.card.user.avatar_url"
           >
           <div
             v-else

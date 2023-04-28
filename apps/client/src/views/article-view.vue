@@ -87,8 +87,8 @@ onMounted(async () => {
       <div class="author--infos">
         <div class="is__container__img">
           <img
-            v-if="userStore.user?.avatar"
-            :src="userStore.user?.avatar"
+            v-if="userStore.user?.avatar_url"
+            :src="userStore.user?.avatar_url"
           >
           <div
             v-else

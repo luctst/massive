@@ -112,8 +112,8 @@ onMounted(async () => {
         <div class="video--box--author--left">
           <div class="is__container__img video--box--author--left--avatar">
             <img
-              v-if="media.user.avatar"
-              :src="media.user.avatar"
+              v-if="media.user.avatar_url"
+              :src="media.user.avatar_url"
             >
             <div
               v-else

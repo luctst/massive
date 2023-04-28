@@ -109,8 +109,8 @@ onMounted(async () => {
     <section class="creator container">
       <div class="is__container__img creator--avatar">
         <img
-          v-if="userData.avatar"
-          :src="userData.avatar"
+          v-if="userData.avatar_url"
+          :src="userData.avatar_url"
         >
         <span v-else>{{ getNameInitial }}</span>
       </div>
