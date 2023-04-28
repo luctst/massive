@@ -2,12 +2,13 @@
 import { onMounted, computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
 import { useUserStore } from '@/stores/user';
 import utils from '@/utils/index';
-import { toast } from 'vue3-toastify';
+import http from '@/utils/http';
 
 interface DataToUpdate {
-  avatar: string;
+  avatar_url: string;
   firstname: string;
   lastname: string;
   email: string;
@@ -28,9 +29,10 @@ interface Rules {
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
-const { user, removeUser } = useUserStore();
+const { user, removeUser, updateUser } = useUserStore();
 const dataToUpdate = ref({} as DataToUpdate);
 const inputFile = ref<HTMLInputElement | null>(null);
+const formAvatar = ref<HTMLFormElement | null>(null);
 const callApiDone = ref<boolean>(true);
 const viewToLoad = ref<'root' | 'subscribes' | 'personalData'>('root');
 const links = ref<Array<{ value: string; onClick: () => void; }>>([
@@ -113,7 +115,7 @@ const changeProfilePicture = (): void => {
   const fileReader = new FileReader();
 
   fileReader.addEventListener('load', () => {
-    dataToUpdate.value.avatar = fileReader.result as string;
+    dataToUpdate.value.avatar_url = fileReader.result as string;
   }, false);
 
   if (inputFile.value.files[0]) {
@@ -127,12 +129,41 @@ function wrapperValidate(self: Rules, evtName: string, cb: Rules['validate']) {
   self.error = cb(dataToUpdate.value[self.key]);
 }
 
-const updateUserData = (): void => {
+const updateUserData = async (): Promise<void> => {
   try {
     if (!personalDataFormRules.value.every((rule) => rule.error === null ? true : false)) return;
     callApiDone.value = false;
+
+    if (dataToUpdate.value.avatar_url) {
+      const formData = new FormData();
+      formData.append('files', inputFile.value?.files[0]);
+      formData.append('ref', 'plugin::users-permissions.user');
+      formData.append('refId', user?.id as string);
+      formData.append('field', 'avatar_url');
+  
+      const { data } = await http.post('upload', formData, {
+        headers: {
+          authorization: `Bearer ${user?.jwt}`,
+          ['content-type']: 'multipart/form-data',
+        },
+      });
+  
+      dataToUpdate.value.avatar_url = data[0].url;
+    }
+
+    await http.put(`users/${user?.id}`, dataToUpdate.value, {
+      headers: {
+        authorization: `Bearer ${user?.jwt}`,
+      },
+    });
+
+    delete dataToUpdate.value.password;
+    updateUser(dataToUpdate.value);
+    callApiDone.value = true;
+    toast.success(t('userUpdate.success'));
   } catch (error) {
-    toast.error('Une erreur est survenue');
+    callApiDone.value = true;
+    toast.error(error.message);
   }
 }
 
@@ -184,8 +215,8 @@ onMounted(() => {
       <div class="sub--header--avatar">
         <div class="is__container__img">
           <img
-            v-if="user?.avatar"
-            :src="user.avatar"
+            v-if="user?.avatar_url"
+            :src="user.avatar_url"
           >
           <div v-else>
             {{ getNameInitial }}
@@ -229,8 +260,8 @@ onMounted(() => {
       >
         <div class="subscribes--list--item--avatar is__container__img">
           <img
-            v-if="creator.avatar"
-            :src="creator.avatar"
+            v-if="creator.avatar_url"
+            :src="creator.avatar_url"
           >
           <div v-else>
             {{ `${creator.firstname[0].toUpperCase()}${creator.lastname[0].toUpperCase()}` }}
@@ -254,29 +285,32 @@ onMounted(() => {
       <div class="sub--header--personal--data--picture">
         <div class="is__container__img">
           <img 
-            v-if="dataToUpdate.avatar"
-            :src="dataToUpdate.avatar"
+            v-if="dataToUpdate.avatar_url"
+            :src="dataToUpdate.avatar_url"
           >
           <img
-            v-else-if="user?.avatar"
-            :src="user.avatar"
+            v-else-if="user?.avatar_url"
+            :src="user.avatar_url"
           >
           <div v-else>
             {{ getNameInitial }}
           </div>
         </div>
         <div class="sub--header--personal--data--picture--action">
-          <input
-            ref="inputFile"
-            type="file"
-            accept="image/*"
-            placeholder="Modifier la photo"
-            @change="changeProfilePicture"
-          >
-          <div>
-            <img src="@/assets/update-profil.svg">
-            <div>Modifier la photo</div>
-          </div>
+          <form ref="formAvatar">
+            <input
+              ref="inputFile"
+              type="file"
+              accept="image/*"
+              placeholder="Modifier la photo"
+              name="avatar"
+              @change="changeProfilePicture"
+            >
+            <div>
+              <img src="@/assets/update-profil.svg">
+              <div>Modifier la photo</div>
+            </div>
+          </form>
         </div>
       </div>
     </section>
@@ -291,6 +325,7 @@ onMounted(() => {
           <input
             :id="input.key"
             v-model="dataToUpdate[input.key]"
+            :type="input.type"
             :placeholder="input.placeholder"
             @input="wrapperValidate(input, $event.type, input.validate)"
             @blur="wrapperValidate(input, $event.type, input.validate)"
@@ -534,32 +569,34 @@ main {
     }
 
     &--action {
-      align-items: center;
-      display: flex;
-      margin-left: 2rem;
-
-      input[type="file"] {
-        position: relative;
-        z-index: 2;
-        opacity: 0;
-      }
-
-      div {
+      form {
         align-items: center;
         display: flex;
-        position: absolute;
-        width: 51%;
-
-        div {
-          font-family: 'Satoshi', sans-serif;
-          font-size: .8rem;
-          color: #000;
-          margin-left: 1.5rem;
+        margin-left: 2rem;
+  
+        input[type="file"] {
+          position: relative;
+          z-index: 2;
+          opacity: 0;
         }
-      }
-
-      &:hover {
-        cursor: pointer;
+  
+        div {
+          align-items: center;
+          display: flex;
+          position: absolute;
+          width: 51%;
+  
+          div {
+            font-family: 'Satoshi', sans-serif;
+            font-size: .8rem;
+            color: #000;
+            margin-left: 1.5rem;
+          }
+        }
+  
+        &:hover {
+          cursor: pointer;
+        }
       }
     }
   }

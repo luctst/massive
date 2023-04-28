@@ -40,7 +40,7 @@ export interface UserStore {
   social?: {
   [key: string]: string;
   };
-  avatar?: string | null;
+  avatar_url?: string | null;
   profil_background?: string;
   description?: string;
 }

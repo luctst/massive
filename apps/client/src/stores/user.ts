@@ -21,6 +21,11 @@ export const useUserStore = defineStore({
     removeUser(): void {
       this.user = null;
     },
+    updateUser(newUserData: { avatar_url: string; email: string; username: string }): void {
+      Object.keys(newUserData).forEach((key) => {
+        this.user[key] = newUserData[key];
+      });
+    },
     async setUser(): Promise<void> {
       try {
         const paramsArticles = qs.stringify(
