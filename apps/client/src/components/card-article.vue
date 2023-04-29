@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Article} from '@/types/index';
@@ -14,6 +15,7 @@ interface Props {
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
+// const { getUserInitialsLetters } = storeToRefs(userStore);
 const props = withDefaults(defineProps<Props>(), {
   showHead: true,
   showActions: true,
@@ -32,9 +34,9 @@ const goToUserProfil = (): void => {
   router.push({ name: 'User', params: { id: props.card.user.id } });
 };
 
-const cacheUserName = computed(() => utils.formatUserName(props.card.user.firstname, props.card.user.lastname));
+const cacheUserName = computed(() => utils.formatUserName(props.card.user));
 const cacheCreatedAt = computed(() => utils.formatDate(new Date(props.card.createdAt)));
-const getNameInitial = computed(() => `${props.card.user.firstname[0].toUpperCase()}${props.card.user.lastname[0].toUpperCase()}`);
+const getInitialName = computed(() => userStore.getUserInitialsLetters(props.card.user));
 </script>
 
 <template>
@@ -59,7 +61,7 @@ const getNameInitial = computed(() => `${props.card.user.firstname[0].toUpperCas
             v-else
             class="author--infos--fake--avatar"
           >
-            {{ getNameInitial }}
+            {{ getInitialName }}
           </div>
         </div>
         <div class="card--article--top--user--name">

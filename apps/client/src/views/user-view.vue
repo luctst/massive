@@ -47,7 +47,6 @@ const userFullName: ComputedRef<string> = computed(() => {
 
 const isUserAuthFollowing: ComputedRef<boolean | undefined> = computed(() => userData.value.followers?.some((ff) => ff.id === userStore.user?.id));
 const isUserAuthOnHisProfil: ComputedRef<boolean> = computed(() => userStore.user?.id === Number.parseInt(route.params.id as string));
-const getNameInitial: ComputedRef<string> = computed(() => `${userStore.user?.firstname[0].toUpperCase()}${userStore.user?.lastname[0].toUpperCase()}`);
 
 
 const descriptionMarkdown = computed(() => {
@@ -76,7 +75,7 @@ onMounted(async () => {
     return;
   }
 
-  const { data } = await http.get(`/users/${route.params.id}?${qs.stringify({ populate: utils.populateUsersData })}`, {
+  const { data } = await http.get(`/users/${route.params.id}?populate=deep`, {
     headers: {
       Authorization: `Bearer ${userStore.user?.jwt}`,
     },
@@ -112,7 +111,7 @@ onMounted(async () => {
           v-if="userData.avatar_url"
           :src="userData.avatar_url"
         >
-        <span v-else>{{ getNameInitial }}</span>
+        <span v-else>{{ userStore.getUserInitialsLetters }}</span>
       </div>
       <div class="creator--infos">
         <div class="creator--infos--left">

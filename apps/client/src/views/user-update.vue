@@ -29,7 +29,7 @@ interface Rules {
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
-const { user, removeUser, updateUser } = useUserStore();
+const { user, removeUser, updateUser, getUserInitialsLetters } = useUserStore();
 const dataToUpdate = ref({} as DataToUpdate);
 const inputFile = ref<HTMLInputElement | null>(null);
 const formAvatar = ref<HTMLFormElement | null>(null);
@@ -184,10 +184,6 @@ const userName = computed(() => {
   if (!user) return '';
   return `${user.firstname} ${user.lastname}`;
 });
-const getNameInitial = computed(() => {
-  if (!user) return '';
-  return `${user.firstname[0].toUpperCase()}${user.lastname[0].toUpperCase()}`;
-});
 
 onMounted(() => {
   if (user?.id !== Number.parseInt(route.params.id as string)) {
@@ -219,7 +215,7 @@ onMounted(() => {
             :src="user.avatar_url"
           >
           <div v-else>
-            {{ getNameInitial }}
+            {{ getUserInitialsLetters }}
           </div>
         </div>
       </div>
@@ -293,7 +289,7 @@ onMounted(() => {
             :src="user.avatar_url"
           >
           <div v-else>
-            {{ getNameInitial }}
+            {{ getUserInitialsLetters }}
           </div>
         </div>
         <div class="sub--header--personal--data--picture--action">

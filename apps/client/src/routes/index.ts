@@ -10,12 +10,7 @@ function userIsAuthenticated() {
 
     return http.get(`auth/google/callback${window.location.search}`)
     .then(res => {
-      const user = {
-        jwt: res.data.jwt,
-        ...res.data.user,
-      };
-      userStore.setUserManually(user);
-      console.log(userStore.user);
+      userStore.setJwt(res.data.jwt);
       return true;
     })
     .catch(() => false);
@@ -74,7 +69,7 @@ export default createRouter({
       meta: {
         headerTitle: 'header.routes.home',
       },
-      beforeEnter: () => wrapperAuth(),
+      beforeEnter: async () => wrapperAuth(),
     },
     {
       path: '/explorer',

@@ -5,7 +5,6 @@ import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const title = ref<string>(useRoute().meta.headerTitle as string || '');
-const getNameInitial = computed(() => `${userStore.user?.firstname[0].toUpperCase()}${userStore.user?.lastname[0].toUpperCase()}`);
 </script>
 
 <template>
@@ -44,7 +43,7 @@ const getNameInitial = computed(() => `${userStore.user?.firstname[0].toUpperCas
             class="fake--avatar"
           >
             <router-link :to="{ name: 'User', params: { id: userStore.user?.id } }">
-              <span>{{ getNameInitial }}</span>
+              <span>{{ userStore.getUserInitialsLetters }}</span>
             </router-link>
           </div>
         </div>

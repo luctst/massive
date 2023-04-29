@@ -1,10 +1,8 @@
 import { AxiosError } from 'axios';
 import { defineStore } from 'pinia';
-import qs from 'qs';
 import { UserStore } from '@/types/index';
 import { ReqAxiosNewUser } from '@/types/index';
 import http from '@/utils/http';
-import utils from '@/utils/index';
 
 export interface Store {
   user: UserStore | null;
@@ -17,9 +15,23 @@ export const useUserStore = defineStore({
       user: null,
     };
   },
+  getters: {
+    getUserInitialsLetters(state): (user: UserStore) => string {
+      return (user: UserStore) => {
+        if (!state.user) return '';
+        if (user.provider === 'google') {
+          return user.username.split('.').map((word) => word[0].toUpperCase()).join('');
+        }
+  
+        return user.firstname[0].toUpperCase() + user.lastname[0].toUpperCase();
+      };
+    },
+  },
   actions: {
-    setUserManually(userData: UserStore): void {
-      this.user = userData;
+    setJwt(jwt: string): void {
+      this.user = {
+        jwt,
+      };
     },
     removeUser(): void {
       this.user = null;
@@ -31,11 +43,7 @@ export const useUserStore = defineStore({
     },
     async setUser(): Promise<void> {
       try {
-        const paramsArticles = qs.stringify(
-          { 
-            populate: utils.populateUsersData,
-          });
-        const { data } = await http.get(`/users/me?${paramsArticles}`, {
+        const { data } = await http.get(`/users/me?populate=deep`, {
           headers: {
             Authorization: `Bearer ${this.user?.jwt}`,
           },
