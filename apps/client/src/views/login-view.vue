@@ -78,6 +78,10 @@ const authUser = async () => {
 
   push({ name: 'Home' });
 };
+
+const logWithGoogle = () => {
+  window.open(`http://localhost:1337/api/connect/google`);
+}
 </script>
 
 <template>
@@ -121,15 +125,7 @@ const authUser = async () => {
             src="@/assets/loader-svg.svg"
           >
         </button>
-        <div class="sign-google-box">
-          <button id="sign-in-google">
-            {{ $t('signin.loginWithGoogle') }}
-            <img
-              src="@/assets/icons8-google.svg"
-              alt="Google icon"
-            >
-          </button>
-        </div>
+        <login-with-google />
       </div>
     </form>
     <p id="already-user">
@@ -254,34 +250,6 @@ main {
         color: #FFF;
         font-weight: 500;
         background: linear-gradient(87.79deg, #000A6B 0%, #790D0D 100%);
-      }
-
-      .sign-google-box {
-        display: flex;
-        align-items: center;
-        position: relative;
-
-        button {
-          font-family: 'Satoshi', sans-serif;
-          color: #000;
-          font-weight: 500;
-          background-color: transparent;
-          border: 1px solid #D1CFCF;
-        }
-
-        img {
-          width: 16px;
-          position: absolute;
-          left: 17%
-        }
-
-        #sign-in-google {
-          font-family: 'Satoshi', sans-serif;
-          color: #000;
-          font-weight: 500;
-          background-color: transparent;
-          border: 1px solid #D1CFCF;
-        }
       }
     }
 

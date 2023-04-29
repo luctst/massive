@@ -1,8 +1,37 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import http from '@/utils/http';
 
 function userIsAuthenticated() {
-  return useUserStore().user !== null;
+  const userStore = useUserStore();
+
+  if (window.location.search.includes('id_token')) {
+    if (userStore.user) return true;
+
+    return http.get(`auth/google/callback${window.location.search}`)
+    .then(res => {
+      const user = {
+        jwt: res.data.jwt,
+        ...res.data.user,
+      };
+      userStore.setUserManually(user);
+      console.log(userStore.user);
+      return true;
+    })
+    .catch(() => false);
+  }
+
+  return userStore.user !== null;
+}
+
+function wrapperAuth(): boolean {
+  if (userIsAuthenticated() instanceof Promise) {
+    return userIsAuthenticated()
+    .then(() => true)
+    .catch(() => false);
+  }
+
+  return userIsAuthenticated();
 }
 
 export default createRouter({
@@ -45,11 +74,7 @@ export default createRouter({
       meta: {
         headerTitle: 'header.routes.home',
       },
-      beforeEnter: () => {
-        if (!userIsAuthenticated()) {
-          return { name: 'Auth' };
-        }
-      },
+      beforeEnter: () => wrapperAuth(),
     },
     {
       path: '/explorer',

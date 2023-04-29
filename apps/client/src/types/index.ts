@@ -36,6 +36,7 @@ export interface UserStore {
   createdAt: Date;
   udpatedAt: Date;
   pricing: number;
+  provider: string;
   jwt?: string;
   social?: {
   [key: string]: string;

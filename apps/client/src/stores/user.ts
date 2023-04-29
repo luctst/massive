@@ -18,6 +18,9 @@ export const useUserStore = defineStore({
     };
   },
   actions: {
+    setUserManually(userData: UserStore): void {
+      this.user = userData;
+    },
     removeUser(): void {
       this.user = null;
     },

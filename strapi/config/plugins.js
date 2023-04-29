@@ -16,10 +16,13 @@ module.exports = ({ env }) => ({
         delete: {},
       },
     },
-    'strapi-plugin-populate-deep': {
-      config: {
-        defaultDepth: 5, // Default is 5
-      }
-    },
   },
+  'strapi-plugin-populate-deep': {
+    config: {
+      defaultDepth: 5, // Default is 5
+    }
+  },
+  // 'google-auth': {
+  //   enabled: true,
+  // },
 });

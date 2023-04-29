@@ -28,8 +28,7 @@
     },
     "provider": {
       "type": "string",
-      "configurable": false,
-      "private": true
+      "configurable": false
     },
     "password": {
       "type": "password",

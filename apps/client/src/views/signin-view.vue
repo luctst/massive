@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { ReqAxiosNewUser } from '@/types';
 import { useUserStore } from '@/stores/user';
+import http from '@/utils/http';
 
 interface Rules {
   key: keyof ReqAxiosNewUser;
@@ -191,15 +192,7 @@ const createUser = async () => {
             src="@/assets/loader-svg.svg"
           >
         </button>
-        <div class="sign-google-box">
-          <button id="sign-in-google">
-            {{ $t('signin.loginWithGoogle') }}
-            <img
-              src="@/assets/icons8-google.svg"
-              alt="Google icon"
-            >
-          </button>
-        </div>
+        <login-with-google />
       </div>
     </form>
     <p
@@ -360,34 +353,6 @@ small {
         color: #FFF;
         font-weight: 500;
         background: linear-gradient(87.79deg, #000A6B 0%, #790D0D 100%);
-      }
-
-      .sign-google-box {
-        display: flex;
-        align-items: center;
-        position: relative;
-
-        button {
-          font-family: 'Satoshi', sans-serif;
-          color: #000;
-          font-weight: 500;
-          background-color: transparent;
-          border: 1px solid #D1CFCF;
-        }
-
-        img {
-          width: 16px;
-          position: absolute;
-          left: 17%
-        }
-
-        #sign-in-google {
-          font-family: 'Satoshi', sans-serif;
-          color: #000;
-          font-weight: 500;
-          background-color: transparent;
-          border: 1px solid #D1CFCF;
-        }
       }
     }
 
