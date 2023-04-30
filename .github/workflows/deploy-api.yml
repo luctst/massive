@@ -32,7 +32,7 @@ jobs:
             ${{ runner.os }}-node-
       - name: "Install dependencies \U0001F468\U0001F3FB‍\U0001F4BB"
         run: yarn install
-      - uses: akhileshns/heroku-deploy@v3.12.12
+      - uses: akhileshns/heroku-deploy@v3.12.13
         with:
           heroku_api_key: '${{secrets.HEROKU_API_KEY}}'
           heroku_app_name: '${{secrets.HEROKU_APP_NAME}}'
