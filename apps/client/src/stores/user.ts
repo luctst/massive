@@ -47,9 +47,11 @@ export const useUserStore = defineStore({
       this.user = null;
     },
     updateUser(newUserData: UpdateUser): void {
-      Object.keys(newUserData).forEach((key) => {
+      (Object.keys(newUserData) as Array<keyof typeof this.user>).forEach((key: keyof UserStore) => {
         if (this.user) {
-          this.user[key as keyof UserStore] = newUserData[key as keyof UpdateUser];
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          this.user[key] = newUserData[key as keyof UpdateUser];
         }
       });
     },

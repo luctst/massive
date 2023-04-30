@@ -31,7 +31,7 @@ onMounted(async () => {
 
 <template>
   <loader-vue v-if="!dataLoaded" />
-  <template v-else>
+  <template v-else-if="$route.name === 'Home'">
     <navigation-header />
     <main class="container home">
       <template v-if="!userStore.user?.followings?.length">
@@ -66,6 +66,9 @@ onMounted(async () => {
       </template>
     </main>
     <navigation-footer />
+  </template>
+  <template v-else>
+    <router-view />
   </template>
 </template>
 

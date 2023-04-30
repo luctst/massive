@@ -61,19 +61,6 @@ export default createRouter({
       ],
     },
     {
-      path: '/bookmarks',
-      name: 'Bookmarks',
-      component: () => import('@/views/favorite-view.vue'),
-      meta: {
-        headerTitle: 'header.routes.bookmarks',
-      },
-      beforeEnter: () => {
-        if (!userIsAuthenticated()) {
-          return { name: 'Auth' };
-        }
-      },
-    },
-    {
       path: '/',
       name: 'Home',
       component: () => import('@/views/home-view.vue'),
@@ -81,59 +68,44 @@ export default createRouter({
         headerTitle: 'header.routes.home',
       },
       beforeEnter: async () => wrapperAuth(),
-    },
-    {
-      path: '/explorer',
-      name: 'Explorer',
-      component: () => import('@/views/explorer-view.vue'),
-      meta: {
-        headerTitle: 'header.routes.explorer',
-      },
-      beforeEnter: () => {
-        if (!userIsAuthenticated()) {
-          return { name: 'Auth' };
-        }
-      },
-    },
-    {
-      path: '/article/:id',
-      name: 'Article',
-      component: () => import('@/views/article-view.vue'),
-      beforeEnter: () => {
-        if (!userIsAuthenticated()) {
-          return { name: 'Auth' };
-        }
-      },
-    },
-    {
-      path: '/media/:id',
-      name: 'Media',
-      component: () => import('@/views/media-view.vue'),
-      beforeEnter: () => {
-        if (!userIsAuthenticated()) {
-          return { name: 'Auth' };
-        }
-      },
-    },
-    {
-      path: '/user/:id',
-      name: 'User',
-      component: () => import('@/views/user-view.vue'),
-      beforeEnter: () => {
-        if (!userIsAuthenticated()) {
-          return { name: 'Auth' };
-        }
-      },
-    },
-    {
-      path: '/user/:id/update',
-      name: 'UserUpdate',
-      component: () => import('@/views/user-update.vue'),
-      beforeEnter: () => {
-        if (!userIsAuthenticated()) {
-          return { name: 'Auth' };
-        }
-      }
+      children: [
+        {
+          path: 'bookmarks',
+          name: 'Bookmarks',
+          component: () => import('@/views/favorite-view.vue'),
+          meta: {
+            headerTitle: 'header.routes.bookmarks',
+          },
+        },
+        {
+          path: 'explorer',
+          name: 'Explorer',
+          component: () => import('@/views/explorer-view.vue'),
+          meta: {
+            headerTitle: 'header.routes.explorer',
+          },
+        },
+        {
+          path: 'article/:id',
+          name: 'Article',
+          component: () => import('@/views/article-view.vue'),
+        },
+        {
+          path: 'media/:id',
+          name: 'Media',
+          component: () => import('@/views/media-view.vue'),
+        },
+        {
+          path: 'user/:id',
+          name: 'User',
+          component: () => import('@/views/user-view.vue'),
+        },
+        {
+          path: 'user/:id/update',
+          name: 'UserUpdate',
+          component: () => import('@/views/user-update.vue'),
+        },
+      ],
     },
   ],
 });
