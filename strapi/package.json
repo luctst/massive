@@ -7,7 +7,8 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "build": "strapi build",
-    "strapi": "strapi"
+    "strapi": "strapi",
+    "heroku-postbuild": "strapi build"
   },
   "devDependencies": {},
   "dependencies": {
@@ -18,7 +19,9 @@
     "strapi-plugin-populate-deep": "2.0.0",
     "better-sqlite3": "7.4.6",
     "strapi-google-auth": "0.1.2",
-    "sharp": "0.31.3"
+    "sharp": "0.31.3",
+    "pg": "8.7.1",
+    "pg-connection-string": "2.5.0"
   },
   "author": {
     "name": "A Strapi developer"

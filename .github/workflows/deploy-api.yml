@@ -1,0 +1,39 @@
+name: deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: '${{ matrix.os }}'
+    defaults:
+      run:
+        working-directory: ./strapi
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+        node:
+          - 16.x
+    steps:
+      - name: "Checkout \U0001F6CE"
+        uses: actions/checkout@master
+      - name: "Setup node env \U0001F3D7"
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: '${{ matrix.node }}'
+          check-latest: true
+      - name: "Cache node_modules \U0001F4E6"
+        uses: actions/cache@v2.1.4
+        with:
+          path: '**/node_modules'
+          key: '${{ runner.os }}-node-${{ hashFiles(''**/yarn.lock'') }}'
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: "Install dependencies \U0001F468\U0001F3FB‍\U0001F4BB"
+        run: yarn install
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: '${{secrets.HEROKU_API_KEY}}'
+          heroku_app_name: '${{secrets.HEROKU_APP_NAME}}'
+          heroku_email: '${{secrets.HEROKU_EMAIL}}'
