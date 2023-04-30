@@ -13,9 +13,15 @@ const publications = ref<Array<Article | Media>>([]);
 onMounted(async () => {
   try {
     await userStore.setUser();
-    publications.value = userStore.user?.followings?.map((follower) => {
-      return follower.media?.concat(follower.articles);
-    }).flat();
+
+    if (userStore.user?.followings.length) {
+      publications.value = userStore.user?.followings?.map((follower) => {
+        return ([] as Array<any>).concat(follower.media, follower.articles);
+      })
+      .flat()
+      .map((item) => ({ ...item, card_type: item.preview ? 'media' : 'article'}));
+    }
+
     dataLoaded.value = true;
   } catch (error) {
     router.push({ name: 'Signup' });
@@ -47,7 +53,7 @@ onMounted(async () => {
           >
             <div>
               <card-media
-                v-if="ff.preview"
+                v-if="ff.card_type === 'media'"
                 :card="ff"
               />
               <card-article

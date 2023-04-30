@@ -4,12 +4,12 @@ import { Article, Media } from '@/types/index';
 import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
-const bookmarks = ref<Array<Media | Article>>([].concat(userStore.user?.bookmarks_article, userStore.user?.bookmarks_media));
+const bookmarks = ref<Array<Media | Article>>(([] as Array<any>).concat(userStore.user?.bookmarks_article, userStore.user?.bookmarks_media));
 
 watch(
   () => [userStore.user?.bookmarks_article, userStore.user?.bookmarks_media],
   () => {
-    bookmarks.value = [].concat(userStore.user?.bookmarks_article, userStore.user?.bookmarks_media);
+    bookmarks.value = ([] as Array<any>).concat(userStore.user?.bookmarks_article, userStore.user?.bookmarks_media).map((item) => ({ ...item, card_type: item.views ? 'media' : 'article' }));
   },
   { deep: true, immediate: true }
 );
@@ -33,7 +33,7 @@ watch(
           :key="index"
         >
           <card-media
-            v-if="bookmark.views"
+            v-if="bookmark.card_type === 'media'"
             :card="bookmark"
           />
           <card-article

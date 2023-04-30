@@ -2,7 +2,6 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import qs from 'qs';
 import { useUserStore } from '@/stores/user';
 import { Media } from '@/types/index';
 import formatDate from '@/utils/formatDate';
@@ -17,6 +16,7 @@ const media = ref<Media | null>();
 const tabs = ref<Array<{ active: boolean; tabName: string;}>>([]);
 
 const userFullName = computed(() => {
+  if (media.value?.user.provider === 'google') return media.value?.user.username;
   return `${media.value?.user.firstname} ${media.value?.user.lastname}`;
 });
 
@@ -38,15 +38,11 @@ const switchTabActive = (index: number) => {
 const tabActive = computed(() => tabs.value.find((tab) => tab.active)?.tabName);
 const isUserAuthFollowing = computed(() => media.value?.user.followers?.some((ff) => ff.id === userStore.user?.id));
 const isUserAuthOnHisMedia = computed(() => media.value?.user.id === userStore.user?.id);
-const mediaPublishedDate = computed(() => formatDate(new Date(media.value?.createdAt) || new Date()));
-const getNameInitial = computed(() => `${media.value?.user.firstname[0].toUpperCase()}${media.value?.user.lastname[0].toUpperCase()}`);
+const mediaPublishedDate = computed(() => formatDate(new Date(media.value?.createdAt || new Date())));
 
 onMounted(async () => {
   try {
-    const queryParams = qs.stringify({
-      populate: ['user', 'user.followings', 'user.followers', 'likes', 'comments', 'comments.likes', 'comments.author']
-    });
-    const { data } = await http.get(`/medias/${route.params.id}?${queryParams}`, {
+    const { data } = await http.get(`/medias/${route.params.id}?populate=deep`, {
       headers: {
         Authorization: `Bearer ${userStore.user?.jwt}`,
       },
@@ -55,7 +51,7 @@ onMounted(async () => {
     const newObj = {
       ...data.data.attributes,
       id: data.data.id,
-      comments: data.data.attributes.comments.data.map((el) => {
+      comments: data.data.attributes.comments.data.map((el: any) => {
         const objToReturn = { id: el.id, ...el.attributes };
         objToReturn.user = {
           ...el.attributes.author.data.attributes,
@@ -68,8 +64,8 @@ onMounted(async () => {
       user: {
         ...data.data.attributes.user.data.attributes,
         id: data.data.attributes.user.data.id,
-        followers: data.data.attributes.user.data.attributes.followers.data.map((el) => ({id: el.id, ...el.attributes})),
-        followings: data.data.attributes.user.data.attributes.followings.data.map((el) => ({id: el.id, ...el.attributes})),
+        followers: data.data.attributes.user.data.attributes.followers.data.map((el: any) => ({id: el.id, ...el.attributes})),
+        followings: data.data.attributes.user.data.attributes.followings.data.map((el: any) => ({id: el.id, ...el.attributes})),
       },
     };
     
@@ -119,7 +115,7 @@ onMounted(async () => {
               v-else
               class="author--infos--fake--avatar"
             >
-              {{ getNameInitial }}
+              {{ userStore.getUserInitialsLetters(media.user) }}
             </div>
           </div>
           <div class="video--box--author--left--metadata">
@@ -128,23 +124,25 @@ onMounted(async () => {
           </div>
         </div>
         <div class="video--box--author--right">
-          <div
-            v-if="isUserAuthFollowing"
-            class="is__container__img"
-          >
-            {{ $t('user.follow') }}
-            <img src="@/assets/Tick-blue.svg">
-          </div>
-          <div
-            v-else
-            class="is__container__img no--follow"
-          >
-            {{ $t('user.noFollow') }}
-            <img
-              src="@/assets/Lock.svg"
-              alt="s'abonner"
+          <template v-if="!isUserAuthOnHisMedia">
+            <div
+              v-if="isUserAuthFollowing"
+              class="is__container__img"
             >
-          </div>
+              {{ $t('user.follow') }}
+              <img src="@/assets/Tick-blue.svg">
+            </div>
+            <div
+              v-else
+              class="is__container__img no--follow"
+            >
+              {{ $t('user.noFollow') }}
+              <img
+                src="@/assets/Lock.svg"
+                alt="s'abonner"
+              >
+            </div>
+          </template>
         </div>
       </div>
       <div class="video--box--actions container">

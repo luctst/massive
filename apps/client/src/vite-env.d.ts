@@ -6,4 +6,6 @@ declare module '*.vue' {
   export default component
 }
 
-declare const __VERSION__: string;
+interface Window {
+  __VERSION__: string
+}

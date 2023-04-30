@@ -1,9 +1,4 @@
-export interface MediaType {
-  cardType: {
-    isMedia: boolean;
-    isArticle: boolean;
-  }
-}
+type PublicationsType = 'article' | 'media';
 
 export interface Media {
   id: number;
@@ -14,8 +9,8 @@ export interface Media {
   user: UserStore;
   likes: Array<Likes>;
   comments: Array<Comments>;
-  card_type: MediaType;
-  views: number;
+  card_type: PublicationsType;
+  views: string;
   categories?: Array<string>;
   description?: string;
 }
@@ -26,13 +21,13 @@ export interface UserStore {
   lastname: string;
   email: string;
   username: string;
-  bookmarks_media: Array<Media> | null;
-  bookmarks_article: Array<Article> | null;
-  followers: Array<UserStore> | null;
-  followings: Array<UserStore> | null;
-  articles: Array<Article> | null;
-  media: Array<Media> | null;
-  comments: Array<Comments> | null;
+  bookmarks_media: Array<Media>;
+  bookmarks_article: Array<Article> ;
+  followers: Array<UserStore>;
+  followings: Array<UserStore>;
+  articles: Array<Article>;
+  media: Array<Media>;
+  comments: Array<Comments>;
   createdAt: Date;
   udpatedAt: Date;
   pricing: number;
@@ -41,21 +36,22 @@ export interface UserStore {
   social?: {
   [key: string]: string;
   };
-  avatar_url?: string | null;
+  avatar_url?: string;
   profil_background?: string;
   description?: string;
 }
 
 export interface Likes {
   id: number;
-  user_id: number;
+  user_id: number | string;
   article_id: number;
   media_id: number;
 }
 
 export interface Comments {
   id: number;
-  user: UserStore;
+  author?: UserStore;
+  user?: UserStore;
   likes: Array<Likes>;
   content: string;
   createdAt: Date;
@@ -69,7 +65,7 @@ export interface Article {
   createdAt: string;
   likes: Array<Likes>;
   comments: Array<Comments>;
-  card_type: MediaType;
+  card_type: PublicationsType;
 }
 
 export interface ReqAxiosNewUser {
@@ -78,4 +74,9 @@ export interface ReqAxiosNewUser {
   username: string;
   password: string;
   email: string;
+}
+
+export interface StrapiResponse {
+  id: number;
+  attributes: Record<any, Article | Media | Comments | Likes>;
 }

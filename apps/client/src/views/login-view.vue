@@ -6,6 +6,8 @@ import { toast } from 'vue3-toastify';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 
+type DataForApi = 'email' | 'password';
+
 interface Rules {
   key: string;
   type: 'text' | 'password';
@@ -20,7 +22,7 @@ const { push } = useRouter();
 const userStore = useUserStore();
 const { t } = useI18n();
 const callApiDone = ref<boolean>(true);
-const dataForApi = ref<{ [key: string]: string}>({
+const dataForApi = ref<{ [key in DataForApi]: string}>({
   email: '',
   password: '',
 });
@@ -28,7 +30,7 @@ const dataForApi = ref<{ [key: string]: string}>({
 function wrapperValidate(self: Rules, evtName: string, cb: Rules['validate']) {
   if (evtName === 'input' && self.hasBeenBlured === false) return;
   if (evtName === 'blur' && self.hasBeenBlured === false) self.hasBeenBlured = true;
-  self.error = cb(dataForApi.value[self.key]);
+  self.error = cb(dataForApi.value[self.key as keyof { email: ''; password: ''}]);
 }
 
 const rules = ref<Array<Rules>>([
@@ -101,7 +103,7 @@ const logWithGoogle = () => {
         <label :for="input.key">{{ input.label }}</label>
         <input
           :id="input.key"
-          v-model="dataForApi[input.key]"
+          v-model="dataForApi[input.key as keyof {}]"
           :type="input.type"
           :placeholder="input.placeholder"
           @input="wrapperValidate(input, $event.type, input.validate)"

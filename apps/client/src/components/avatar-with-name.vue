@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { UserStore } from '@/types/index';
+import { useUserStore } from '@/stores/user';
 
 const props = defineProps<{
   userData: UserStore;
 }>();
 
-const fullname = computed(() => `${props.userData.firstname} ${props.userData.lastname}`);
-const userInitialsName = computed(() => `${props.userData.firstname[0].toUpperCase()}${props.userData.lastname[0].toUpperCase()}`);
+const { getUserInitialsLetters } = useUserStore();
+const fullname = computed(() => {
+  if (props.userData.provider === 'google') return props.userData.username;
+  return `${props.userData.firstname} ${props.userData.lastname}`;
+});
 </script>
 
 <template>
@@ -15,10 +19,10 @@ const userInitialsName = computed(() => `${props.userData.firstname[0].toUpperCa
     <div class="avatar">
       <div class="avatar--picture is__container__img">
         <img
-          v-if="props.userData.avatar"
-          :src="props.userData.avatar"
+          v-if="props.userData.avatar_url"
+          :src="props.userData.avatar_url"
         >
-        <span v-else>{{ userInitialsName }}</span>
+        <span v-else>{{ getUserInitialsLetters(props.userData) }}</span>
       </div>
       <p class="avatar--username">
         {{ fullname }}

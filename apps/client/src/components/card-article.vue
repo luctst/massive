@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { Article} from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import utils from '@/utils/index';
@@ -13,15 +12,13 @@ interface Props {
 }
 
 const router = useRouter();
-const route = useRoute();
 const userStore = useUserStore();
-// const { getUserInitialsLetters } = storeToRefs(userStore);
 const props = withDefaults(defineProps<Props>(), {
   showHead: true,
   showActions: true,
 });
 const isUserAuthFollowing = computed(() => {
-  if (userStore.user?.id === Number.parseInt(route.params.id as string)) return true;
+  if (userStore.user?.id === props.card.user.id) return true;
   return userStore.user?.followings?.some((ff) => ff.id === props.card.user.id);
 });
 
@@ -36,7 +33,6 @@ const goToUserProfil = (): void => {
 
 const cacheUserName = computed(() => utils.formatUserName(props.card.user));
 const cacheCreatedAt = computed(() => utils.formatDate(new Date(props.card.createdAt)));
-const getInitialName = computed(() => userStore.getUserInitialsLetters(props.card.user));
 </script>
 
 <template>
@@ -61,7 +57,7 @@ const getInitialName = computed(() => userStore.getUserInitialsLetters(props.car
             v-else
             class="author--infos--fake--avatar"
           >
-            {{ getInitialName }}
+            {{ userStore.getUserInitialsLetters(props.card.user) }}
           </div>
         </div>
         <div class="card--article--top--user--name">

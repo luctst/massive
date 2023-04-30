@@ -14,6 +14,7 @@ declare module '@vue/runtime-core' {
     CommentsMediaArticle: typeof import('./src/components/comments-media-article.vue')['default']
     Loader: typeof import('./src/components/loader.vue')['default']
     LoaderVue: typeof import('./src/components/loader-vue.vue')['default']
+    LoginWithGoogle: typeof import('./src/components/login-with-google.vue')['default']
     MediaActions: typeof import('./src/components/media-actions.vue')['default']
     Navigation: typeof import('./src/components/navigation.vue')['default']
     NavigationFooter: typeof import('./src/components/navigation-footer.vue')['default']

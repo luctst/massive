@@ -12,8 +12,7 @@ const { media, isUserAuthFollowing } = toRefs(props);
 const userHasCreatedData: ComputedRef<boolean> = computed(() => media.value.user.id === userStore.user?.id);
 const userHasLikedMedia: ComputedRef<boolean> = computed(() => media.value.likes.some((lk) => Number.parseInt(lk.user_id as string) === userStore.user?.id));
 const mediaType = computed(() => {
-  if (media.value.views) return 'isMedia';
-  return 'isArticle';
+  return media.value.card_type === 'media' ? 'isMedia' : 'isArticle';
 });
 const userHasBookmarked: ComputedRef<boolean | undefined> = computed(() => {
   if (mediaType.value === 'isArticle') return userStore.user?.bookmarks_article?.some((bk) => bk.id === media.value.id);
@@ -76,34 +75,35 @@ const handleBookmark = async (): Promise<void> => {
     }
 
     const utils = {
-        fieldsInStore: mediaType.value === 'isArticle' ? 'bookmarks_article' : 'bookmarks_media',
-      };
+      fieldsInStore: mediaType.value === 'isArticle' ? 'bookmarks_article' : 'bookmarks_media',
+    };
+    const arrayToUpdate = userStore.user?.[mediaType.value === 'isArticle' ? 'bookmarks_article' : 'bookmarks_media'] as Array<Article | Media>;
 
-      if (userHasBookmarked.value) {
-        userStore.user?.[utils.fieldsInStore].splice(
-          userStore.user?.[utils.fieldsInStore]?.findIndex((bk) => bk.id === media.value.id),
-          1
-        );
-
-        await http.put(`users/${userStore.user?.id}`, {
-          [utils.fieldsInStore]: userStore.user?.[utils.fieldsInStore].map((bookmark) => bookmark.id),
-        }, {
-          headers: {
-            Authorization: `Bearer ${userStore.user?.jwt}`,
-          },
-        })
-        return;
-      }
+    if (userHasBookmarked.value) {
+      arrayToUpdate?.splice(
+        arrayToUpdate?.findIndex((bk: Article | Media) => bk.id === media.value.id),
+        1
+      );
 
       await http.put(`users/${userStore.user?.id}`, {
-        [utils.fieldsInStore]: userStore.user?.[utils.fieldsInStore]?.map((bookmark) => bookmark.id).concat(media.value.id),
+        [utils.fieldsInStore]: arrayToUpdate?.map((bookmark: Article | Media) => bookmark.id),
       }, {
         headers: {
           Authorization: `Bearer ${userStore.user?.jwt}`,
         },
-      });
+      })
+      return;
+    }
 
-      userStore.user?.[utils.fieldsInStore].push(media.value); 
+    await http.put(`users/${userStore.user?.id}`, {
+      [utils.fieldsInStore]: arrayToUpdate?.map((bookmark: Article | Media) => bookmark.id).concat(media.value.id),
+    }, {
+      headers: {
+        Authorization: `Bearer ${userStore.user?.jwt}`,
+      },
+    });
+
+    arrayToUpdate?.push(media.value); 
   } catch (error) {
     toast.error('Une erreur est survenue');
   }

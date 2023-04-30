@@ -29,8 +29,10 @@ const goToUserProfil = (): void => {
   router.push({ name: 'User', params: { id: props.card.user.id } });
 };
 
-const userFullName = computed(() => `${props.card.user.firstname} ${props.card.user.lastname}`);
-const getNameInitial = computed(() => `${props.card.user.firstname[0].toUpperCase()}${props.card.user.lastname[0].toUpperCase()}`);
+const userFullName = computed(() => {
+  if (props.card.user.provider === 'google') return props.card.user.username;
+  return `${props.card.user.firstname} ${props.card.user.lastname}`;
+});
 </script>
 
 <template>
@@ -56,11 +58,11 @@ const getNameInitial = computed(() => `${props.card.user.firstname[0].toUpperCas
             v-else
             class="author--infos--fake--avatar"
           >
-            {{ getNameInitial }}
+            {{ userStore.getUserInitialsLetters(props.card.user) }}
           </div>
         </div>
         <div class="card--container--item--top--user--name">
-          <p>{{ utils.formatUserName(props.card.user.firstname, props.card.user.lastname) }}</p>
+          <p>{{ utils.formatUserName(props.card.user) }}</p>
           <p>Il y a {{ utils.formatDate(new Date(props.card.createdAt)) }}</p>
         </div>
       </div>

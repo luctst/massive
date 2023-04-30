@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import http from '@/utils/http';
-
 const logWithGoogle = async () => {
   try {
-    window.location = `http://localhost:1337/api/connect/google`;
+    window.location.href = `http://localhost:1337/api/connect/google`;
   } catch (error) {
     throw error; 
   }

@@ -25,6 +25,7 @@ onBeforeMount(() => {
     :comments="userData.comments"
     :author-name="userData.firstname"
     :author-lastname="userData.lastname"
+    :author-username="userData.username"
     :author-id="userData.id"
   />
 </template>

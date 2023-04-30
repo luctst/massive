@@ -6,11 +6,11 @@ import { toast } from 'vue3-toastify';
 import { useUserStore } from '@/stores/user';
 import utils from '@/utils/index';
 import http from '@/utils/http';
+import { UserStore } from '@/types/index';
 
 interface DataToUpdate {
   avatar_url: string;
-  firstname: string;
-  lastname: string;
+  username: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -31,8 +31,8 @@ const route = useRoute();
 const router = useRouter();
 const { user, removeUser, updateUser, getUserInitialsLetters } = useUserStore();
 const dataToUpdate = ref({} as DataToUpdate);
-const inputFile = ref<HTMLInputElement | null>(null);
-const formAvatar = ref<HTMLFormElement | null>(null);
+const inputFile = ref<HTMLInputElement>();
+const formAvatar = ref<HTMLFormElement>();
 const callApiDone = ref<boolean>(true);
 const viewToLoad = ref<'root' | 'subscribes' | 'personalData'>('root');
 const links = ref<Array<{ value: string; onClick: () => void; }>>([
@@ -56,7 +56,7 @@ const links = ref<Array<{ value: string; onClick: () => void; }>>([
     value: t('userUpdate.links.logout'),
     onClick: () => {
       removeUser();
-      router.push({ name: 'Auth' });
+      window.location.href = window.location.origin + '/';
     },
   },
 ]);
@@ -118,7 +118,7 @@ const changeProfilePicture = (): void => {
     dataToUpdate.value.avatar_url = fileReader.result as string;
   }, false);
 
-  if (inputFile.value.files[0]) {
+  if (inputFile.value.files?.[0]) {
     fileReader.readAsDataURL(inputFile.value.files[0]);
   }
 };
@@ -126,7 +126,7 @@ const changeProfilePicture = (): void => {
 function wrapperValidate(self: Rules, evtName: string, cb: Rules['validate']) {
   if (evtName === 'input' && self.hasBeenBlured === false) return;
   if (evtName === 'blur' && self.hasBeenBlured === false) self.hasBeenBlured = true;
-  self.error = cb(dataToUpdate.value[self.key]);
+  self.error = cb(dataToUpdate.value[self.key as keyof DataToUpdate]);
 }
 
 const updateUserData = async (): Promise<void> => {
@@ -136,19 +136,23 @@ const updateUserData = async (): Promise<void> => {
 
     if (dataToUpdate.value.avatar_url) {
       const formData = new FormData();
-      formData.append('files', inputFile.value?.files[0]);
-      formData.append('ref', 'plugin::users-permissions.user');
-      formData.append('refId', user?.id as string);
-      formData.append('field', 'avatar_url');
+
+      if (inputFile.value?.files) {
+        formData.append('files', inputFile.value.files[0]);
+        formData.append('ref', 'plugin::users-permissions.user');
+        formData.append('refId', user!.id.toString());
+        formData.append('field', 'avatar_url');
+
+        const { data } = await http.post('upload', formData, {
+          headers: {
+            authorization: `Bearer ${user?.jwt}`,
+            ['content-type']: 'multipart/form-data',
+          },
+        });
+    
+        dataToUpdate.value.avatar_url = data[0].url;
+      }
   
-      const { data } = await http.post('upload', formData, {
-        headers: {
-          authorization: `Bearer ${user?.jwt}`,
-          ['content-type']: 'multipart/form-data',
-        },
-      });
-  
-      dataToUpdate.value.avatar_url = data[0].url;
     }
 
     await http.put(`users/${user?.id}`, dataToUpdate.value, {
@@ -157,13 +161,19 @@ const updateUserData = async (): Promise<void> => {
       },
     });
 
-    delete dataToUpdate.value.password;
-    updateUser(dataToUpdate.value);
+    updateUser({
+      ...(dataToUpdate.value.avatar_url && { avatar_url: dataToUpdate.value.avatar_url }),
+      ...(dataToUpdate.value.username && { username: dataToUpdate.value.username }),
+      ...(dataToUpdate.value.email && { email: dataToUpdate.value.email }),
+    });
     callApiDone.value = true;
     toast.success(t('userUpdate.success'));
-  } catch (error) {
+  } catch (error: unknown) {
     callApiDone.value = true;
-    toast.error(error.message);
+
+    if (error instanceof Error) {
+      toast.error(error.message);
+    }
   }
 }
 
@@ -182,6 +192,7 @@ const getUserEmail = computed(() => {
 });
 const userName = computed(() => {
   if (!user) return '';
+  if (user.provider === 'google') return user.username;
   return `${user.firstname} ${user.lastname}`;
 });
 
@@ -215,7 +226,7 @@ onMounted(() => {
             :src="user.avatar_url"
           >
           <div v-else>
-            {{ getUserInitialsLetters }}
+            {{ getUserInitialsLetters(user as UserStore) }}
           </div>
         </div>
       </div>
@@ -289,7 +300,7 @@ onMounted(() => {
             :src="user.avatar_url"
           >
           <div v-else>
-            {{ getUserInitialsLetters }}
+            {{ getUserInitialsLetters(user as UserStore) }}
           </div>
         </div>
         <div class="sub--header--personal--data--picture--action">
@@ -320,7 +331,7 @@ onMounted(() => {
           <label :for="input.key">{{ input.label }}</label>
           <input
             :id="input.key"
-            v-model="dataToUpdate[input.key]"
+            v-model="dataToUpdate[input.key as keyof DataToUpdate]"
             :type="input.type"
             :placeholder="input.placeholder"
             @input="wrapperValidate(input, $event.type, input.validate)"

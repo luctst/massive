@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, ComputedRef } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { marked } from 'marked';
 import { useRoute, useRouter } from 'vue-router';
-import qs from 'qs';
 import { Article } from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import formatDate from '@/utils/formatDate';
 import http from '@/utils/http';
 import { toast } from 'vue3-toastify';
+import { UserStore } from '@/types/index';
 
 const route = useRoute();
 const router = useRouter();
@@ -17,7 +17,6 @@ const userStore = useUserStore();
 
 const isUserAuthFollowing = computed(() => userStore.user?.followings?.some((ff) => ff.id === article.value?.user.id));
 const isUserAuthOnHisArticle = computed(() => userStore.user?.id === article.value?.user.id);
-const getNameInitial: ComputedRef<string> = computed(() => `${article.value?.user.firstname[0].toUpperCase()}${article.value?.user.lastname[0].toUpperCase()}`);
 const articleContent = computed(() => {
   marked.setOptions({
     breaks: true,
@@ -29,10 +28,7 @@ const articleContent = computed(() => {
 
 onMounted(async () => {
   try {
-    const queryParams = qs.stringify({
-      populate: ['user', 'likes', 'comments', 'comments.likes', 'comments.author']
-    });
-    const { data } = await http.get(`/articles/${route.params.id}?${queryParams}`, {
+    const { data } = await http.get(`/articles/${route.params.id}?populate=deep`, {
       headers: {
         Authorization: `Bearer ${userStore.user?.jwt}`,
       },
@@ -41,7 +37,7 @@ onMounted(async () => {
     const newObj = {
       ...data.data.attributes,
       id: data.data.id,
-      comments: data.data.attributes.comments.data.map((el) => {
+      comments: data.data.attributes.comments.data.map((el: any) => {
         const objToReturn = { id: el.id, ...el.attributes };
         objToReturn.user = {
           ...el.attributes.author.data.attributes,
@@ -94,25 +90,32 @@ onMounted(async () => {
             v-else
             class="author--infos--fake--avatar"
           >
-            {{ getNameInitial }}
+            {{ userStore.getUserInitialsLetters(article?.user as UserStore) }}
           </div>
         </div>
         <div class="author--infos--metadata">
-          <p>{{ article?.user.firstname }} {{ article?.user.lastname }}</p>
-          <p>Publié il y a <span>{{ formatDate(new Date(article?.createdAt) || new Date()) }}</span></p>
+          <p v-if="article?.user.firstname">
+            {{ article?.user.firstname }} {{ article?.user.lastname }}
+          </p>
+          <p v-else>
+            {{ article?.user.username }}
+          </p>
+          <p>Publié il y a <span>{{ formatDate(new Date(article?.createdAt || new Date())) }}</span></p>
         </div>
       </div>
       <div class="author--subscribe is__container__img">
-        <template v-if="isUserAuthFollowing">
-          {{ $t('user.follow') }}
-          <img src="@/assets/Tick-blue.svg">
-        </template>
-        <template v-else>
-          {{ $t('user.noFollow') }}
-          <img
-            src="@/assets/Lock.svg"
-            alt="S'abonner"
-          >
+        <template v-if="!isUserAuthOnHisArticle">
+          <template v-if="isUserAuthFollowing">
+            {{ $t('user.follow') }}
+            <img src="@/assets/Tick-blue.svg">
+          </template>
+          <template v-else>
+            {{ $t('user.noFollow') }}
+            <img
+              src="@/assets/Lock.svg"
+              alt="S'abonner"
+            >
+          </template>
         </template>
       </div>
     </section>

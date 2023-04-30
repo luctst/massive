@@ -74,7 +74,7 @@ const userCreatedAt = computed(() => {
         :key="index"
       >
         <a
-          :href="userData.social[link]"
+          :href="userData.social?.[link]"
           target="_blank"
         >
           <img :src="returnImgSocial(link)">

@@ -8,6 +8,18 @@ export interface Store {
   user: UserStore | null;
 }
 
+export interface UserBeforeAuth {
+  user: {
+    jwt: string;
+  };
+}
+
+export interface UpdateUser {
+  avatar_url?: string;
+  email?: string;
+  username?: string;
+}
+
 export const useUserStore = defineStore({
   id: 'user',
   state: (): Store => {
@@ -28,17 +40,17 @@ export const useUserStore = defineStore({
     },
   },
   actions: {
-    setJwt(jwt: string): void {
-      this.user = {
-        jwt,
-      };
+    setUserManually(user: UserStore): void {
+      this.user = user;
     },
     removeUser(): void {
       this.user = null;
     },
-    updateUser(newUserData: { avatar_url: string; email: string; username: string }): void {
+    updateUser(newUserData: UpdateUser): void {
       Object.keys(newUserData).forEach((key) => {
-        this.user[key] = newUserData[key];
+        if (this.user) {
+          this.user[key as keyof UserStore] = newUserData[key as keyof UpdateUser];
+        }
       });
     },
     async setUser(): Promise<void> {
@@ -59,9 +71,7 @@ export const useUserStore = defineStore({
     async authUser(userId: { email: string; password: string }): Promise<boolean | AxiosError> {
       try {
         const { data } = await http.post('/auth/local', { identifier: userId.email, password: userId.password });
-        this.user = {
-          jwt: data.jwt,
-        };
+        this.user = data;
         return true;
       } catch (error: AxiosError | any) {
         return error;
@@ -70,10 +80,7 @@ export const useUserStore = defineStore({
     async registerUser(newUserData: ReqAxiosNewUser): Promise<boolean | AxiosError> {
       try {
         const { data } = await http.post('/auth/local/register', newUserData);
-        this.user = {
-          jwt: data.jwt,
-        };
-
+        this.user = data;
       return true;
       } catch (error: AxiosError | any) {
         return error;

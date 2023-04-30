@@ -11,7 +11,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const userPublications = ref<Array<Media | Article>>([].concat(props.userData.articles, props.userData.media));
+const userPublications = ref<Array<Media | Article>>(([] as Array<any>).concat(props.userData.articles, props.userData.media).map((item) => ({ ...item, card_type: item.preview ? 'media' : 'article'})));
 const shouldShowSubscribeBanner: ComputedRef<boolean> = computed(() => {
   return !props.isUserAuthOnHisProfile && !props.isUserAuthFollowing;
 });
@@ -21,7 +21,7 @@ const shouldShowSubscribeBanner: ComputedRef<boolean> = computed(() => {
   <section class="container publications">
     <template v-for="(card, index) in userPublications">
       <card-media
-        v-if="card.preview"
+        v-if="card.card_type === 'media'"
         :key="index"
         :card="card"
       />

@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHashHistory, RouteLocation } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import http from '@/utils/http';
 
@@ -10,7 +10,12 @@ function userIsAuthenticated() {
 
     return http.get(`auth/google/callback${window.location.search}`)
     .then(res => {
-      userStore.setJwt(res.data.jwt);
+      const user = {
+        ...res.data.user,
+        jwt: res.data.jwt,
+      }
+
+      userStore.setUserManually(user);
       return true;
     })
     .catch(() => false);
@@ -19,14 +24,20 @@ function userIsAuthenticated() {
   return userStore.user !== null;
 }
 
-function wrapperAuth(): boolean {
-  if (userIsAuthenticated() instanceof Promise) {
-    return userIsAuthenticated()
-    .then(() => true)
-    .catch(() => false);
-  }
+const wrapperAuth = async (): Promise<any> => {
+  try {
+    if (userIsAuthenticated() instanceof Promise) {
+      return await userIsAuthenticated();
+    }
 
-  return userIsAuthenticated();
+    if (userIsAuthenticated() === false) {
+      return { name: 'Auth' };
+    }
+
+    return true;
+  } catch (error) {
+    return { name: 'Auth' };
+  }
 }
 
 export default createRouter({

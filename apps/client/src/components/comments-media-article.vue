@@ -21,6 +21,7 @@ const props = withDefaults(defineProps<{
   authorName: string;
   authorLastname: string;
   authorId: number;
+  authorUsername?: string;
   showCommentsHead?: boolean;
   showWriteMessageBox?: boolean;
 }>(), {
@@ -40,7 +41,7 @@ const userAuthIsFollowing = computed(() => {
 const isUserAuthOnHisProfil = computed(() => {
   return userStore.user?.id === props.authorId;
 });
-const userAuthHasLiked = (likes: Array<Likes>): boolean => likes.some((like) => Number.parseInt(like.user_id) === userStore.user?.id);
+const userAuthHasLiked = (likes: Array<Likes>): boolean => likes.some((like) => Number.parseInt(like.user_id as string) === userStore.user?.id);
 const handleLike = async (commentIndex: number): Promise<void> => {
   try {
     if (!userAuthIsFollowing.value) {
@@ -101,7 +102,7 @@ const createNewComment = async () => {
     data: {
       content: newComment.value,
       author: userStore.user?.id,
-      [commentsSectionAttachedTo.value]: router.currentRoute.value.params.id,
+      [commentsSectionAttachedTo.value]: Number.parseInt(router.currentRoute.value.params.id as string),
     },
   },
   {
@@ -182,10 +183,10 @@ onBeforeMount(() => {
           class="comments--wrapper"
         >
           <p class="comments--wrapper--avatar">
-            {{ comment.user.firstname[0].toLowerCase() }}
+            {{ comment.user?.firstname[0].toLowerCase() }}
           </p>
           <div class="comments--wrapper--msg">
-            <p>{{ comment.user.firstname }} {{ comment.user.lastname[0].toLowerCase() }}.</p>
+            <p>{{ comment.user?.firstname }} {{ comment.user?.lastname[0].toLowerCase() }}.</p>
             <p class="is__article__content">
               {{ comment.content }}
             </p>
@@ -241,7 +242,7 @@ onBeforeMount(() => {
               alt="lock follow"
             >
           </div>
-          <p>{{ $t('userCommunity.needFollow', { name: `${props.authorName} ${props.authorLastname}`}) }}</p>
+          <p>{{ $t('userCommunity.needFollow', { name: props.authorName ? `${props.authorName} ${props.authorLastname}` : props.authorUsername }) }}</p>
         </div>
         <div class="loading-div" />
         <div class="loading-div" />

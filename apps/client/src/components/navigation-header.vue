@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import { UserStore } from '@/types';
 
 const userStore = useUserStore();
 const title = ref<string>(useRoute().meta.headerTitle as string || '');
@@ -43,7 +44,7 @@ const title = ref<string>(useRoute().meta.headerTitle as string || '');
             class="fake--avatar"
           >
             <router-link :to="{ name: 'User', params: { id: userStore.user?.id } }">
-              <span>{{ userStore.getUserInitialsLetters }}</span>
+              <span>{{ userStore.getUserInitialsLetters(userStore.user as UserStore) }}</span>
             </router-link>
           </div>
         </div>

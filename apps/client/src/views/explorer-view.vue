@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, Ref, ref, reactive } from 'vue';
-import qs from 'qs';
 import { Media, UserStore } from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import http from '@/utils/http';
@@ -45,11 +44,7 @@ function handleCategoryFilter(index: number) {
 onMounted(async () => {
   try {
     function getVideosTrendings() {
-      const queryParams = qs.stringify({
-        populate: ['categories', 'user'],
-      });
-
-      return http.get(`/medias?${queryParams}`, {
+      return http.get(`/medias?populate=deep`, {
         headers: {
           Authorization: `Bearer ${userStore.user?.jwt}`,
         },
@@ -66,7 +61,7 @@ onMounted(async () => {
 
     const res = await Promise.all([getVideosTrendings(), getUsersTrendings()]);
     
-    mediasTrends.value = res[0].data.data.map((media) => {
+    mediasTrends.value = res[0].data.data.map((media: any) => {
       const newObj = {
         id: media.id,
         ...media.attributes,
@@ -79,7 +74,7 @@ onMounted(async () => {
 
       return newObj;
     });
-    usersTrends.value = res[1].data.filter((user) => user.id !== userStore.user?.id);
+    usersTrends.value = res[1].data.filter((user: UserStore) => user.id !== userStore.user?.id);
     dataLoaded.value = true;
   } catch (error) {
     throw error;

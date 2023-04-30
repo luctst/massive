@@ -3,14 +3,12 @@ import { onMounted, ref, computed, ComputedRef } from 'vue';
 import { useRoute } from 'vue-router';
 import { marked } from 'marked';
 import { useI18n } from 'vue-i18n';
-import qs from 'qs';
 import { UserStore } from '@/types/index';
 import { useUserStore } from '@/stores/user';
 import UserAbout from '@/components/user-about.vue';
 import UserCommunity from '@/components/user-community.vue';
 import UserPublication from '@/components/user-publications.vue';
 import http from '@/utils/http';
-import utils from '@/utils';
 
 interface Category {
   active: boolean;
@@ -42,10 +40,11 @@ const category = ref<Array<Category>>([
 ]);
 
 const userFullName: ComputedRef<string> = computed(() => {
-  return `${userData.value.firstname} ${userData.value.lastname}`;
+  if (userData.value?.provider === 'google') return userData.value.username;
+  return `${userData.value?.firstname} ${userData.value?.lastname}`;
 });
 
-const isUserAuthFollowing: ComputedRef<boolean | undefined> = computed(() => userData.value.followers?.some((ff) => ff.id === userStore.user?.id));
+const isUserAuthFollowing: ComputedRef<boolean | undefined> = computed(() => userData.value?.followers?.some((ff) => ff.id === userStore.user?.id));
 const isUserAuthOnHisProfil: ComputedRef<boolean> = computed(() => userStore.user?.id === Number.parseInt(route.params.id as string));
 
 
@@ -55,7 +54,7 @@ const descriptionMarkdown = computed(() => {
     gfm: true,
   });
 
-  return marked(userData.value.description || '');
+  return marked(userData.value?.description || '');
 });
 
 const switchCategory = (index: number) => {
@@ -70,7 +69,7 @@ const switchCategory = (index: number) => {
 
 onMounted(async () => {
   if (isUserAuthOnHisProfil.value) {
-    userData.value = userStore.user;
+    userData.value = userStore.user as UserStore;
     dataFetched.value = true;
     return;
   }
@@ -91,7 +90,7 @@ onMounted(async () => {
   <template v-else>
     <header class="head">
       <div class="is__container__img head--bg--image">
-        <img :src="userData.profil_background">
+        <img :src="userData?.profil_background">
       </div>
       <div class="head--nav container">
         <div
@@ -108,15 +107,15 @@ onMounted(async () => {
     <section class="creator container">
       <div class="is__container__img creator--avatar">
         <img
-          v-if="userData.avatar_url"
-          :src="userData.avatar_url"
+          v-if="userData?.avatar_url"
+          :src="userData?.avatar_url"
         >
-        <span v-else>{{ userStore.getUserInitialsLetters }}</span>
+        <span v-else>{{ userStore.getUserInitialsLetters(userData) }}</span>
       </div>
       <div class="creator--infos">
         <div class="creator--infos--left">
           <h1>{{ userFullName }}</h1>
-          <div>{{ userData.followers?.length }} Contributeurs</div>
+          <div>{{ userData?.followers?.length }} Contributeurs</div>
         </div>
         <div class="creator--infos--right">
           <div 
