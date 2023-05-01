@@ -2,10 +2,15 @@ import axios from 'axios';
 
 let baseUrl: string;
 
-if (import.meta.env.DEV) {
-  baseUrl = import.meta.env.VITE_API_URL_DEV;
-} else {
-  baseUrl = import.meta.env.VITE_API_URL_PROD;
+switch (import.meta.env.MODE) {
+  case 'development':
+    baseUrl = import.meta.env.VITE_API_URL_DEV;
+    break;
+  case 'staging':
+    baseUrl = import.meta.env.VITE_API_URL_STAGING;
+  default:
+    baseUrl = import.meta.env.VITE_API_URL_PROD;
+    break;
 }
 
 export default axios.create({
