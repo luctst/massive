@@ -1,8 +1,10 @@
-name: deploy-api
+name: deploy-api-dev
 on:
   push:
     branches:
       - main
+    paths:
+      - 'strapi/**'
 jobs:
   deploy:
     runs-on: '${{ matrix.os }}'
@@ -16,22 +18,31 @@ jobs:
         node:
           - 16.x
     steps:
-      - name: "Checkout"
-        uses: actions/checkout@master
+      - uses: actions/checkout@master
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'strapi/**'
       - name: "Setup node env"
+        if: steps.filter.outputs.backend == 'true'
         uses: actions/setup-node@v2.1.5
         with:
           node-version: '${{ matrix.node }}'
           check-latest: true
       - name: Login to Heroku Container registry
+        if: steps.filter.outputs.backend == 'true'
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:login
       - name: Build and push
+        if: steps.filter.outputs.backend == 'true'
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web 
       - name: Release
+        if: steps.filter.outputs.backend == 'true'
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web 

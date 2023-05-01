@@ -1,10 +1,10 @@
-name: deploy
-
+name: deploy-front-dev
 on:
   push:
     branches:
       - main
-
+    paths:
+      - 'apps/client/**'
 jobs:
   cache-and-install:
     runs-on: ubuntu-latest
