@@ -28,13 +28,13 @@ module.exports = [
       },
     },
   },
-  'strapi::poweredBy',
   {
     name: 'strapi::cors',
     config: {
-      origin: [process.env.CORS_STAGING, 'https://massive-api-dev.herokuapp.com/'],
+      origin: [process.env.CORS_STAGING, 'https://massive-api-dev.herokuapp.com'],
     },
   },
+  'strapi::poweredBy',
   'strapi::logger',
   'strapi::query',
   'strapi::body',

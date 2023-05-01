@@ -1,5 +1,5 @@
 module.exports = ({ env }) => {
-  // console.log(env.int('PORT'), 'SERVERR', process.env);
+  console.log(process.env);
   return {
     host: env('HOST', '0.0.0.0'),
     port: env.int('PORT', 1337),
