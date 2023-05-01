@@ -14,29 +14,37 @@ jobs:
         node-version: [18.x]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'apps/client/**'
       - uses: pnpm/action-setup@v2
         name: Install pnpm
+        if: steps.filter.outputs.frontend == 'true'
         id: pnpm-install
         with:
           version: 7
           run_install: false
 
       - name: Install Node.js ${{ matrix.node-version }}
+        if: steps.filter.outputs.frontend == 'true'
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
       - name: Get pnpm store directory
+        if: steps.filter.outputs.frontend == 'true'
         id: pnpm-cache
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@v3
+        if: steps.filter.outputs.frontend == 'true'
         name: Setup pnpm cache
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
@@ -45,12 +53,15 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
+        if: steps.filter.outputs.frontend == 'true'
         run: pnpm install
       
       - name: Lint
+        if: steps.filter.outputs.frontend == 'true'
         run: pnpm run lint
       
       - name: typecheck
+        if: steps.filter.outputs.frontend == 'true'
         run: pnpm run typecheck
       
   build:
@@ -61,29 +72,42 @@ jobs:
       matrix:
         node-version: [18.x]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'apps/client/**'
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_VITE_API_URL_STAGING: ${{ secrets.VITE_API_URL_STAGING }}
+          file_name: .env
       - uses: pnpm/action-setup@v2
         name: Install pnpm
+        if: steps.filter.outputs.frontend == 'true'
         id: pnpm-install
         with:
           version: 7
           run_install: false
 
       - name: Install Node.js ${{ matrix.node-version }}
+        if: steps.filter.outputs.frontend == 'true'
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
       - name: Get pnpm store directory
+        if: steps.filter.outputs.frontend == 'true'
         id: pnpm-cache
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@v3
+        if: steps.filter.outputs.frontend == 'true'
         name: Setup pnpm cache
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
@@ -92,12 +116,15 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
+        if: steps.filter.outputs.frontend == 'true'
         run: pnpm install
       
       - name: Build
+        if: steps.filter.outputs.frontend == 'true'
         run: pnpm run --filter client build --mode staging
       
       - name: S3
+        if: steps.filter.outputs.frontend == 'true'
         uses: jakejarvis/s3-sync-action@be0c4ab89158cac4278689ebedd8407dd5f35a83
         with:
           args: --acl public-read --delete
@@ -109,6 +136,7 @@ jobs:
           SOURCE_DIR: './apps/client/dist'
         
       - name: Invalidate Cloudfront
+        if: steps.filter.outputs.frontend == 'true'
         uses: chetan/invalidate-cloudfront-action@v2
         env:
           DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}

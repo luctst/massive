@@ -32,7 +32,7 @@ module.exports = [
   {
     name: 'strapi::cors',
     config: {
-      origin: process.env.CORS_STAGING,
+      origin: '*',
     },
   },
   'strapi::logger',
