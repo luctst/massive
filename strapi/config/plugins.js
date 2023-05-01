@@ -17,6 +17,11 @@ module.exports = ({ env }) => ({
       },
     },
   },
+  'users-permissions': {
+    config: {
+      jwtSecret: env('JWT_SECRET') || crypto.randomBytes(16).toString('base64'),
+    },
+  },
   'strapi-plugin-populate-deep': {
     config: {
       defaultDepth: 5, // Default is 5
