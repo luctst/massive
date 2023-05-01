@@ -28,11 +28,13 @@ module.exports = [
       },
     },
   },
-  'strapi::poweredBy',
   {
     name: 'strapi::cors',
-    origin: process.env.CORS_DEV,
+    config: {
+      origin: process.env.CORS_DEV,
+    },
   },
+  'strapi::poweredBy',
   'strapi::logger',
   'strapi::query',
   'strapi::body',

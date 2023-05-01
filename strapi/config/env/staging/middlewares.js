@@ -31,7 +31,9 @@ module.exports = [
   'strapi::poweredBy',
   {
     name: 'strapi::cors',
-    origin: process.env.CORS_STAGING,
+    config: {
+      origin: process.env.CORS_STAGING,
+    },
   },
   'strapi::logger',
   'strapi::query',
