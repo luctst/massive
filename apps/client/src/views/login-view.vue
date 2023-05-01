@@ -127,7 +127,7 @@ const logWithGoogle = () => {
             src="@/assets/loader-svg.svg"
           >
         </button>
-        <login-with-google />
+        <login-with-google :btn-content="$t('signup.signupWithGoogle')"/>
       </div>
     </form>
     <p id="already-user">

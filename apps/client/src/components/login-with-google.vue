@@ -1,4 +1,10 @@
 <script lang="ts" setup>
+interface Props {
+  btnContent: string;
+};
+
+const props = defineProps<Props>();
+
 const logWithGoogle = async () => {
   try {
     window.location.href = `http://localhost:1337/api/connect/google`;
@@ -14,7 +20,7 @@ const logWithGoogle = async () => {
       id="sign-in-google"
       @click="logWithGoogle"
     >
-      {{ $t('signin.loginWithGoogle') }}
+      {{ props.btnContent }}
       <img
         src="@/assets/icons8-google.svg"
         alt="Google icon"

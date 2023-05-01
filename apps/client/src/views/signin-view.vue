@@ -192,7 +192,7 @@ const createUser = async () => {
             src="@/assets/loader-svg.svg"
           >
         </button>
-        <login-with-google />
+        <login-with-google :btn-content="$t('signin.signinWithGoogle')"/>
       </div>
     </form>
     <p

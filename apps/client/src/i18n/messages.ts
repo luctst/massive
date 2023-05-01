@@ -42,7 +42,7 @@ export default {
       },
       legal: 'By checking this box, I accept the <router-link to="/legal" id="termes">terms and privacy</ router-link> of the application.',
       createAccount: 'Create my account',
-      loginWithGoogle: 'Signin with Google',
+      signinWithGoogle: 'Signin with Google',
       alreadyAccount: 'You already have an account? <router-link to="/auth/signin">Login</router-link>',
     },
     signup: {
@@ -71,6 +71,7 @@ export default {
           },
         },
       ],
+      signupWithGoogle: 'Login with Google',
     },
     bookmarks: {
       noData: 'No publication saved',
@@ -164,7 +165,7 @@ export default {
       },
       legal: 'En cochant cette case, j\'accepte les <router-link to="/legal" id="termes">termes et confidentialité</ router-link> de l\'application.',
       createAccount: 'Créer mon compte',
-      loginWithGoogle: 'S\'inscrire avec Google',
+      signinWithGoogle: 'S\'inscrire avec Google',
       alreadyAccount: 'Vous avez déjà un compte ? <router-link to="/auth/signin">Se connecter</router-link>',
     },
     signup: {
@@ -193,6 +194,7 @@ export default {
           },
         },
       ],
+      signupWithGoogle: 'Se connecter avec Google',
     },
     bookmarks: {
       noData: 'Aucune publication sauvegardée',
