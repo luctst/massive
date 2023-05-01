@@ -8,6 +8,7 @@ switch (import.meta.env.MODE) {
     break;
   case 'staging':
     baseUrl = import.meta.env.VITE_API_URL_STAGING;
+    break;
   default:
     baseUrl = import.meta.env.VITE_API_URL_PROD;
     break;
