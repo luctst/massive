@@ -32,7 +32,7 @@ module.exports = [
   {
     name: 'strapi::cors',
     config: {
-      origin: '*',
+      origin: [process.env.CORS_STAGING, 'https://massive-api-dev.herokuapp.com/'],
     },
   },
   'strapi::logger',
