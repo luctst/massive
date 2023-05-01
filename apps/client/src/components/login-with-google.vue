@@ -20,7 +20,7 @@ const logWithGoogle = async () => {
         break;
     }
     
-    window.location.href = `${baseUrl}connect/google`;
+    window.location.href = `${baseUrl}/connect/google`;
   } catch (error) {
     throw error; 
   }
