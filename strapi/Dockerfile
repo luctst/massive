@@ -11,6 +11,5 @@ ENV PATH /opt/node_modules/.bin:$PATH
 RUN yarn config set network-timeout 600000 -g && yarn install
 WORKDIR /opt/app
 COPY ./ .
-RUN yarn build
 EXPOSE 1337
-CMD ["PORT=$PORT", "DATABASE_URL=$DATABASE_URL","yarn", "start"]
+CMD ["PORT=$PORT", "DATABASE_URL=$DATABASE_URL", "yarn", "build", "&&" ,"yarn", "start"]
