@@ -18,21 +18,25 @@ jobs:
     steps:
       - name: "Checkout \U0001F6CE"
         uses: actions/checkout@master
-      - name: "Setup node env \U0001F3D7"
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: '${{ matrix.node }}'
-          check-latest: true
-      - name: "Cache node_modules \U0001F4E6"
-        uses: actions/cache@v2.1.4
-        with:
-          path: '**/node_modules'
-          key: '${{ runner.os }}-node-${{ hashFiles(''**/yarn.lock'') }}'
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - uses: akhileshns/heroku-deploy@v3.12.13
-        with:
-          heroku_api_key: '${{secrets.HEROKU_API_KEY}}'
-          heroku_app_name: '${{secrets.HEROKU_APP_NAME}}'
-          heroku_email: '${{secrets.HEROKU_EMAIL}}'
-          appdir: ./strapi
+      - name: Login to Heroku Container registry
+      env: 
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: heroku container:login
+      # - name: "Setup node env \U0001F3D7"
+      #   uses: actions/setup-node@v2.1.5
+      #   with:
+      #     node-version: '${{ matrix.node }}'
+      #     check-latest: true
+      # - name: "Cache node_modules \U0001F4E6"
+      #   uses: actions/cache@v2.1.4
+      #   with:
+      #     path: '**/node_modules'
+      #     key: '${{ runner.os }}-node-${{ hashFiles(''**/yarn.lock'') }}'
+      #     restore-keys: |
+      #       ${{ runner.os }}-node-
+      # - uses: akhileshns/heroku-deploy@v3.12.13
+      #   with:
+      #     heroku_api_key: '${{secrets.HEROKU_API_KEY}}'
+      #     heroku_app_name: '${{secrets.HEROKU_APP_NAME}}'
+      #     heroku_email: '${{secrets.HEROKU_EMAIL}}'
+      #     appdir: ./strapi
