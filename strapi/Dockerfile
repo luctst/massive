@@ -36,4 +36,4 @@ WORKDIR /opt/app
 COPY --from=build /opt/node_modules ./node_modules
 ENV PATH /opt/node_modules/.bin:$PATH
 COPY --from=build /opt/app ./
-CMD yarn build && yarn start
+CMD NODE_OPTIONS=--max_old_space_size=4096 yarn build && yarn start
