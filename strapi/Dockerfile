@@ -13,4 +13,4 @@ WORKDIR /opt/app
 COPY ./ .
 RUN yarn build
 EXPOSE 1337
-CMD ["yarn", "start"]
+CMD ["PORT=$PORT", "DATABASE_URL=$DATABASE_URL","yarn", "start"]

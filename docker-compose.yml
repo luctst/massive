@@ -3,7 +3,9 @@ version: "3.9"
 services:
   strapi:
     container_name: strapi
-    build: ./strapi
+    build: 
+      context: ./strapi
+      dockerfile: Dockerfile.dev
     image: strapi:latest
     restart: unless-stopped
     env_file: .env
