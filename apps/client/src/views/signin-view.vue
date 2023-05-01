@@ -6,7 +6,6 @@ import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { ReqAxiosNewUser } from '@/types';
 import { useUserStore } from '@/stores/user';
-import http from '@/utils/http';
 
 interface Rules {
   key: keyof ReqAxiosNewUser;

@@ -7,7 +7,20 @@ const props = defineProps<Props>();
 
 const logWithGoogle = async () => {
   try {
-    window.location.href = `http://localhost:1337/api/connect/google`;
+    let baseUrl = '';
+    switch (import.meta.env.MODE) {
+      case 'development':
+        baseUrl = import.meta.env.VITE_API_URL_DEV;
+        break;
+      case 'staging':
+        baseUrl = import.meta.env.VITE_API_URL_STAGING;
+        break;
+      default:
+        baseUrl = import.meta.env.VITE_API_URL_PROD;
+        break;
+    }
+    
+    window.location.href = `${baseUrl}connect/google`;
   } catch (error) {
     throw error; 
   }
