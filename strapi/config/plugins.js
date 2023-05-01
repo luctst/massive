@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 module.exports = ({ env }) => ({
   upload: {
     config: {
