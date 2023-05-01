@@ -13,6 +13,7 @@ switch (import.meta.env.MODE) {
     break;
 }
 
+console.log(import.meta.env, baseUrl);
 export default axios.create({
   baseURL: baseUrl,
   headers: {

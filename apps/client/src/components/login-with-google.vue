@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 interface Props {
   btnContent: string;
-};
+}
 
 const props = defineProps<Props>();
 
