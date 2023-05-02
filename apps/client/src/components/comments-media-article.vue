@@ -182,15 +182,25 @@ onBeforeMount(() => {
           :key="index"
           class="comments--wrapper"
         >
-          <p v-if="comment.user?.provider === 'google'" class="comments--wrapper--avatar">
+          <p
+            v-if="comment.user?.provider === 'google'"
+            class="comments--wrapper--avatar"
+          >
             {{ comment.user?.username[0].toLowerCase() }}
           </p>
-          <p v-else class="comments--wrapper--avatar">
+          <p
+            v-else
+            class="comments--wrapper--avatar"
+          >
             {{ comment.user?.firstname[0].toLowerCase() }}
           </p>
           <div class="comments--wrapper--msg">
-            <p v-if="comment.user?.provider === 'google'">{{ comment.user.username }}</p>
-            <p v-else>{{ comment.user?.firstname }} {{ comment.user?.lastname[0].toLowerCase() }}.</p>
+            <p v-if="comment.user?.provider === 'google'">
+              {{ comment.user.username }}
+            </p>
+            <p v-else>
+              {{ comment.user?.firstname }} {{ comment.user?.lastname[0].toLowerCase() }}.
+            </p>
             <p class="is__article__content">
               {{ comment.content }}
             </p>
