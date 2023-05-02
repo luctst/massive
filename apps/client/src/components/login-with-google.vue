@@ -10,17 +10,17 @@ const logWithGoogle = async () => {
     let baseUrl = '';
     switch (import.meta.env.MODE) {
       case 'development':
-        baseUrl = import.meta.env.VITE_API_URL_DEV;
+        baseUrl = `${import.meta.env.VITE_API_URL_DEV}connect/google`;
         break;
       case 'staging':
-        baseUrl = import.meta.env.VITE_API_URL_STAGING;
+        baseUrl = `${import.meta.env.VITE_API_URL_STAGING}/connect/google`;
         break;
       default:
         baseUrl = import.meta.env.VITE_API_URL_PROD;
         break;
     }
     
-    window.location.href = `${baseUrl}/connect/google`;
+    window.location.href = baseUrl;
   } catch (error) {
     throw error; 
   }

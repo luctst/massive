@@ -13,7 +13,7 @@ const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
 const media = ref<Media | null>();
-const tabs = ref<Array<{ active: boolean; tabName: string;}>>([]);
+const tabs = ref<Array<{ active: boolean; tabName?: string; useComputed?: boolean}>>([]);
 
 const userFullName = computed(() => {
   if (media.value?.user.provider === 'google') return media.value?.user.username;
@@ -39,6 +39,9 @@ const tabActive = computed(() => tabs.value.find((tab) => tab.active)?.tabName);
 const isUserAuthFollowing = computed(() => media.value?.user.followers?.some((ff) => ff.id === userStore.user?.id));
 const isUserAuthOnHisMedia = computed(() => media.value?.user.id === userStore.user?.id);
 const mediaPublishedDate = computed(() => formatDate(new Date(media.value?.createdAt || new Date())));
+const mediaTabTitle = computed(() => {
+  return `${media.value?.comments.length || 0} ${t('comments.head')}`;
+});
 
 onMounted(async () => {
   try {
@@ -77,7 +80,7 @@ onMounted(async () => {
       },
       {
         active: false,
-        tabName: `${media.value?.comments.length || 0} ${t('comments.head')}`,
+        useComputed: true,
       },
     ];
 
@@ -159,7 +162,7 @@ onMounted(async () => {
             :class="{active: tab.active}"
             @click.stop="switchTabActive(index)"
           >
-            {{ tab.tabName }}
+            {{ tab.useComputed ? mediaTabTitle : tab.tabName }}
           </div>
         </div>
       </section>
