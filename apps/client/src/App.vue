@@ -41,7 +41,6 @@ function isAppAvailable() {
 //   }
 // };
 
-
 onMounted(() => {
   isAppAvailable();
   window.addEventListener('resize', isAppAvailable);

@@ -122,10 +122,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
           aws-region: eu-west-1
       
-      - name: Remove s3 bucket access-policy
-        if: steps.filter.outputs.frontend == 'true'
-        run: |
-          aws s3api put-public-access-block --bucket {{ secrets.AWS_BUCKET }} --public-access-block-configuration BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false
       
       - name: Build
         if: steps.filter.outputs.frontend == 'true'
@@ -133,6 +129,13 @@ jobs:
         env:
           VITE_API_URL_STAGING: ${{ secrets.VITE_API_URL_STAGING }}
       
+      - name: Remove s3 bucket access-policy
+        if: steps.filter.outputs.frontend == 'true'
+        env:
+          BUCKET_NAME: ${{ secrets.AWS_BUCKET }}
+        run: |
+          aws s3api put-public-access-block --bucket $BUCKET_NAME --public-access-block-configuration BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false
+
       - name: S3
         if: steps.filter.outputs.frontend == 'true'
         uses: jakejarvis/s3-sync-action@be0c4ab89158cac4278689ebedd8407dd5f35a83
@@ -147,8 +150,10 @@ jobs:
       
       - name: Add s3 bucket access-policy
         if: steps.filter.outputs.frontend == 'true'
+        env:
+          BUCKET_NAME: ${{ secrets.AWS_BUCKET }}
         run: |
-          aws s3api put-public-access-block --bucket {{ secrets.AWS_BUCKET }} --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
+          aws s3api put-public-access-block --bucket $BUCKET_NAME --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
         
       - name: Invalidate Cloudfront
         if: steps.filter.outputs.frontend == 'true'
