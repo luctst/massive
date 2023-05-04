@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { useHead } from '@vueuse/head';
 import { onMounted, ref } from 'vue';
-import { useUserStore } from '@/stores/user';
 
 useHead({
   link: [
@@ -14,7 +13,6 @@ useHead({
 });
 
 const showApp = ref(false);
-const { setUser } = useUserStore();
 
 function isAppAvailable() {
   if (window.innerWidth > 500) {
