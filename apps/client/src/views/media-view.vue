@@ -43,6 +43,26 @@ const mediaTabTitle = computed(() => {
   return `${media.value?.comments.length || 0} ${t('comments.head')}`;
 });
 
+const onVideoEnded = async () => {
+  try {
+    if (media.value) {
+      const { data } = await http.put(`/medias/${userStore.user?.id}`, {
+        data: {
+          views: Number.parseInt(media.value.views) + 1,
+        },
+      }, {
+        headers: {
+          Authorization: `Bearer ${userStore.user?.jwt}`,
+        },
+      })
+  
+      media.value.views = data.data.attributes.views;
+    }
+  } catch (error) {
+    toast.error('Une erreur est survenue');
+  }
+};
+
 onMounted(async () => {
   try {
     const { data } = await http.get(`/medias/${route.params.id}?populate=deep`, {
@@ -101,6 +121,7 @@ onMounted(async () => {
           src="@/assets/Studio_Project.mp4"
           muted
           controls
+          @ended="onVideoEnded"
         />
       </div>
       <div class="video--box--infos container">
