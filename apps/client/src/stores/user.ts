@@ -55,11 +55,11 @@ export const useUserStore = defineStore({
         }
       });
     },
-    async setUser(): Promise<void> {
+    async setUser(customJwt?: string): Promise<void> {
       try {
         const { data } = await http.get(`/users/me?populate=deep`, {
           headers: {
-            Authorization: `Bearer ${this.user?.jwt}`,
+            Authorization: `Bearer ${customJwt ? customJwt : this.user?.jwt}`,
           },
         });
         this.user = {

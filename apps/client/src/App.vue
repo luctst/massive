@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useHead } from '@vueuse/head';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useUserStore } from '@/stores/user';
 
 useHead({
   link: [
@@ -13,6 +14,8 @@ useHead({
 });
 
 const showApp = ref(false);
+const { setUser } = useUserStore();
+
 function isAppAvailable() {
   if (window.innerWidth > 500) {
     showApp.value = false;
@@ -22,13 +25,28 @@ function isAppAvailable() {
   showApp.value = true;
 }
 
+// async function persisUserOnRefresh(event: BeforeUnloadEvent) {
+//   try {
+//     event.preventDefault();
+//     event.stopPropagation();
+//     const { user } = useUserStore();
+
+//     if (user?.provider === 'google') return;
+//     if (!user?.jwt) return;
+
+//     const { data } = await http.post('/token/refresh', {
+//       refreshToken: user?.jwt,
+//     });
+//     await setUser(data.jwt);
+//   } catch (error) {
+//     toast.error('Error on refresh');
+//   }
+// };
+
 onMounted(() => {
   isAppAvailable();
   window.addEventListener('resize', isAppAvailable);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', isAppAvailable);
+  // window.addEventListener('beforeunload', persisUserOnRefresh);
 });
 </script>
 
