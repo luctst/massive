@@ -113,6 +113,19 @@ jobs:
       - name: Install dependencies
         if: steps.filter.outputs.frontend == 'true'
         run: pnpm install
+
+      - name: Configure AWS Credentials
+        if: steps.filter.outputs.frontend == 'true'
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
+          aws-region: eu-west-1
+      
+      - name: Remove s3 bucket access-policy
+        if: steps.filter.outputs.frontend == 'true'
+        run: |
+          aws s3api put-public-access-block --bucket {{ secrets.AWS_BUCKET }} --public-access-block-configuration BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false
       
       - name: Build
         if: steps.filter.outputs.frontend == 'true'
@@ -131,6 +144,11 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
           AWS_REGION: 'eu-west-1'
           SOURCE_DIR: './apps/client/dist'
+      
+      - name: Add s3 bucket access-policy
+        if: steps.filter.outputs.frontend == 'true'
+        run: |
+          aws s3api put-public-access-block --bucket {{ secrets.AWS_BUCKET }} --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
         
       - name: Invalidate Cloudfront
         if: steps.filter.outputs.frontend == 'true'
