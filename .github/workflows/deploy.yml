@@ -115,7 +115,7 @@ jobs:
         run: pnpm install
 
       - name: Configure AWS Credentials
-        if: steps.filter.outputs.frontend == 'true'
+        if: false
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
@@ -130,7 +130,7 @@ jobs:
           VITE_API_URL_STAGING: ${{ secrets.VITE_API_URL_STAGING }}
       
       - name: Remove s3 bucket access-policy
-        if: steps.filter.outputs.frontend == 'true'
+        if: false
         env:
           BUCKET_NAME: ${{ secrets.AWS_BUCKET }}
         run: |
@@ -149,7 +149,7 @@ jobs:
           SOURCE_DIR: './apps/client/dist'
       
       - name: Add s3 bucket access-policy
-        if: steps.filter.outputs.frontend == 'true'
+        if: false
         env:
           BUCKET_NAME: ${{ secrets.AWS_BUCKET }}
         run: |
